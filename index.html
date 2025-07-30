@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,590 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Election Application</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light grey background */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Main Title */
+        h1 {
+            font-family: 'Inter', sans-serif;
+            color: #2c3e50; /* Darker blue-grey for headings */
+            margin-bottom: 30px;
+            font-size: 3em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Container for Sections (CSS Grid Layout) */
+        .container {
+            display: grid;
+            /* Default: auto-fit columns, min 300px, max 1fr (fills available space) */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: start; /* Align items to the top of their grid cells */
+            grid-auto-rows: minmax(min-content, max-content); /* Rows adjust to content height */
+            transition: grid-template-columns 0.5s ease-in-out; /* Smooth transition for column changes */
+        }
+
+        /* Two-column layout when a section is expanded (for larger screens) */
+        .container.two-column-active {
+            grid-template-columns: 2fr 1fr; /* Expanded section wider (2 parts), sidebar narrower (1 part) */
+        }
+
+        /* Section Styling */
+        section {
+            background-color: #ffffff; /* White background for sections */
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* Soft, modern shadow */
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, grid-column 0.5s ease-in-out, grid-row 0.5s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-width: 280px; /* Ensures sections don't get too small */
+        }
+
+        section:hover {
+            transform: translateY(-5px); /* Subtle lift on hover */
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+
+        /* Styles for the currently expanded main section */
+        section.expanded-main-section {
+            grid-column: 1; /* Place in the first column (wider) */
+            grid-row: 1 / -1; /* Span from the first row line to the last, taking all vertical space */
+        }
+
+        /* Styles for sections in the sidebar (collapsed) */
+        section.sidebar-section {
+            grid-column: 2; /* Place in the second column (narrower) */
+            grid-row: auto; /* Stack vertically within this column */
+        }
+
+        /* Section Header */
+        .section-header {
+            background-color: #3498db; /* Vibrant blue for headers */
+            color: #fff;
+            padding: 18px 25px;
+            font-size: 1.6em;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .toggle-icon {
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.active .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Section Content (Collapsible) */
+        .section-content {
+            padding: 25px;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out, padding 0.5s ease-out;
+            max-height: 1000px; /* Arbitrarily large value for expanded state */
+            opacity: 1;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        /* Hide default h2 */
+        h2 {
+            display: none;
+        }
+
+        /* Form Elements */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        form label {
+            display: block;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95em;
+            text-align: left;
+        }
+
+        form input[type="text"],
+        form input[type="password"],
+        form select,
+        form textarea {
+            width: calc(100% - 28px); /* Account for padding */
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background-color: #f9f9f9;
+            color: #333;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="password"]:focus,
+        form select:focus,
+        form textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .bedrock-input {
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding-right: 14px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .bedrock-input span {
+            padding: 0 12px;
+            font-weight: 500;
+            color: #777;
+            font-size: 1.1em;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .bedrock-input input {
+            flex-grow: 1;
+            border: none;
+            margin-bottom: 0;
+            padding: 14px 0;
+            background-color: transparent;
+            width: auto;
+        }
+
+        .bedrock-input input:focus {
+            box-shadow: none;
+        }
+
+        /* Buttons */
+        form button, .action-button {
+            background-color: #2ecc71; /* Green for primary actions */
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px; /* Spacing for buttons */
+        }
+
+        form button:hover, .action-button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        form button:active, .action-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(46, 204, 113, 0.2);
+        }
+
+        /* Specific button styles */
+        #upload-logo-btn {
+            background-color: #f39c12; /* Orange for upload */
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+        }
+
+        #upload-logo-btn:hover {
+            background-color: #e67e22;
+            box-shadow: 0 6px 12px rgba(243, 156, 18, 0.4);
+        }
+
+        #logout-candidate-btn, #change-player-details-btn {
+            background-color: #e74c3c; /* Red for destructive/secondary actions */
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        #logout-candidate-btn:hover, #change-player-details-btn:hover {
+            background-color: #c0392b;
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Live Vote Count */
+        #live-vote-count .vote-count-item {
+            display: flex;
+            align-items: center;
+            background-color: #ecf0f1; /* Light grey for items */
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .party-logo-small {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Party List (Voting) */
+        #party-list {
+            display: grid; /* Use grid internally for party cards */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px; /* Space from heading */
+        }
+
+        .party-card {
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .party-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .party-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .party-card h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .party-card p {
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .party-card button {
+            margin-top: auto;
+            background-color: #3498db; /* Blue for voting button */
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .party-card button:hover {
+            background-color: #2980b9;
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Candidate Dashboard */
+        #candidate-dashboard {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        #candidate-dashboard .party-logo-large {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #candidate-dashboard h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        #candidate-dashboard p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        /* Logo Upload Preview */
+        .logo-preview-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        #logo-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px dashed #ccc; /* Lighter dashed border */
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: #f0f0f0;
+            display: inline-block;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        /* Custom Alert Modal */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .custom-modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal-content {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .custom-modal-overlay.visible .custom-modal-content {
+            transform: translateY(0);
+        }
+
+        .custom-modal-content p {
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .custom-modal-content button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .custom-modal-content button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Player Details Display (when already entered) */
+        #player-details-display {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: left;
+            color: #555;
+        }
+
+        #player-details-display p {
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        #player-details-display strong {
+            color: #2c3e50;
+        }
+
+        /* Initial Login Section */
+        #initial-login-section {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            margin: 50px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        #initial-login-section h2 {
+            display: block; /* Override hidden h2 */
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #initial-login-section input[type="text"] {
+            width: calc(100% - 28px);
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        #initial-login-section button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #initial-login-section button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+        }
+
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 992px) { /* Adjust breakpoint for two-column to single-column transition */
+            .container, .container.two-column-active {
+                grid-template-columns: 1fr; /* Stack all sections on smaller screens */
+            }
+            section.expanded-main-section,
+            section.sidebar-section {
+                grid-column: auto; /* Reset column span */
+                grid-row: auto; /* Reset row span */
+            }
+            /* Ensure section content is collapsed if it's not the active one on mobile */
+            .section-content.collapsed {
+                max-height: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .section-header {
+                font-size: 1.4em;
+            }
+
+            .container {
+                gap: 15px;
+            }
+
+            section {
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .section-header {
+                padding: 15px 20px;
+                font-size: 1.1em;
+            }
+
+            .section-content {
+                padding: 20px;
+            }
+
+            form input, form select, form textarea, form button, .action-button {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .party-card img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Initial Login Section -->
@@ -20,8 +602,6 @@
     <div id="main-app-container" style="display: none;">
         <h1>Election System</h1>
         <div class="container">
-            
-
             <!-- Vote Section (now includes player details and party list for voting) -->
             <section id="vote-section" class="active">
                 <div class="section-header">Vote <span class="toggle-icon">+</span></div>
@@ -148,6 +728,545 @@
         </div>
     </div>
 
-    <script src="client.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const initialLoginSection = document.getElementById('initial-login-section');
+            const votingIdInput = document.getElementById('voting-id-input');
+            const votingIdLoginBtn = document.getElementById('voting-id-login-btn');
+            const mainAppContainer = document.getElementById('main-app-container');
+            const container = document.querySelector('.container');
+
+            const editionSelect = document.getElementById('edition');
+            const bedrockNameField = document.getElementById('bedrock-name-field');
+            const javaNameField = document.getElementById('java-name-field');
+            const voteSection = document.getElementById('vote-section');
+            const playerDetailsFormContainer = document.getElementById('player-details-form-container');
+            const playerDetailsForm = document.getElementById('player-details-form');
+            const playerDetailsDisplay = document.getElementById('player-details-display');
+            const partyListForVoting = document.getElementById('party-list-for-voting');
+            const registerCandidateForm = document.getElementById('register-candidate-form');
+            const liveVoteCountDiv = document.getElementById('live-vote-count');
+            const partyListDiv = document.getElementById('party-list');
+            const nextBtn = document.getElementById('next-btn');
+            const changePlayerDetailsBtn = document.getElementById('change-player-details-btn');
+            const candidateManagementSection = document.getElementById('candidate-management-section');
+            const candidateDashboard = document.getElementById('candidate-dashboard');
+            const logoPreview = document.getElementById('logo-preview');
+            const uploadLogoBtn = document.getElementById('upload-logo-btn');
+            const partyLogoUpload = document.getElementById('party-logo-upload');
+            const partyManagementLoginSection = document.getElementById('party-management-login-section');
+            const partyLoginForm = document.getElementById('party-login-form');
+            const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
+
+            // Custom Alert Modal Elements
+            const customAlertModal = document.getElementById('custom-alert-modal');
+            const alertMessage = document.getElementById('alert-message');
+            const alertOkBtn = document.getElementById('alert-ok-btn');
+
+            // --- Constants & State Variables ---
+            const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api'; // Cloudflare Worker API base path
+            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
+            const MAX_IMAGE_SIZE_MB = 5; // Increased to 5MB
+
+            let candidates = []; // Will be fetched from API
+            let votes = []; // Will be fetched from API
+            let validVotingIds = []; // Fetched from API
+            let usedVotingIds = []; // Fetched from API
+            let currentVotingId = sessionStorage.getItem('currentVotingId') || null; // Persist validated voting ID
+            let playerData = JSON.parse(sessionStorage.getItem('playerData')) || null;
+            let loggedInCandidate = JSON.parse(sessionStorage.getItem('loggedInCandidate')) || null;
+
+            // --- API Fetch Functions ---
+
+            /**
+             * Generic async function to fetch data from the API.
+             * @param {string} endpoint - The API endpoint (e.g., '/candidates').
+             * @returns {Promise<Array|Object|null>} - Parsed JSON data or null on error.
+             */
+            async function fetchData(endpoint) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error(`API Error fetching ${endpoint}: ${response.status} - ${errorText}`);
+                        showCustomAlert(`Error loading data: ${response.statusText}`);
+                        return null;
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Network error fetching ${endpoint}:`, error);
+                    showCustomAlert(`Network error: Could not connect to server.`);
+                    return null;
+                }
+            }
+
+            /**
+             * Generic async function to post data to the API.
+             * @param {string} endpoint - The API endpoint (e.g., '/register-candidate').
+             * @param {Object} data - The data to send in the request body.
+             * @returns {Promise<Object|null>} - Parsed JSON response or null on error.
+             */
+            async function postData(endpoint, data) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error(`API Error posting to ${endpoint}: ${response.status} - ${errorText}`);
+                        showCustomAlert(`Error: ${errorText || response.statusText}`);
+                        return null;
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Network error posting to ${endpoint}:`, error);
+                    showCustomAlert(`Network error: Could not connect to server.`);
+                    return null;
+                }
+            }
+
+            // --- Helper Functions ---
+
+            /**
+             * Displays a custom alert modal with a given message.
+             * @param {string} message - The message to display in the alert.
+             */
+            function showCustomAlert(message) {
+                alertMessage.textContent = message;
+                customAlertModal.classList.add('visible');
+            }
+
+            /**
+             * Hides the custom alert modal.
+             */
+            function hideCustomAlert() {
+                customAlertModal.classList.remove('visible');
+            }
+
+            /**
+             * Toggles the display of Minecraft edition specific name fields.
+             */
+            function toggleEditionFields() {
+                if (editionSelect.value === 'bedrock') {
+                    bedrockNameField.style.display = 'block';
+                    javaNameField.style.display = 'none';
+                } else {
+                    bedrockNameField.style.display = 'none';
+                    javaNameField.style.display = 'block';
+                }
+            }
+
+            /**
+             * Updates and displays the live vote count for all parties.
+             */
+            async function updateLiveVoteCount() {
+                votes = await fetchData('/votes');
+                if (!votes) return; // Exit if data fetch failed
+
+                liveVoteCountDiv.innerHTML = '';
+                const voteCounts = {};
+
+                votes.forEach(vote => {
+                    voteCounts[vote.party] = (voteCounts[vote.party] || 0) + 1;
+                });
+
+                const sortedVoteCounts = Object.entries(voteCounts).sort(([, countA], [, countB]) => countB - countA);
+
+                if (sortedVoteCounts.length > 0) {
+                    sortedVoteCounts.forEach(([party, count]) => {
+                        const partyData = candidates.find(c => c.partyName === party);
+                        const div = document.createElement('div');
+                        div.classList.add('vote-count-item');
+
+                        if (partyData && partyData.partyLogo) {
+                            const logo = document.createElement('img');
+                            logo.src = partyData.partyLogo;
+                            logo.alt = partyData.partyName;
+                            logo.classList.add('party-logo-small');
+                            div.appendChild(logo);
+                        }
+
+                        const text = document.createElement('span');
+                        text.textContent = `${party}: ${count} votes`;
+                        div.appendChild(text);
+
+                        liveVoteCountDiv.appendChild(div);
+                    });
+                } else {
+                    liveVoteCountDiv.textContent = 'No votes cast yet.';
+                }
+            }
+
+            /**
+             * Displays the list of registered parties for voting.
+             */
+            async function displayPartyList() {
+                candidates = await fetchData('/candidates');
+                if (!candidates) return; // Exit if data fetch failed
+
+                partyListDiv.innerHTML = '';
+                if (candidates.length === 0) {
+                    partyListDiv.textContent = 'No parties registered yet. Be the first to register!';
+                    return;
+                }
+
+                candidates.forEach(candidate => {
+                    const partyCard = document.createElement('div');
+                    partyCard.classList.add('party-card');
+
+                    const partyLogo = document.createElement('img');
+                    partyLogo.src = candidate.partyLogo || placeholderImage;
+                    partyLogo.alt = candidate.partyName;
+
+                    const partyName = document.createElement('h3');
+                    partyName.textContent = candidate.partyName;
+
+                    const partyLeader = document.createElement('p');
+                    partyLeader.textContent = `Leader: ${candidate.candidateName}`;
+
+                    const partyChinn = document.createElement('p');
+                    partyChinn.textContent = `Symbol: ${candidate.partyChinn}`;
+
+                    const voteButton = document.createElement('button');
+                    voteButton.textContent = 'Vote for this Party';
+                    voteButton.addEventListener('click', async () => {
+                        if (!currentVotingId) {
+                            showCustomAlert('Please log in with your Voting ID first.');
+                            return;
+                        }
+                        if (!playerData) {
+                            showCustomAlert('Please enter your player details first in the "Vote" section.');
+                            activateSection(voteSection);
+                            playerDetailsFormContainer.style.display = 'block';
+                            playerDetailsDisplay.style.display = 'none';
+                            partyListForVoting.style.display = 'none';
+                            return;
+                        }
+
+                        const voteData = {
+                            ...playerData,
+                            party: candidate.partyName,
+                            votingId: currentVotingId // Include the validated voting ID
+                        };
+
+                        const result = await postData('/submit-vote', voteData);
+                        if (result && result.success) {
+                            showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
+                            await updateLiveVoteCount(); // Refresh vote count
+                            // After voting, clear player data for a new vote if desired, or keep it
+                            // playerData = null;
+                            // sessionStorage.removeItem('playerData');
+                            // updateVoteSectionDisplay();
+                        } else {
+                            showCustomAlert(result ? result.message : 'Failed to submit vote.');
+                        }
+                    });
+
+                    partyCard.appendChild(partyLogo);
+                    partyCard.appendChild(partyName);
+                    partyCard.appendChild(partyLeader);
+                    partyCard.appendChild(partyChinn);
+                    partyCard.appendChild(voteButton);
+                    partyListDiv.appendChild(partyCard);
+                });
+            }
+
+            /**
+             * Gets the total votes for a specific party.
+             * @param {string} partyName - The name of the party.
+             * @returns {number} The total number of votes for the party.
+             */
+            function getPartyVoteCount(partyName) {
+                return votes.filter(vote => vote.party === partyName).length;
+            }
+
+            /**
+             * Handles candidate login.
+             * @param {string} partyName - The party name to log in with.
+             * @param {string} password - The password to log in with.
+             */
+            async function loginCandidate(partyName, password) {
+                candidates = await fetchData('/candidates'); // Ensure latest candidates are loaded
+                if (!candidates) return;
+
+                loggedInCandidate = candidates.find(c => c.partyName === partyName && c.password === btoa(password));
+
+                if (loggedInCandidate) {
+                    sessionStorage.setItem('loggedInCandidate', JSON.stringify(loggedInCandidate));
+                    showCustomAlert('Login successful! Welcome to your dashboard.');
+                    activateSection(candidateManagementSection);
+                } else {
+                    showCustomAlert('Invalid Party Name or Password.');
+                    loggedInCandidate = null;
+                    sessionStorage.removeItem('loggedInCandidate');
+                    displayCandidateDashboard();
+                }
+            }
+
+            /**
+             * Handles candidate logout.
+             */
+            function logoutCandidate() {
+                loggedInCandidate = null;
+                sessionStorage.removeItem('loggedInCandidate');
+                displayCandidateDashboard();
+                showCustomAlert('Logged out successfully.');
+                activateSection(partyManagementLoginSection);
+            }
+
+            /**
+             * Displays the candidate's dashboard if logged in.
+             */
+            async function displayCandidateDashboard() {
+                if (loggedInCandidate) {
+                    candidateManagementSection.style.display = 'block';
+                    await updateLiveVoteCount(); // Ensure vote count is fresh for dashboard
+                    candidateDashboard.innerHTML = `
+                        <h3>Welcome, ${loggedInCandidate.candidateName}!</h3>
+                        <p>Party: ${loggedInCandidate.partyName}</p>
+                        <p>Symbol: ${loggedInCandidate.partyChinn}</p>
+                        <img src="${loggedInCandidate.partyLogo}" alt="${loggedInCandidate.partyName}" class="party-logo-large">
+                        <p>Your party currently has <strong>${getPartyVoteCount(loggedInCandidate.partyName)}</strong> votes.</p>
+                    `;
+                } else {
+                    candidateManagementSection.style.display = 'none';
+                    candidateManagementSection.querySelector('.section-content').classList.add('collapsed');
+                    candidateManagementSection.classList.remove('active', 'expanded-main-section', 'sidebar-section');
+                }
+            }
+
+            /**
+             * Manages the display of the vote section based on whether player data is entered.
+             */
+            function updateVoteSectionDisplay() {
+                if (playerData) {
+                    playerDetailsFormContainer.style.display = 'none';
+                    playerDetailsDisplay.style.display = 'block';
+                    partyListForVoting.style.display = 'block';
+                    document.getElementById('display-minecraft-name').textContent = playerData.minecraftName;
+                    document.getElementById('display-edition').textContent = playerData.edition;
+                    document.getElementById('display-real-name').textContent = playerData.realName || 'N/A';
+                    document.getElementById('display-discord-insta').textContent = playerData.discordInsta || 'N/A';
+                    displayPartyList();
+                } else {
+                    playerDetailsFormContainer.style.display = 'block';
+                    playerDetailsDisplay.style.display = 'none';
+                    partyListForVoting.style.display = 'none';
+                    playerDetailsForm.reset();
+                }
+            }
+
+            /**
+             * Activates a specific section, expanding it and moving others to the sidebar.
+             * @param {HTMLElement} sectionToActivate - The section element to expand.
+             */
+            function activateSection(sectionToActivate) {
+                const allSections = document.querySelectorAll('.container > section');
+
+                // If the clicked section is already active, collapse it and revert to default layout
+                if (sectionToActivate.classList.contains('active')) {
+                    allSections.forEach(section => {
+                        section.classList.remove('active', 'expanded-main-section', 'sidebar-section');
+                        section.querySelector('.section-content').classList.add('collapsed');
+                    });
+                    container.classList.remove('two-column-active');
+                } else {
+                    // Otherwise, activate the clicked section and set up two-column layout
+                    allSections.forEach(section => {
+                        section.classList.remove('active', 'expanded-main-section', 'sidebar-section');
+                        section.querySelector('.section-content').classList.add('collapsed');
+                    });
+
+                    sectionToActivate.classList.add('active', 'expanded-main-section');
+                    sectionToActivate.querySelector('.section-content').classList.remove('collapsed');
+
+                    allSections.forEach(section => {
+                        if (section !== sectionToActivate) {
+                            section.classList.add('sidebar-section');
+                        }
+                    });
+
+                    container.classList.add('two-column-active');
+
+                    if (sectionToActivate.id === 'vote-section') {
+                        updateVoteSectionDisplay();
+                    }
+                    if (sectionToActivate.id === 'live-vote-section') {
+                        updateLiveVoteCount();
+                    }
+                    if (sectionToActivate.id === 'candidate-management-section') {
+                        displayCandidateDashboard();
+                    }
+                }
+            }
+
+            // --- Event Listeners ---
+
+            // Custom Alert OK button
+            alertOkBtn.addEventListener('click', hideCustomAlert);
+
+            // Initial Voting ID Login
+            votingIdLoginBtn.addEventListener('click', async () => {
+                const id = votingIdInput.value.trim();
+                if (!id) {
+                    showCustomAlert('Please enter your Voting ID.');
+                    return;
+                }
+
+                const result = await postData('/check-voting-id', { votingId: id });
+
+                if (result && result.valid && !result.used) {
+                    currentVotingId = id;
+                    sessionStorage.setItem('currentVotingId', currentVotingId);
+                    initialLoginSection.style.display = 'none';
+                    mainAppContainer.style.display = 'block';
+                    showCustomAlert('Login successful! Welcome.');
+                    // Initialize main app content after successful login
+                    await Promise.all([updateLiveVoteCount(), displayPartyList()]); // Fetch initial data
+                    activateSection(voteSection); // Activate vote section by default
+                } else {
+                    showCustomAlert(result ? result.message : 'Invalid or already used Voting ID.');
+                }
+            });
+
+            // Section Header Toggles
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            sectionHeaders.forEach(header => {
+                header.addEventListener('click', (e) => {
+                    const currentSection = e.currentTarget.parentElement;
+                    activateSection(currentSection);
+                });
+            });
+
+            // Minecraft Edition Select Change
+            editionSelect.addEventListener('change', toggleEditionFields);
+
+            // Player Details Form Submission (Next Button)
+            nextBtn.addEventListener('click', () => {
+                const edition = editionSelect.value;
+                let minecraftNameInput;
+                if (edition === 'bedrock') {
+                    minecraftNameInput = document.getElementById('bedrock-name');
+                } else {
+                    minecraftNameInput = document.getElementById('java-name');
+                }
+
+                if (!minecraftNameInput.value.trim()) {
+                    showCustomAlert('Please enter your Minecraft Name.');
+                    minecraftNameInput.focus();
+                    return;
+                }
+
+                playerData = {
+                    edition,
+                    minecraftName: minecraftNameInput.value,
+                    realName: document.getElementById('real-name').value,
+                    discordInsta: document.getElementById('discord-insta').value
+                };
+                sessionStorage.setItem('playerData', JSON.stringify(playerData));
+
+                updateVoteSectionDisplay();
+            });
+
+            // Change Player Details Button
+            changePlayerDetailsBtn.addEventListener('click', () => {
+                playerData = null;
+                sessionStorage.removeItem('playerData');
+                updateVoteSectionDisplay();
+            });
+
+            // Party Logo Upload
+            uploadLogoBtn.addEventListener('click', () => {
+                partyLogoUpload.click();
+            });
+
+            partyLogoUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+                        showCustomAlert(`Image size should be less than ${MAX_IMAGE_SIZE_MB}MB.`);
+                        // Clear the file input to prevent re-uploading too large file
+                        event.target.value = '';
+                        logoPreview.src = placeholderImage; // Reset preview
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        logoPreview.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Register Candidate Form Submission
+            registerCandidateForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const candidateName = document.getElementById('candidate-name').value;
+                const partyName = document.getElementById('party-name-reg').value;
+                const partyPassword = document.getElementById('party-password-reg').value;
+                const partyChinn = document.getElementById('party-chinn').value;
+                const partyLogo = logoPreview.src;
+
+                // Basic client-side check for duplicate party name (server will also validate)
+                if (candidates.some(c => c.partyName.toLowerCase() === partyName.toLowerCase())) {
+                    showCustomAlert('A party with this name already exists. Please choose a different party name.');
+                    return;
+                }
+
+                const newCandidate = {
+                    candidateName,
+                    partyName,
+                    password: btoa(partyPassword), // Base64 encode password (NOT secure for real apps)
+                    partyChinn,
+                    partyLogo
+                };
+
+                const result = await postData('/register-candidate', newCandidate);
+
+                if (result && result.success) {
+                    showCustomAlert('Candidate registered successfully!');
+                    registerCandidateForm.reset();
+                    logoPreview.src = placeholderImage;
+                    loginCandidate(partyName, partyPassword); // Automatically log in
+                    await Promise.all([updateLiveVoteCount(), displayPartyList()]); // Refresh data
+                } else {
+                    showCustomAlert(result ? result.message : 'Failed to register candidate.');
+                }
+            });
+
+            // Party Login Form Submission
+            partyLoginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const loginPartyName = document.getElementById('login-party-name').value;
+                const loginPartyPassword = document.getElementById('login-party-password').value;
+                loginCandidate(loginPartyName, loginPartyPassword);
+                partyLoginForm.reset();
+            });
+
+            // Candidate Logout Button
+            logoutCandidateBtn.addEventListener('click', logoutCandidate);
+
+            // --- Initial Setup on Load ---
+            toggleEditionFields();
+
+            // Check if user is already logged in with a voting ID
+            if (currentVotingId) {
+                initialLoginSection.style.display = 'none';
+                mainAppContainer.style.display = 'block';
+                // Re-fetch all data and set up UI
+                await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
+                activateSection(voteSection); // Activate vote section by default
+            } else {
+                initialLoginSection.style.display = 'flex'; // Show login screen
+                mainAppContainer.style.display = 'none'; // Hide main app
+            }
+        });
+    </script>
 </body>
 </html>
