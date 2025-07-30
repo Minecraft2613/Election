@@ -245,6 +245,17 @@
             background-color: #dbeafe; /* Light blue background */
             border: 1px solid #93c5fd; /* Blue border */
         }
+        /* Ensure party cards don't collapse and are responsive in a grid */
+        #party-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 1.5rem; /* Space between cards */
+            justify-items: center; /* Center items in the grid */
+        }
+        /* Cursor barrier style */
+        .cursor-wait {
+            cursor: wait !important;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -318,8 +329,8 @@
                             <h3 class="text-xl font-semibold mb-4 text-gray-800">Select a Party to Vote For:</h3>
                             <!-- Party Search Input -->
                             <div class="mb-4">
-                                <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name or Leader:</label>
-                                <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash" class="input-field w-full">
+                                <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name, Symbol, or Leader:</label>
+                                <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash, 🦁" class="input-field w-full">
                             </div>
                             <div id="party-list" class="flex flex-col gap-4">
                                 <!-- Party cards will be loaded here -->
@@ -526,11 +537,24 @@
             }
 
             function hideCustomAlert() {
+                alertMessage.textContent = ''; // Clear message on hide
                 customAlertModal.classList.remove('visible');
             }
 
             function getPartyVoteCount(partyName) {
                 return votes.filter(vote => vote.party === partyName).length;
+            }
+
+            // New functions for cursor barrier
+            function setAppCursor(type) {
+                const body = document.body;
+                if (type === 'wait') {
+                    body.classList.add('cursor-wait');
+                    body.style.pointerEvents = 'none'; // Prevent all clicks
+                } else {
+                    body.classList.remove('cursor-wait');
+                    body.style.pointerEvents = 'auto'; // Re-enable clicks
+                }
             }
 
             // --- UI Management Functions ---
@@ -712,7 +736,6 @@
 
                 candidates.forEach(candidate => {
                     const partyCard = document.createElement('div');
-                    // Added flex-grow to party-card to ensure buttons are pushed to bottom consistently
                     partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
 
                     const partyLogo = document.createElement('img');
@@ -757,23 +780,36 @@
                             return;
                         }
 
+                        setAppCursor('wait'); // Apply cursor barrier
+                        voteButton.disabled = true; // Disable the specific button immediately
+                        voteButton.textContent = 'Submitting...'; // Change button text
 
-                        const voteData = {
-                            votingId: currentVotingId,
-                            party: candidate.partyName,
-                            realName: realNameInput.value, // Include optional real name
-                            discordInsta: contactInfoInput.value // Include optional contact info
-                        };
+                        try {
+                            const voteData = {
+                                votingId: currentVotingId,
+                                party: candidate.partyName,
+                                realName: realNameInput.value, // Include optional real name
+                                discordInsta: contactInfoInput.value // Include optional contact info
+                            };
 
-                        const result = await postData('/submit-vote', voteData);
-                        if (result && result.success) {
-                            showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
-                            isVotingDisabledForUsedId = true;
-                            sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                            updateVoteSectionUI(); // Re-render UI to disable vote buttons
-                            await updateLiveVoteCount();
-                        } else {
-                            showCustomAlert(result ? result.message : 'Failed to submit vote.');
+                            const result = await postData('/submit-vote', voteData);
+                            if (result && result.success) {
+                                showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
+                                isVotingDisabledForUsedId = true;
+                                sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
+                                updateVoteSectionUI(); // Re-render UI to disable vote buttons
+                                await updateLiveVoteCount();
+                            } else {
+                                showCustomAlert(result ? result.message : 'Failed to submit vote.');
+                            }
+                        } finally {
+                            setAppCursor('auto'); // Remove cursor barrier
+                            // The button will be re-rendered by updateVoteSectionUI() if voting is disabled for used ID
+                            // If there was an error and voting isn't disabled, re-enable it:
+                            if (!isVotingDisabledForUsedId) {
+                                 voteButton.disabled = false;
+                                 voteButton.textContent = 'Vote for this Party';
+                            }
                         }
                     });
 
@@ -986,7 +1022,8 @@
                 const searchTerm = partySearchInput.value.toLowerCase();
                 const filteredCandidates = candidates.filter(candidate =>
                     candidate.partyName.toLowerCase().includes(searchTerm) ||
-                    candidate.candidateName.toLowerCase().includes(searchTerm)
+                    candidate.candidateName.toLowerCase().includes(searchTerm) ||
+                    (candidate.partyChinn && candidate.partyChinn.toLowerCase().includes(searchTerm))
                 );
                 displayPartyList(filteredCandidates);
             });
