@@ -91,7 +91,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             flex-grow: 1; /* Allow buttons to grow and fill space */
             text-align: center; /* Center text in buttons */
-            cursor: pointer; /* ADDED: Hand cursor for all tabs */
         }
         .tab-button:hover {
             background-color: #a0aec0; /* Darker gray on hover */
@@ -101,11 +100,6 @@
             background: linear-gradient(to right, #3b82f6, #6366f1); /* Blue to indigo gradient */
             color: white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        /* ADDED: Click effect for tab buttons */
-        .tab-button:active {
-            transform: translateY(1px);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         /* Input field styles */
@@ -137,37 +131,36 @@
             padding: 0.75rem 1.5rem;
             border-radius: 0.75rem;
             font-weight: 600;
-            transition: all 0.2s ease; /* Slightly faster transition */
+            transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            cursor: pointer; /* MODIFIED: Added hand cursor */
         }
         .action-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0,0,0,0.2);
             background: linear-gradient(to right, #2563eb, #4f46e5);
         }
-        /* ADDED: Click effect for action buttons */
-        .action-button:active {
-            transform: translateY(0px); /* Makes it look pressed */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Reduces shadow on click */
-        }
+        /* Disabled button style */
         .action-button:disabled {
-            background: #9ca3af; /* Gray out when disabled */
+            background: #cbd5e0; /* Light gray */
+            color: #a0aec0; /* Darker gray */
             cursor: not-allowed;
-            transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: none;
+            box-shadow: none;
         }
 
-
-        /* Party card styles */
+        /* Party card styles - Modified for rectangular box effect */
         .party-card {
             background-color: #ffffff;
-            border: 1px solid #e2e8f0;
+            border: 2px solid #6366f1; /* Stronger border for the "box" effect */
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex; /* Use flexbox for better alignment */
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* Pushes button to bottom */
         }
         .party-card:hover {
             transform: translateY(-5px);
@@ -229,7 +222,6 @@
             font-weight: 600;
             transition: all 0.2s ease;
             margin-top: 1rem;
-            cursor: pointer;
         }
         .alert-ok-button:hover {
             background-color: #2563eb;
@@ -268,7 +260,7 @@
         <!-- Header with Title and Logout -->
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <h1 class="text-3xl font-bold text-blue-700">Minecraft Election</h1>
-            <button id="logout-button" class="action-button bg-red-500 hover:bg-red-600">Logout</button>
+            <button id="logout-button" class="bg-red-500 text-white py-2 px-4 rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out font-semibold">Logout</button>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 w-full">
@@ -321,7 +313,7 @@
 
                         <div id="party-list-for-voting" class="hidden mt-6 p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
                             <h3 class="text-xl font-semibold mb-4 text-gray-800">Select a Party to Vote For:</h3>
-                            <div id="party-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div id="party-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <!-- Party cards will be loaded here -->
                             </div>
                         </div>
@@ -425,7 +417,7 @@
             const playerInfoDisplay = document.getElementById('player-info-display');
             const displayMinecraftName = document.getElementById('display-minecraft-name');
             const displayGameEdition = document.getElementById('display-game-edition');
-            const bedrockHint = document.getElementById('bedrock-hint');
+            const bedrockHint = document.getElementById('bedrock-hint'); // New hint element
             const partyListForVoting = document.getElementById('party-list-for-voting');
             const partyListDiv = document.getElementById('party-list');
 
@@ -438,7 +430,7 @@
 
 
             // Live Vote Count Elements
-            const liveVoteCountDiv = document.getElementById('live-vote-count');
+            const liveVoteCountDiv = document.getElementById('live-vote-count'); // Correctly defined
 
             // Candidate Management Elements
             const partyManagementLoginSection = document.getElementById('party-management-login-section');
@@ -458,12 +450,13 @@
             const alertOkBtn = document.getElementById('alert-ok-btn');
 
             // --- Feature Toggles and Custom Messages ---
-            const IS_VOTING_ENABLED = true; // Set to false to disable voting
-            const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is not active. Please check back later!";
+            const IS_VOTING_ENABLED = false; // Set to false to disable voting
+            const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
 
             const IS_REGISTRATION_ENABLED = true; // Set to false to disable candidate registration
             const REGISTRATION_DISABLED_CUSTOM_MESSAGE = "Candidate registration is not available at this time.";
             // --- End Feature Toggles ---
+
             // --- Constants & State Variables ---
             const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
             const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
@@ -573,8 +566,8 @@
                 if (!IS_VOTING_ENABLED) {
                     voteSectionDetails.classList.remove('hidden'); // Ensure container is visible for message
                     playerInfoDisplay.classList.add('hidden');
-                    realNameInput.closest('div.mb-4').classList.add('hidden');
-                    contactInfoInput.closest('div.mb-4').classList.add('hidden');
+                    realNameInput.classList.add('hidden');
+                    contactInfoInput.classList.add('hidden');
                     enteredDetailsDisplay.classList.add('hidden');
                     partyListForVoting.classList.add('hidden');
                     votingDisabledMessage.classList.remove('hidden');
@@ -585,8 +578,6 @@
                 }
 
                 voteSectionDetails.classList.remove('hidden');
-                realNameInput.closest('div.mb-4').classList.remove('hidden');
-                contactInfoInput.closest('div.mb-4').classList.remove('hidden');
 
                 // Display player info from the validated voting ID
                 displayMinecraftName.textContent = currentVotingPlayerDetails.playerName || 'N/A';
@@ -624,8 +615,8 @@
             }
 
             function updateEnteredDetailsDisplay() {
-                displayRealName.textContent = `Real Name: ${realNameInput.value || 'Not provided'}`;
-                displayContactInfo.textContent = `Contact: ${contactInfoInput.value || 'Not provided'}`;
+                displayRealName.textContent = `Real Name: ${realNameInput.value}`;
+                displayContactInfo.textContent = `Contact: ${contactInfoInput.value}`;
                 if (realNameInput.value || contactInfoInput.value) {
                     enteredDetailsDisplay.classList.remove('hidden');
                 } else {
@@ -703,35 +694,36 @@
 
                 candidates.forEach(candidate => {
                     const partyCard = document.createElement('div');
-                    partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
+                    // Added flex-grow to party-card to ensure buttons are pushed to bottom consistently
+                    partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200', 'flex-grow');
 
                     const partyLogo = document.createElement('img');
                     partyLogo.src = candidate.partyLogo || placeholderImage;
                     partyLogo.alt = candidate.partyName;
-                    partyLogo.classList.add('w-24', 'h-24', 'object-cover', 'rounded-full', 'mb-3', 'border', 'border-gray-300');
+                    partyLogo.classList.add('w-24', 'h-24', 'object-cover', 'rounded-full', 'mb-4', 'border', 'border-gray-300');
 
                     const partyName = document.createElement('h3');
                     partyName.textContent = candidate.partyName;
-                    partyName.classList.add('text-xl', 'font-semibold', 'mb-3', 'text-gray-800');
-
-                    // MODIFIED: Container for horizontal details
-                    const detailsContainer = document.createElement('div');
-                    detailsContainer.classList.add('flex', 'flex-col', 'sm:flex-row', 'sm:justify-around', 'w-full', 'mb-4', 'text-gray-600', 'text-sm', 'space-y-1', 'sm:space-y-0');
+                    partyName.classList.add('text-xl', 'font-semibold', 'mb-2', 'text-gray-800');
 
                     const partyLeader = document.createElement('p');
-                    partyLeader.innerHTML = `<strong>Leader:</strong> ${candidate.candidateName}`;
+                    partyLeader.textContent = `Leader: ${candidate.candidateName}`;
+                    partyLeader.classList.add('text-gray-600', 'text-sm');
 
                     const partyChinn = document.createElement('p');
-                    partyChinn.innerHTML = `<strong>Symbol:</strong> ${candidate.partyChinn}`;
-                    
-                    detailsContainer.appendChild(partyLeader);
-                    detailsContainer.appendChild(partyChinn);
+                    partyChinn.textContent = `Symbol: ${candidate.partyChinn}`;
+                    partyChinn.classList.add('text-gray-600', 'text-sm', 'mb-4');
 
                     const voteButton = document.createElement('button');
                     voteButton.textContent = 'Vote for this Party';
-                    voteButton.classList.add('action-button', 'w-full', 'mt-auto');
+                    voteButton.classList.add('action-button', 'w-full', 'mt-auto'); // Added mt-auto to push button to bottom
+                    
+                    // Disable button if voting is disabled for this ID or generally
+                    if (isVotingDisabledForUsedId || !IS_VOTING_ENABLED) {
+                        voteButton.disabled = true;
+                        voteButton.textContent = isVotingDisabledForUsedId ? 'Already Voted' : 'Voting Disabled';
+                    }
 
-                    // MODIFIED: Enhanced click listener
                     voteButton.addEventListener('click', async () => {
                         if (!currentVotingId) {
                             showCustomAlert('Please log in with your Voting ID first.');
@@ -741,53 +733,36 @@
                             showCustomAlert('This Voting ID has already been used. You cannot cast another vote.');
                             return;
                         }
+                        // Check IS_VOTING_ENABLED before allowing vote submission
                         if (!IS_VOTING_ENABLED) {
                             showCustomAlert(VOTING_DISABLED_CUSTOM_MESSAGE);
                             return;
                         }
 
-                        const allVoteButtons = partyListDiv.querySelectorAll('.action-button');
-                        
-                        // Disable UI
-                        allVoteButtons.forEach(btn => btn.disabled = true);
-                        voteButton.textContent = 'Submitting...';
-                        document.body.style.cursor = 'wait';
 
-                        try {
-                            const voteData = {
-                                votingId: currentVotingId,
-                                party: candidate.partyName,
-                                realName: realNameInput.value,
-                                discordInsta: contactInfoInput.value
-                            };
-                            const result = await postData('/submit-vote', voteData);
-                            if (result && result.success) {
-                                showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
-                                isVotingDisabledForUsedId = true;
-                                sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                                updateVoteSectionUI(); // This will hide the voting options
-                                await updateLiveVoteCount();
-                            } else {
-                                showCustomAlert(result ? result.message : 'Failed to submit vote.');
-                                // Re-enable buttons on failure
-                                allVoteButtons.forEach(btn => btn.disabled = false);
-                                voteButton.textContent = 'Vote for this Party';
-                            }
-                        } catch (error) {
-                            console.error("Error during vote submission:", error);
-                            showCustomAlert("An unexpected error occurred. Please try again.");
-                            // Re-enable buttons on error
-                            allVoteButtons.forEach(btn => btn.disabled = false);
-                            voteButton.textContent = 'Vote for this Party';
-                        } finally {
-                            // Reset cursor regardless of outcome
-                            document.body.style.cursor = 'default';
+                        const voteData = {
+                            votingId: currentVotingId,
+                            party: candidate.partyName,
+                            realName: realNameInput.value, // Include optional real name
+                            discordInsta: contactInfoInput.value // Include optional contact info
+                        };
+
+                        const result = await postData('/submit-vote', voteData);
+                        if (result && result.success) {
+                            showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
+                            isVotingDisabledForUsedId = true;
+                            sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
+                            updateVoteSectionUI(); // Re-render UI to disable vote buttons
+                            await updateLiveVoteCount();
+                        } else {
+                            showCustomAlert(result ? result.message : 'Failed to submit vote.');
                         }
                     });
 
                     partyCard.appendChild(partyLogo);
                     partyCard.appendChild(partyName);
-                    partyCard.appendChild(detailsContainer); // Add new container
+                    partyCard.appendChild(partyLeader);
+                    partyCard.appendChild(partyChinn);
                     partyCard.appendChild(voteButton);
                     partyListDiv.appendChild(partyCard);
                 });
@@ -927,6 +902,7 @@
             partyLogoUpload.addEventListener('change', (event) => {
                 const file = event.target.files[0];
                 if (file) {
+                    // Changed MAX_IMAGE_SIZE_MB to MAX_IMAGE_SIZE_KB and updated calculation
                     if (file.size > MAX_IMAGE_SIZE_KB * 1024) {
                         showCustomAlert(`Image size should be less than ${MAX_IMAGE_SIZE_KB}KB.`);
                         event.target.value = '';
@@ -945,6 +921,7 @@
             registerCandidateForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
+                // Check if registration is generally enabled
                 if (!IS_REGISTRATION_ENABLED) {
                     showCustomAlert(REGISTRATION_DISABLED_CUSTOM_MESSAGE);
                     return;
@@ -970,6 +947,7 @@
                     showCustomAlert('Candidate registered successfully!');
                     registerCandidateForm.reset();
                     logoPreview.src = placeholderImage;
+                    // Automatically log in the new candidate
                     await loginCandidate(partyName, partyPassword);
                     await Promise.all([updateLiveVoteCount(), displayPartyList()]);
                 } else {
@@ -982,27 +960,54 @@
                 e.preventDefault();
                 const loginPartyName = document.getElementById('login-party-name').value;
                 const loginPartyPassword = document.getElementById('login-party-password').value;
-                await loginCandidate(loginPartyName, loginPartyPassword);
+                loginCandidate(loginPartyName, loginPartyPassword);
             });
 
             // --- Initial Setup on Load ---
+            // Hide registration tab and content if disabled
             if (!IS_REGISTRATION_ENABLED) {
-                tabRegisterCandidate.classList.add('hidden');
+                tabRegisterCandidate.classList.add('hidden'); // Hide the tab button
                 contentRegisterCandidate.innerHTML = `
                     <div class="disabled-message">
                         <p>${REGISTRATION_DISABLED_CUSTOM_MESSAGE}</p>
                     </div>
                 `;
+                // Ensure the form is hidden if the tab is not enabled
                 document.getElementById('register-candidate-form').classList.add('hidden');
             }
 
-            if (currentVotingId && currentVotingPlayerDetails) {
-                initialLoginSection.classList.add('hidden');
-                mainAppContainer.classList.remove('hidden');
-                isVotingDisabledForUsedId = sessionStorage.getItem('isVotingDisabledForUsedId') === 'true';
-                updateVoteSectionUI();
-                await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-                showTab(contentVote, tabVote);
+
+            // Determine which screen to show on page load
+            if (currentVotingId) {
+                // Attempt to retrieve stored voting ID data
+                const storedVotingIdData = sessionStorage.getItem('currentVotingPlayerDetails');
+                if (storedVotingIdData) {
+                    try {
+                        currentVotingPlayerDetails = JSON.parse(storedVotingIdData);
+                    } catch (e) {
+                        console.error("Error parsing stored currentVotingPlayerDetails:", e);
+                        sessionStorage.removeItem('currentVotingPlayerDetails'); // Clear invalid data
+                        currentVotingId = null; // Force re-login
+                    }
+                }
+
+                if (currentVotingId && currentVotingPlayerDetails) { // Proceed only if both are valid
+                    initialLoginSection.classList.add('hidden');
+                    mainAppContainer.classList.remove('hidden');
+                    isVotingDisabledForUsedId = sessionStorage.getItem('isVotingDisabledForUsedId') === 'true';
+                    updateVoteSectionUI(); // Now currentVotingIdData should be available
+                    await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
+                    showTab(contentVote, tabVote);
+                } else {
+                    // If currentVotingId exists but data is missing/corrupted, force login screen
+                    console.warn("Voting ID found but data missing or corrupted. Redirecting to login.");
+                    sessionStorage.removeItem('currentVotingId');
+                    sessionStorage.removeItem('currentVotingPlayerDetails');
+                    sessionStorage.removeItem('isVotingDisabledForUsedId');
+                    initialLoginSection.classList.remove('hidden');
+                    mainAppContainer.classList.add('hidden');
+                    // No specific tab to show here, as it's the initial login screen
+                }
             } else if (loggedInCandidate) {
                 initialLoginSection.classList.add('hidden');
                 mainAppContainer.classList.remove('hidden');
@@ -1011,6 +1016,7 @@
             } else {
                 initialLoginSection.classList.remove('hidden');
                 mainAppContainer.classList.add('hidden');
+                // No specific tab to show here, as it's the initial login screen
             }
         });
     </script>
