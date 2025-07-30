@@ -45,17 +45,17 @@
             border: 1px solid #e2e8f0;
         }
 
-        /* Main App Container - Adjusted for a more centralized, compact look */
+        /* Main App Container - Adjusted for a more centralized, compact look and responsiveness */
         .app-container {
             background-color: #ffffff;
             border-radius: 1.5rem; /* Rounded corners */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
             padding: 2.5rem;
-            max-width: 800px; /* Adjusted max width for main app */
+            max-width: 1200px; /* Increased max width for overall app */
             width: 100%;
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem; /* Reduced gap */
+            flex-direction: column; /* Default to column on small screens */
+            gap: 1.5rem; /* Spacing between main content and sidebar */
             min-height: 80vh; /* Ensure it takes up a good portion of the viewport */
         }
 
@@ -66,16 +66,17 @@
             padding: 1.5rem;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
+            flex-grow: 1; /* Allows content to grow */
         }
-        @media (min-width: 1024px) { /* For larger screens, arrange side-by-side */
+        @media (min-width: 1024px) { /* On large screens (lg), arrange side-by-side */
             .app-container {
-                flex-direction: row;
+                flex-direction: row; /* Row direction for desktop */
             }
             .main-content-area {
-                flex: 2;
+                flex: 2; /* Main content takes 2 parts */
             }
             .sidebar-area {
-                flex: 1;
+                flex: 1; /* Sidebar takes 1 part */
             }
         }
 
@@ -88,6 +89,8 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-grow: 1; /* Allow buttons to grow and fill space */
+            text-align: center; /* Center text in buttons */
         }
         .tab-button:hover {
             background-color: #a0aec0; /* Darker gray on hover */
@@ -240,7 +243,7 @@
             <!-- Main Content Area for Tabs -->
             <div class="main-content-area flex-grow">
                 <!-- Tab Navigation -->
-                <div class="flex space-x-4 mb-8">
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-8">
                     <button id="tab-vote" class="tab-button active">Vote</button>
                     <button id="tab-candidate-login" class="tab-button">Candidate Login</button>
                     <button id="tab-register-candidate" class="tab-button">Register Candidate</button>
@@ -424,7 +427,7 @@
 
             // --- Constants & State Variables ---
             const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
-            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
+            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANlRUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
             const MAX_IMAGE_SIZE_MB = 5;
 
             let candidates = [];
@@ -614,7 +617,7 @@
                         liveVoteCountDiv.appendChild(div);
                     });
                 } else {
-                    liveVoteCountDiv.textContent = 'No votes cast yet.';
+                    liveVoteDiv.innerHTML = '<p class="text-center text-gray-500">No votes cast yet.</p>';
                     liveVoteCountDiv.classList.add('text-center', 'text-gray-500');
                 }
             }
@@ -628,7 +631,7 @@
 
                 partyListDiv.innerHTML = '';
                 if (candidates.length === 0) {
-                    partyListDiv.textContent = 'No parties registered yet. Be the first to register!';
+                    partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties registered yet. Be the first to register!</p>';
                     partyListDiv.classList.add('text-center', 'text-gray-500');
                     return;
                 }
