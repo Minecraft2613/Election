@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const partyLogoUpload = document.getElementById('party-logo-upload');
     const partyManagementLoginSection = document.getElementById('party-management-login-section');
     const partyLoginForm = document.getElementById('party-login-form');
-    const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
+    
 
     // Custom Alert Modal Elements
     const customAlertModal = document.getElementById('custom-alert-modal');
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const result = await postData('/submit-vote', voteData);
                 if (result && result.success) {
-                    showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
+                    showCustomAlert(`You have successfully voted for ${candidate.partyName} with Voting ID: ${currentVotingId}!`);
                     await updateLiveVoteCount(); // Refresh vote count
                     // After voting, clear player data for a new vote if desired, or keep it
                     // playerData = null;
@@ -522,17 +522,19 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutCandidateBtn.addEventListener('click', logoutCandidate);
 
     // --- Initial Setup on Load ---
-    toggleEditionFields();
+    (async () => {
+        toggleEditionFields();
 
-    // Check if user is already logged in with a voting ID
-    if (currentVotingId) {
-        initialLoginSection.style.display = 'none';
-        mainAppContainer.style.display = 'block';
-        // Re-fetch all data and set up UI
-        await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-        activateSection(voteSection); // Activate vote section by default
-    } else {
-        initialLoginSection.style.display = 'flex'; // Show login screen
-        mainAppContainer.style.display = 'none'; // Hide main app
-    }
+        // Check if user is already logged in with a voting ID
+        if (currentVotingId) {
+            initialLoginSection.style.display = 'none';
+            mainAppContainer.style.display = 'block';
+            // Re-fetch all data and set up UI
+            await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
+            activateSection(voteSection); // Activate vote section by default
+        } else {
+            initialLoginSection.style.display = 'flex'; // Show login screen
+            mainAppContainer.style.display = 'none'; // Hide main app
+        }
+    })();
 });

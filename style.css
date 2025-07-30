@@ -517,6 +517,8 @@ form button:active, .action-button:active {
 }
 
 
+
+
 /* Media Queries for Responsiveness */
 @media (max-width: 992px) { /* Adjust breakpoint for two-column to single-column transition */
     .container, .container.two-column-active {
