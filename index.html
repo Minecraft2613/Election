@@ -316,7 +316,12 @@
 
                         <div id="party-list-for-voting" class="hidden mt-6 p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
                             <h3 class="text-xl font-semibold mb-4 text-gray-800">Select a Party to Vote For:</h3>
-                            <div id="party-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Party Search Input -->
+                            <div class="mb-4">
+                                <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name or Leader:</label>
+                                <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash" class="input-field w-full">
+                            </div>
+                            <div id="party-list" class="flex flex-col gap-4">
                                 <!-- Party cards will be loaded here -->
                             </div>
                         </div>
@@ -423,6 +428,7 @@
             const bedrockHint = document.getElementById('bedrock-hint'); // New hint element
             const partyListForVoting = document.getElementById('party-list-for-voting');
             const partyListDiv = document.getElementById('party-list');
+            const partySearchInput = document.getElementById('party-search-input'); // New search input element
 
             // Optional Details Elements
             const realNameInput = document.getElementById('real-name-input');
@@ -453,7 +459,7 @@
             const alertOkBtn = document.getElementById('alert-ok-btn');
 
             // --- Feature Toggles and Custom Messages ---
-            const IS_VOTING_ENABLED = true; // Set to false to disable voting
+            const IS_VOTING_ENABLED = true; // Set to true to enable voting as requested
             const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
 
             const IS_REGISTRATION_ENABLED = true; // Set to false to disable candidate registration
@@ -465,7 +471,7 @@
             const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
             const MAX_IMAGE_SIZE_KB = 100; // Set image size limit to 100KB
 
-            let candidates = [];
+            let candidates = []; // Stores all fetched candidates
             let votes = [];
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
             let currentVotingPlayerDetails = JSON.parse(sessionStorage.getItem('currentVotingPlayerDetails')) || null;
@@ -613,7 +619,9 @@
                 } else {
                     votingDisabledMessage.classList.add('hidden');
                     partyListForVoting.classList.remove('hidden');
-                    displayPartyList(); // Only display party list if voting is enabled
+                    // Ensure search input is visible and party list is displayed
+                    partySearchInput.value = ''; // Clear search input on UI update
+                    displayPartyList(); // Display all parties initially
                 }
             }
 
@@ -683,14 +691,21 @@
 
             /**
              * Displays the list of registered parties for voting.
+             * @param {Array} [filteredList=null] - Optional array of candidates to display (for search).
              */
-            async function displayPartyList() {
-                candidates = await fetchData('/candidates');
-                if (!candidates) return;
+            async function displayPartyList(filteredList = null) {
+                // If no filtered list is provided, fetch all candidates
+                if (filteredList === null) {
+                    candidates = await fetchData('/candidates');
+                    if (!candidates) return;
+                } else {
+                    // Use the provided filtered list
+                    candidates = filteredList;
+                }
 
                 partyListDiv.innerHTML = '';
                 if (candidates.length === 0) {
-                    partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties registered yet. Be the first to register!</p>';
+                    partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties found matching your search, or no parties registered yet.</p>';
                     partyListDiv.classList.add('text-center', 'text-gray-500');
                     return;
                 }
@@ -866,7 +881,7 @@
                     mainAppContainer.classList.remove('hidden');
                     showTab(contentVote, tabVote); // Automatically go to Vote tab
                     await updateLiveVoteCount();
-                    await displayPartyList();
+                    // displayPartyList() is called by updateVoteSectionUI()
                 } else {
                     showCustomAlert(result ? result.message : 'Invalid Voting ID.');
                 }
@@ -966,6 +981,16 @@
                 loginCandidate(loginPartyName, loginPartyPassword);
             });
 
+            // Party Search Input Listener
+            partySearchInput.addEventListener('input', () => {
+                const searchTerm = partySearchInput.value.toLowerCase();
+                const filteredCandidates = candidates.filter(candidate =>
+                    candidate.partyName.toLowerCase().includes(searchTerm) ||
+                    candidate.candidateName.toLowerCase().includes(searchTerm)
+                );
+                displayPartyList(filteredCandidates);
+            });
+
             // --- Initial Setup on Load ---
             // Hide registration tab and content if disabled
             if (!IS_REGISTRATION_ENABLED) {
@@ -999,7 +1024,8 @@
                     mainAppContainer.classList.remove('hidden');
                     isVotingDisabledForUsedId = sessionStorage.getItem('isVotingDisabledForUsedId') === 'true';
                     updateVoteSectionUI(); // Now currentVotingIdData should be available
-                    await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
+                    await Promise.all([updateLiveVoteCount(), displayCandidateDashboard()]);
+                    // displayPartyList() is called by updateVoteSectionUI()
                     showTab(contentVote, tabVote);
                 } else {
                     // If currentVotingId exists but data is missing/corrupted, force login screen
