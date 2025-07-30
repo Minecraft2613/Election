@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertOkBtn = document.getElementById('alert-ok-btn');
 
     // --- Constants & State Variables ---
-    const API_BASE_URL = '/api'; // Cloudflare Worker API base path
+    const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api'; // Cloudflare Worker API base path
     const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
     const MAX_IMAGE_SIZE_MB = 5; // Increased to 5MB
 
