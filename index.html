@@ -468,7 +468,7 @@
 
             // --- Constants & State Variables ---
             const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
-            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
+            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTSuQmCC';
             let allCandidates = []; // Stores all fetched candidates for search
             let votes = [];
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
@@ -990,6 +990,11 @@
             // Party Search Input Listener
             partySearchInput.addEventListener('input', () => {
                 const searchTerm = partySearchInput.value.toLowerCase();
+                // If search term is empty, display all candidates
+                if (searchTerm === '') {
+                    displayPartyList(allCandidates);
+                    return;
+                }
                 // Filter allCandidates, not just the currently displayed ones
                 const filteredCandidates = allCandidates.filter(candidate =>
                     candidate.partyName.toLowerCase().includes(searchTerm) ||
