@@ -318,10 +318,10 @@
                             <h3 class="text-xl font-semibold mb-4 text-gray-800">Select a Party to Vote For:</h3>
                             <!-- Party Search Input -->
                             <div class="mb-4">
-                                <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name or Leader:</label>
-                                <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash" class="input-field w-full">
+                                <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name, Leader, or Symbol:</label>
+                                <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash, Lion" class="input-field w-full">
                             </div>
-                            <div id="party-list" class="flex flex-col gap-4">
+                            <div id="party-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                 <!-- Party cards will be loaded here -->
                             </div>
                         </div>
@@ -459,7 +459,7 @@
             const alertOkBtn = document.getElementById('alert-ok-btn');
 
             // --- Feature Toggles and Custom Messages ---
-            const IS_VOTING_ENABLED = false; // Set to true to enable voting as requested
+            const IS_VOTING_ENABLED = true; // Set to true to enable voting as requested
             const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
 
             const IS_REGISTRATION_ENABLED = true; // Set to false to disable candidate registration
@@ -469,9 +469,7 @@
             // --- Constants & State Variables ---
             const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
             const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
-            const MAX_IMAGE_SIZE_KB = 100; // Set image size limit to 100KB
-
-            let candidates = []; // Stores all fetched candidates
+            let allCandidates = []; // Stores all fetched candidates for search
             let votes = [];
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
             let currentVotingPlayerDetails = JSON.parse(sessionStorage.getItem('currentVotingPlayerDetails')) || null;
@@ -649,14 +647,14 @@
                     return;
                 }
 
-                // Update the global candidates array with the latest data
-                candidates = latestCandidates;
+                // Update the global allCandidates array with the latest data
+                allCandidates = latestCandidates;
 
                 liveVoteCountDiv.innerHTML = '';
                 const voteCounts = {};
 
                 // Initialize counts for all known candidates
-                candidates.forEach(c => voteCounts[c.partyName] = 0);
+                allCandidates.forEach(c => voteCounts[c.partyName] = 0);
 
                 votes.forEach(vote => {
                     if (voteCounts.hasOwnProperty(vote.party)) { // Ensure party exists
@@ -668,7 +666,7 @@
 
                 if (sortedVoteCounts.length > 0) {
                     sortedVoteCounts.forEach(([party, count]) => {
-                        const partyData = candidates.find(c => c.partyName === party);
+                        const partyData = allCandidates.find(c => c.partyName === party);
                         const div = document.createElement('div');
                         div.classList.add('vote-count-item', 'flex', 'items-center', 'p-2', 'bg-gray-50', 'rounded-md', 'shadow-sm', 'text-gray-800');
 
@@ -706,21 +704,19 @@
             async function displayPartyList(filteredList = null) {
                 // If no filtered list is provided, fetch all candidates
                 if (filteredList === null) {
-                    candidates = await fetchData('/candidates');
-                    if (!candidates) return;
-                } else {
-                    // Use the provided filtered list
-                    candidates = filteredList;
+                    allCandidates = await fetchData('/candidates'); // Populate allCandidates
+                    if (!allCandidates) return;
+                    filteredList = allCandidates; // Use all candidates if no filter
                 }
 
                 partyListDiv.innerHTML = '';
-                if (candidates.length === 0) {
+                if (filteredList.length === 0) {
                     partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties found matching your search, or no parties registered yet.</p>';
                     partyListDiv.classList.add('text-center', 'text-gray-500');
                     return;
                 }
 
-                candidates.forEach(candidate => {
+                filteredList.forEach(candidate => {
                     const partyCard = document.createElement('div');
                     // Added flex-grow to party-card to ensure buttons are pushed to bottom consistently
                     partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
@@ -800,11 +796,11 @@
              * Handles candidate login.
              */
             async function loginCandidate(partyName, password) {
-                candidates = await fetchData('/candidates');
-                if (!candidates) return;
+                allCandidates = await fetchData('/candidates'); // Use allCandidates here
+                if (!allCandidates) return;
 
                 // Passwords are stored base64 encoded
-                loggedInCandidate = candidates.find(c => c.partyName === partyName && c.password === btoa(password));
+                loggedInCandidate = allCandidates.find(c => c.partyName === partyName && c.password === btoa(password));
 
                 if (loggedInCandidate) {
                     sessionStorage.setItem('loggedInCandidate', JSON.stringify(loggedInCandidate));
@@ -994,9 +990,11 @@
             // Party Search Input Listener
             partySearchInput.addEventListener('input', () => {
                 const searchTerm = partySearchInput.value.toLowerCase();
-                const filteredCandidates = candidates.filter(candidate =>
+                // Filter allCandidates, not just the currently displayed ones
+                const filteredCandidates = allCandidates.filter(candidate =>
                     candidate.partyName.toLowerCase().includes(searchTerm) ||
-                    candidate.candidateName.toLowerCase().includes(searchTerm)
+                    candidate.candidateName.toLowerCase().includes(searchTerm) ||
+                    candidate.partyChinn.toLowerCase().includes(searchTerm)
                 );
                 displayPartyList(filteredCandidates);
             });
