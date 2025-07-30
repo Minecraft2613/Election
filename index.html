@@ -161,10 +161,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between; /* Pushes button to bottom */
-            /* Removed fixed width and height */
             min-width: 180px; /* Ensure a reasonable minimum width */
             height: auto; /* Allow height to adjust */
-            margin: auto; /* Center the cards within their grid cells */
+            /* Removed margin: auto; to fix grid collapse issue */
         }
         .party-card:hover {
             transform: translateY(-5px);
@@ -719,12 +718,13 @@
 
                 filteredList.forEach(candidate => {
                     const partyCard = document.createElement('div');
-                    // Added flex-grow to party-card to ensure buttons are pushed to bottom consistently
-                    partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
+                    // **FIX:** Only add the 'party-card' class. The rest of the styling is in the CSS.
+                    partyCard.classList.add('party-card');
 
                     const partyLogo = document.createElement('img');
                     partyLogo.src = candidate.partyLogo || placeholderImage;
                     partyLogo.alt = candidate.partyName;
+                    // Using Tailwind classes here is fine as they don't conflict with the .party-card definition
                     partyLogo.classList.add('w-24', 'h-24', 'object-cover', 'rounded-full', 'mb-4', 'border', 'border-gray-300');
 
                     const partyName = document.createElement('h3');
@@ -928,6 +928,7 @@
                 const file = event.target.files[0];
                 if (file) {
                     // Changed MAX_IMAGE_SIZE_MB to MAX_IMAGE_SIZE_KB and updated calculation
+                    const MAX_IMAGE_SIZE_KB = 100; // Example size
                     if (file.size > MAX_IMAGE_SIZE_KB * 1024) {
                         showCustomAlert(`Image size should be less than ${MAX_IMAGE_SIZE_KB}KB.`);
                         event.target.value = '';
