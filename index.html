@@ -148,7 +148,7 @@
             box-shadow: none;
         }
 
-        /* Party card styles - Modified for rectangular box effect */
+        /* Party card styles - Modified for rectangular box effect and fixed dimensions */
         .party-card {
             background-color: #ffffff;
             border: 2px solid #6366f1; /* Stronger border for the "box" effect */
@@ -161,6 +161,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between; /* Pushes button to bottom */
+            width: 200px; /* Fixed width for rectangular shape */
+            height: 280px; /* Fixed height for rectangular shape */
+            margin: auto; /* Center the cards within their grid cells */
         }
         .party-card:hover {
             transform: translateY(-5px);
@@ -695,7 +698,7 @@
                 candidates.forEach(candidate => {
                     const partyCard = document.createElement('div');
                     // Added flex-grow to party-card to ensure buttons are pushed to bottom consistently
-                    partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200', 'flex-grow');
+                    partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
 
                     const partyLogo = document.createElement('img');
                     partyLogo.src = candidate.partyLogo || placeholderImage;
