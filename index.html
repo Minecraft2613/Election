@@ -640,8 +640,17 @@
              * Updates and displays the live vote count for all parties.
              */
             async function updateLiveVoteCount() {
+                // Fetch latest votes and candidates directly to ensure data consistency
                 votes = await fetchData('/votes');
-                if (!votes) return;
+                const latestCandidates = await fetchData('/candidates');
+
+                if (!votes || !latestCandidates) {
+                    liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">Error loading vote data or candidate data.</p>';
+                    return;
+                }
+
+                // Update the global candidates array with the latest data
+                candidates = latestCandidates;
 
                 liveVoteCountDiv.innerHTML = '';
                 const voteCounts = {};
@@ -663,19 +672,20 @@
                         const div = document.createElement('div');
                         div.classList.add('vote-count-item', 'flex', 'items-center', 'p-2', 'bg-gray-50', 'rounded-md', 'shadow-sm', 'text-gray-800');
 
-                        if (partyData && partyData.partyLogo) {
-                            const logo = document.createElement('img');
-                            logo.src = partyData.partyLogo;
-                            logo.alt = partyData.partyName;
-                            logo.classList.add('party-logo-small');
-                            div.appendChild(logo);
-                        } else if (partyData && partyData.partyChinn) {
-                            const symbolSpan = document.createElement('span');
-                            symbolSpan.textContent = partyData.partyChinn;
-                            symbolSpan.classList.add('text-2xl', 'mr-2');
-                            div.appendChild(symbolSpan);
+                        if (partyData) { // Ensure partyData exists before trying to access its properties
+                            if (partyData.partyLogo && partyData.partyLogo !== placeholderImage) { // Check if a valid logo exists
+                                const logo = document.createElement('img');
+                                logo.src = partyData.partyLogo;
+                                logo.alt = partyData.partyName;
+                                logo.classList.add('party-logo-small');
+                                div.appendChild(logo);
+                            } else if (partyData.partyChinn) { // Fallback to symbol if no valid logo
+                                const symbolSpan = document.createElement('span');
+                                symbolSpan.textContent = partyData.partyChinn;
+                                symbolSpan.classList.add('text-2xl', 'mr-2');
+                                div.appendChild(symbolSpan);
+                            }
                         }
-
 
                         const text = document.createElement('span');
                         text.textContent = `${party}: ${count} votes`;
