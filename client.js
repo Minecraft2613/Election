@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const partyManagementLoginSection = document.getElementById('party-management-login-section');
     const partyLoginForm = document.getElementById('party-login-form');
     const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
+    const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
     
 
     // Custom Alert Modal Elements
