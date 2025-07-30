@@ -237,11 +237,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            partyCard.appendChild(partyLogo);
-            partyCard.appendChild(partyName);
-            partyCard.appendChild(partyLeader);
-            partyCard.appendChild(partyChinn);
-            partyCard.appendChild(voteButton);
+            voteButton.disabled = hasVoted;
+                    if (hasVoted) {
+                        voteButton.textContent = 'Already Voted';
+                        voteButton.style.backgroundColor = '#95a5a6'; // A grey color to indicate disabled
+                        voteButton.style.cursor = 'not-allowed';
+                    }
+
+                    partyCard.appendChild(partyLogo);
+                    partyCard.appendChild(partyName);
+                    partyCard.appendChild(partyLeader);
+                    partyCard.appendChild(partyChinn);
+                    partyCard.appendChild(voteButton);
             partyListDiv.appendChild(partyCard);
         });
     }
