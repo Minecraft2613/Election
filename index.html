@@ -217,6 +217,19 @@
             from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .alert-ok-button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+        .alert-ok-button:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
         .hidden {
             display: none !important;
         }
@@ -231,40 +244,6 @@
             color: #1e40af; /* Darker blue text */
             background-color: #dbeafe; /* Light blue background */
             border: 1px solid #93c5fd; /* Blue border */
-        }
-
-        /* Firework container */
-        .fireworks-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Allows clicks to pass through */
-            z-index: 1001; /* Above other content */
-            overflow: hidden;
-        }
-
-        /* Firework particle */
-        .firework {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            border-radius: 50%;
-            opacity: 0;
-            animation: firework-burst 0.8s ease-out forwards;
-        }
-
-        @keyframes firework-burst {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
         }
     </style>
 </head>
@@ -342,7 +321,7 @@
                                 <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name or Leader:</label>
                                 <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash" class="input-field w-full">
                             </div>
-                            <div id="party-list" class="flex flex-col gap-4 items-center">
+                            <div id="party-list" class="flex flex-col gap-4">
                                 <!-- Party cards will be loaded here -->
                             </div>
                         </div>
@@ -422,9 +401,6 @@
         </div>
     </div>
 
-    <!-- Firework Container -->
-    <div id="fireworks-container" class="fireworks-container"></div>
-
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // --- DOM Elements ---
@@ -482,9 +458,6 @@
             const alertMessage = document.getElementById('alert-message');
             const alertOkBtn = document.getElementById('alert-ok-btn');
 
-            // Firework Container
-            const fireworksContainer = document.getElementById('fireworks-container');
-
             // --- Feature Toggles and Custom Messages ---
             const IS_VOTING_ENABLED = true; // Set to true to enable voting as requested
             const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
@@ -498,7 +471,7 @@
             const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
             const MAX_IMAGE_SIZE_KB = 100; // Set image size limit to 100KB
 
-            let allCandidates = []; // Stores all fetched candidates for search
+            let candidates = []; // Stores all fetched candidates
             let votes = [];
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
             let currentVotingPlayerDetails = JSON.parse(sessionStorage.getItem('currentVotingPlayerDetails')) || null;
@@ -558,24 +531,6 @@
 
             function getPartyVoteCount(partyName) {
                 return votes.filter(vote => vote.party === partyName).length;
-            }
-
-            /**
-             * Triggers a firework animation at a random position.
-             * @param {string} color - The color of the firework (e.g., 'red', '#ff00ff').
-             */
-            function triggerFirework(color) {
-                const firework = document.createElement('div');
-                firework.classList.add('firework');
-                firework.style.backgroundColor = color;
-                firework.style.left = `${Math.random() * 100}%`;
-                firework.style.top = `${Math.random() * 100}%`;
-                fireworksContainer.appendChild(firework);
-
-                // Remove firework after animation
-                firework.addEventListener('animationend', () => {
-                    firework.remove();
-                });
             }
 
             // --- UI Management Functions ---
@@ -661,16 +616,12 @@
                     votingDisabledMessage.classList.add('bg-red-100', 'border-red-300', 'text-red-700');
                     votingDisabledMessage.classList.remove('disabled-message'); // Remove custom style if it was applied
                     partyListForVoting.classList.add('hidden');
-                    // Add a class to make the entire voting section unresponsive
-                    partyListForVoting.classList.add('pointer-events-none', 'opacity-50');
                 } else {
                     votingDisabledMessage.classList.add('hidden');
                     partyListForVoting.classList.remove('hidden');
-                    // Remove unresponsive classes
-                    partyListForVoting.classList.remove('pointer-events-none', 'opacity-50');
                     // Ensure search input is visible and party list is displayed
                     partySearchInput.value = ''; // Clear search input on UI update
-                    displayPartyList(allCandidates); // Display all parties initially
+                    displayPartyList(); // Display all parties initially
                 }
             }
 
@@ -696,7 +647,7 @@
                 const voteCounts = {};
 
                 // Initialize counts for all known candidates
-                allCandidates.forEach(c => voteCounts[c.partyName] = 0);
+                candidates.forEach(c => voteCounts[c.partyName] = 0);
 
                 votes.forEach(vote => {
                     if (voteCounts.hasOwnProperty(vote.party)) { // Ensure party exists
@@ -708,7 +659,7 @@
 
                 if (sortedVoteCounts.length > 0) {
                     sortedVoteCounts.forEach(([party, count]) => {
-                        const partyData = allCandidates.find(c => c.partyName === party);
+                        const partyData = candidates.find(c => c.partyName === party);
                         const div = document.createElement('div');
                         div.classList.add('vote-count-item', 'flex', 'items-center', 'p-2', 'bg-gray-50', 'rounded-md', 'shadow-sm', 'text-gray-800');
 
@@ -740,26 +691,28 @@
 
             /**
              * Displays the list of registered parties for voting.
-             * @param {Array} [candidatesToDisplay=null] - Optional array of candidates to display (for search).
+             * @param {Array} [filteredList=null] - Optional array of candidates to display (for search).
              */
-            async function displayPartyList(candidatesToDisplay = null) {
-                // If no specific list is provided, fetch all candidates initially
-                if (candidatesToDisplay === null) {
-                    allCandidates = await fetchData('/candidates'); // Fetch and store all candidates
-                    if (!allCandidates) return;
-                    candidatesToDisplay = allCandidates; // Use all candidates for initial display
+            async function displayPartyList(filteredList = null) {
+                // If no filtered list is provided, fetch all candidates
+                if (filteredList === null) {
+                    candidates = await fetchData('/candidates');
+                    if (!candidates) return;
+                } else {
+                    // Use the provided filtered list
+                    candidates = filteredList;
                 }
 
                 partyListDiv.innerHTML = '';
-                if (candidatesToDisplay.length === 0) {
+                if (candidates.length === 0) {
                     partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties found matching your search, or no parties registered yet.</p>';
                     partyListDiv.classList.add('text-center', 'text-gray-500');
                     return;
                 }
 
-                candidatesToDisplay.forEach(candidate => {
+                candidates.forEach(candidate => {
                     const partyCard = document.createElement('div');
-                    // Removed flex-grow from party-card to prevent uneven stretching
+                    // Added flex-grow to party-card to ensure buttons are pushed to bottom consistently
                     partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
 
                     const partyLogo = document.createElement('img');
@@ -817,20 +770,8 @@
                             showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
                             isVotingDisabledForUsedId = true;
                             sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                            updateVoteSectionUI(); // Re-render UI to disable vote buttons and entire section
+                            updateVoteSectionUI(); // Re-render UI to disable vote buttons
                             await updateLiveVoteCount();
-
-                            // Trigger firework animation
-                            const partyColors = {
-                                "Sovereign": "#FFD700", // Gold
-                                "BJP": "#FFA500", // Orange
-                                // Add more party colors here if available
-                            };
-                            const fireworkColor = partyColors[candidate.partyName] || '#00BFFF'; // Default to deep sky blue
-                            for (let i = 0; i < 10; i++) { // Generate 10 particles
-                                setTimeout(() => triggerFirework(fireworkColor), i * 50);
-                            }
-
                         } else {
                             showCustomAlert(result ? result.message : 'Failed to submit vote.');
                         }
@@ -849,11 +790,11 @@
              * Handles candidate login.
              */
             async function loginCandidate(partyName, password) {
-                allCandidates = await fetchData('/candidates');
-                if (!allCandidates) return;
+                candidates = await fetchData('/candidates');
+                if (!candidates) return;
 
                 // Passwords are stored base64 encoded
-                loggedInCandidate = allCandidates.find(c => c.partyName === partyName && c.password === btoa(password));
+                loggedInCandidate = candidates.find(c => c.partyName === partyName && c.password === btoa(password));
 
                 if (loggedInCandidate) {
                     sessionStorage.setItem('loggedInCandidate', JSON.stringify(loggedInCandidate));
@@ -1043,7 +984,7 @@
             // Party Search Input Listener
             partySearchInput.addEventListener('input', () => {
                 const searchTerm = partySearchInput.value.toLowerCase();
-                const filteredCandidates = allCandidates.filter(candidate =>
+                const filteredCandidates = candidates.filter(candidate =>
                     candidate.partyName.toLowerCase().includes(searchTerm) ||
                     candidate.candidateName.toLowerCase().includes(searchTerm)
                 );
