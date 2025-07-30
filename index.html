@@ -19,510 +19,543 @@
             justify-content: center;
             padding: 1rem;
         }
+
+        /* Styles for the initial login screen (matching screenshot) */
         .initial-login-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Match body background */
-            position: fixed;
+            position: fixed; /* Fixed to cover entire screen */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 999;
+            background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Match body background */
+            z-index: 999; /* Ensure it's on top */
         }
+        .initial-login-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
+            padding: 2.5rem;
+            max-width: 400px; /* Compact width */
+            width: 90%; /* Responsive width */
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Main App Container - Adjusted for a more centralized, compact look */
         .app-container {
-            background-color: #ffffff; /* White background for the main app */
-            border-radius: 1rem; /* Rounded corners */
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Rounded corners */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            padding: 2rem;
-            max-width: 900px; /* Max width for larger screens */
+            padding: 2.5rem;
+            max-width: 800px; /* Adjusted max width for main app */
             width: 100%;
             display: flex;
             flex-direction: column;
+            gap: 1.5rem; /* Reduced gap */
             min-height: 80vh; /* Ensure it takes up a good portion of the viewport */
         }
+
+        /* Main content and sidebar are now stacked vertically on small screens, side-by-side on larger */
+        .main-content-area, .sidebar-area {
+            background-color: #f8fafc; /* Lighter background for content */
+            border-radius: 1rem; /* Slightly less rounded than container */
+            padding: 1.5rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        @media (min-width: 1024px) { /* For larger screens, arrange side-by-side */
+            .app-container {
+                flex-direction: row;
+            }
+            .main-content-area {
+                flex: 2;
+            }
+            .sidebar-area {
+                flex: 1;
+            }
+        }
+
+        /* Tab button styles */
         .tab-button {
-            @apply px-4 py-2 rounded-t-lg font-medium text-gray-600 hover:bg-gray-100 transition duration-200 ease-in-out;
+            background-color: #cbd5e0; /* Light gray for inactive tabs */
+            color: #4a5568; /* Darker text */
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-button:hover {
+            background-color: #a0aec0; /* Darker gray on hover */
+            color: white;
         }
         .tab-button.active {
-            @apply bg-white text-blue-600 border-b-2 border-blue-600;
+            background: linear-gradient(to right, #3b82f6, #6366f1); /* Blue to indigo gradient */
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .tab-content {
-            @apply p-6 bg-white rounded-b-lg shadow-inner flex-grow;
+
+        /* Input field styles */
+        .input-field {
+            background-color: #f1f5f9; /* Off-white for inputs */
+            border: 1px solid #cbd5e0;
+            color: #374151;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .input-field::placeholder {
+            color: #94a3b8;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+        .input-field option {
+            background-color: #ffffff; /* White background for select options */
+            color: #374151;
+        }
+
+        /* Action button styles */
+        .action-button {
+            background: linear-gradient(to right, #3b82f6, #6366f1); /* Blue to indigo gradient */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+            background: linear-gradient(to right, #2563eb, #4f46e5);
+        }
+
+        /* Party card styles */
+        .party-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .party-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        .party-logo-small {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #a855f7; /* Purple border */
+        }
+        .party-logo-large {
+            max-width: 120px;
+            height: auto;
+            border-radius: 1rem;
+            margin-top: 10px;
+            border: 2px solid #a855f7;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Custom Alert Modal Styles */
+        .custom-alert-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .custom-alert-modal.visible {
+            display: flex;
+        }
+        .custom-alert-content {
+            background-color: #ffffff;
+            color: #374151;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s ease-out;
+            border: 1px solid #e2e8f0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-ok-button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+        .alert-ok-button:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
         }
         .hidden {
             display: none !important;
         }
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            width: 80%;
-            max-width: 500px;
-            position: relative;
-        }
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-
-    <!-- Initial Login/Registration Section -->
-    <div id="initial-login-section" class="initial-login-container w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
-        <h2 class="text-3xl font-bold text-center text-blue-700 mb-8">Minecraft Election</h2>
-
-        <!-- Login Tabs -->
-        <div class="flex justify-center mb-6 border-b border-gray-200">
-            <button id="tab-login-voting-id" class="tab-button active">Vote</button>
-            <button id="tab-login-party" class="tab-button">Party Login</button>
-            <button id="tab-register-party" class="tab-button">Register Party</button>
-        </div>
-
-        <!-- Content for Voting ID Login -->
-        <div id="content-login-voting-id" class="tab-content">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Enter Your Voting ID</h3>
-            <form id="voting-id-login-form" class="space-y-4">
-                <div>
-                    <label for="voting-id" class="block text-sm font-medium text-gray-700 mb-1">Voting ID</label>
-                    <input type="text" id="voting-id" name="votingId" required
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out font-semibold text-lg">
-                    Login to Vote
-                </button>
-                <p id="login-message" class="text-center text-sm mt-4 hidden"></p>
-            </form>
-        </div>
-
-        <!-- Content for Party Login -->
-        <div id="content-login-party" class="tab-content hidden">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Party Login</h3>
-            <form id="party-login-form" class="space-y-4">
-                <div>
-                    <label for="login-party-name" class="block text-sm font-medium text-gray-700 mb-1">Party Name</label>
-                    <input type="text" id="login-party-name" name="partyName" required
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg">
-                </div>
-                <div>
-                    <label for="login-party-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="login-party-password" name="password" required
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out font-semibold text-lg">
-                    Login as Party
-                </button>
-                <p id="party-login-message" class="text-center text-sm mt-4 hidden"></p>
-            </form>
-        </div>
-
-        <!-- Content for Register Party -->
-        <div id="content-register-party" class="tab-content hidden">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Register New Party</h3>
-            <form id="register-party-form" class="space-y-4">
-                <div>
-                    <label for="register-party-name" class="block text-sm font-medium text-gray-700 mb-1">Party Name</label>
-                    <input type="text" id="register-party-name" name="partyName" required
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg">
-                </div>
-                <div>
-                    <label for="register-candidate-name" class="block text-sm font-medium text-gray-700 mb-1">Candidate Name (Leader)</label>
-                    <input type="text" id="register-candidate-name" name="candidateName" required
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg">
-                </div>
-                <div>
-                    <label for="register-party-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="register-party-password" name="password" required
-                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg">
-                </div>
-                <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out font-semibold text-lg">
-                    Register Party
-                </button>
-                <p id="register-message" class="text-center text-sm mt-4 hidden"></p>
-            </form>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Initial Login Section -->
+    <div id="initial-login-section" class="initial-login-container">
+        <div class="initial-login-card">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome to Minecraft Election</h2>
+            <p class="mb-6 text-gray-600">Please enter your unique Voting ID to proceed.</p>
+            <input type="text" id="voting-id-input-initial" placeholder="Enter Voting ID" class="input-field w-full mb-4">
+            <button id="voting-id-login-btn-initial" class="action-button w-full">Login</button>
         </div>
     </div>
 
-    <!-- Main App Container (Hidden by default) -->
-    <div id="main-app-container" class="app-container hidden">
+    <!-- Main Application Container -->
+    <div id="main-app-container" class="hidden app-container">
+        <!-- Header with Title and Logout -->
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <h1 class="text-3xl font-bold text-blue-700">Minecraft Election</h1>
             <button id="logout-button" class="bg-red-500 text-white py-2 px-4 rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out font-semibold">Logout</button>
         </div>
 
-        <!-- Main Tabs -->
-        <div class="flex mb-6 border-b border-gray-200">
-            <button id="tab-vote" class="tab-button active">Vote</button>
-            <button id="tab-live-results" class="tab-button">Live Results</button>
-            <button id="tab-candidate-dashboard" class="tab-button">Candidate Dashboard</button>
-        </div>
+        <div class="flex flex-col lg:flex-row gap-6 w-full">
+            <!-- Main Content Area for Tabs -->
+            <div class="main-content-area flex-grow">
+                <!-- Tab Navigation -->
+                <div class="flex space-x-4 mb-8">
+                    <button id="tab-vote" class="tab-button active">Vote</button>
+                    <button id="tab-candidate-login" class="tab-button">Candidate Login</button>
+                    <button id="tab-register-candidate" class="tab-button">Register Candidate</button>
+                </div>
 
-        <!-- Content for Vote Section -->
-        <div id="content-vote" class="tab-content">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Cast Your Vote</h2>
+                <!-- Tab Content: Vote Section -->
+                <div id="content-vote" class="tab-content">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Cast Your Vote</h2>
+                    <div id="vote-section-details">
+                        <div id="voting-disabled-message" class="hidden text-center p-8 bg-red-100 border border-red-300 rounded-xl mb-8 text-red-700">
+                            <p class="text-xl font-semibold">
+                                This Voting ID has already been used. You cannot cast another vote.
+                            </p>
+                            <p class="text-sm mt-2">You can still view live vote counts and candidate information.</p>
+                        </div>
 
-            <!-- Player Info Display -->
-            <div class="mb-6 bg-blue-100 p-4 rounded-lg shadow-inner">
-                <p class="text-lg font-semibold text-blue-800 mb-2">Your Voting Details:</p>
-                <p class="text-md"><span class="font-medium">Voting ID:</span> <span id="voting-id-display" class="font-bold text-blue-700"></span></p>
-                <p class="text-md"><span class="font-medium">Minecraft Name:</span> <span id="player-name-display" class="font-bold text-blue-700"></span></p>
-                <p class="text-md"><span class="font-medium">Game Edition:</span> <span id="game-edition-display" class="font-bold text-blue-700"></span></p>
-                <p class="text-sm text-blue-600 mt-2">
-                    <span id="bedrock-hint" class="hidden">For Bedrock Edition, your username might include a dot (e.g., `Player.Name`). Please ensure it matches your in-game name.</span>
-                </p>
+                        <div id="player-info-display" class="mb-6 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner text-blue-800">
+                            <h3 class="text-xl font-semibold mb-4">Your Voting Account Details:</h3>
+                            <p class="mb-2"><strong>Minecraft Name:</strong> <span id="display-minecraft-name"></span></p>
+                            <p><strong>Game Edition:</strong> <span id="display-game-edition"></span></p>
+                            <p class="text-sm text-blue-600 mt-2">
+                                <span id="bedrock-hint" class="hidden">For Bedrock Edition, your username might include a dot (e.g., `Player.Name`). Please ensure it matches your in-game name.</span>
+                            </p>
+                        </div>
+
+                        <!-- New Optional Details Section -->
+                        <div class="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+                            <h3 class="text-lg font-semibold mb-3 text-gray-700">Optional Details:</h3>
+                            <div class="mb-4">
+                                <label for="real-name-input" class="block text-sm font-medium text-gray-700 mb-1">Your Real Name (Optional):</label>
+                                <input type="text" id="real-name-input" placeholder="e.g., John Doe" class="input-field w-full">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-info-input" class="block text-sm font-medium text-gray-700 mb-1">Discord/WhatsApp/Instagram (Optional):</label>
+                                <input type="text" id="contact-info-input" placeholder="e.g., @yourdiscord, +1234567890" class="input-field w-full">
+                            </div>
+                            <div id="entered-details-display" class="mt-4 p-3 bg-white border border-gray-200 rounded-md hidden">
+                                <p class="text-sm font-medium text-gray-600">Entered Details:</p>
+                                <p id="display-real-name" class="text-sm text-gray-800"></p>
+                                <p id="display-contact-info" class="text-sm text-gray-800"></p>
+                            </div>
+                        </div>
+
+                        <div id="party-list-for-voting" class="hidden mt-6 p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+                            <h3 class="text-xl font-semibold mb-4 text-gray-800">Select a Party to Vote For:</h3>
+                            <div id="party-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- Party cards will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Candidate Login -->
+                <div id="content-candidate-login" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Candidate Login</h2>
+                    <div id="party-management-login-section" class="p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+                        <form id="party-login-form" class="space-y-4">
+                            <div>
+                                <label for="login-party-name" class="block text-sm font-medium text-gray-700">Party Name:</label>
+                                <input type="text" id="login-party-name" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="login-party-password" class="block text-sm font-medium text-gray-700">Password:</label>
+                                <input type="password" id="login-party-password" class="input-field w-full" required>
+                            </div>
+                            <button type="submit" class="action-button w-full">Login</button>
+                        </form>
+                    </div>
+                    <div id="candidate-dashboard" class="mt-6 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner hidden">
+                        <!-- Candidate dashboard content will be loaded here -->
+                        <button id="logout-candidate-btn" class="action-button bg-red-600 hover:bg-red-700 w-full mt-4">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Register Candidate -->
+                <div id="content-register-candidate" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Register New Candidate</h2>
+                    <div class="p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+                        <form id="register-candidate-form" class="space-y-4">
+                            <div>
+                                <label for="candidate-name" class="block text-sm font-medium text-gray-700">Candidate Name:</label>
+                                <input type="text" id="candidate-name" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-name-reg" class="block text-sm font-medium text-gray-700">Party Name:</label>
+                                <input type="text" id="party-name-reg" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-password-reg" class="block text-sm font-medium text-gray-700">Party Password:</label>
+                                <input type="password" id="party-password-reg" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-chinn" class="block text-sm font-medium text-gray-700">Party Symbol (Text/Emoji):</label>
+                                <input type="text" id="party-chinn" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-logo-upload" class="block text-sm font-medium text-gray-700">Party Logo:</label>
+                                <input type="file" id="party-logo-upload" accept="image/*" class="hidden">
+                                <button type="button" id="upload-logo-btn" class="action-button mt-1">Upload Logo</button>
+                                <img id="logo-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC" alt="Logo Preview" class="mt-2 w-24 h-24 object-cover rounded-md border border-gray-300">
+                            </div>
+                            <button type="submit" class="action-button w-full">Register Party</button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
-            <!-- New Input Fields for Real Name and Contact Info -->
-            <div class="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
-                <h3 class="text-lg font-semibold mb-3 text-gray-700">Optional Details:</h3>
-                <div class="mb-4">
-                    <label for="real-name-input" class="block text-sm font-medium text-gray-700 mb-1">Your Real Name (Optional):</label>
-                    <input type="text" id="real-name-input" placeholder="e.g., John Doe" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            <!-- Sidebar: Live Vote Count -->
+            <div class="sidebar-area">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Live Vote Count</h2>
+                <div id="live-vote-count" class="space-y-3">
+                    <!-- Live vote counts will be displayed here -->
                 </div>
-                <div class="mb-4">
-                    <label for="contact-info-input" class="block text-sm font-medium text-gray-700 mb-1">Discord/WhatsApp/Instagram (Optional):</label>
-                    <input type="text" id="contact-info-input" placeholder="e.g., @yourdiscord, +1234567890" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div id="entered-details-display" class="mt-4 p-3 bg-white border border-gray-200 rounded-md hidden">
-                    <p class="text-sm font-medium text-gray-600">Entered Details:</p>
-                    <p id="display-real-name" class="text-sm text-gray-800"></p>
-                    <p id="display-contact-info" class="text-sm text-gray-800"></p>
-                </div>
-            </div>
-
-            <!-- Party List Display -->
-            <div class="mb-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Select a Party to Vote For:</h3>
-                <div id="party-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Party items will be dynamically loaded here -->
-                </div>
-            </div>
-
-            <!-- Submit Vote Button and Message -->
-            <button id="submit-vote-button" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out font-semibold text-lg">Submit Vote</button>
-            <p id="vote-message" class="text-center text-sm mt-4 hidden"></p>
-        </div>
-
-        <!-- Content for Live Results Section -->
-        <div id="content-live-results" class="tab-content hidden">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Live Election Results</h2>
-            <div id="live-vote-count" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Live vote counts will be displayed here -->
-            </div>
-        </div>
-
-        <!-- Content for Candidate Dashboard Section -->
-        <div id="content-candidate-dashboard" class="tab-content hidden">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Candidate Dashboard</h2>
-            <p id="dashboard-message" class="text-gray-600 mb-4">Login as a party to view your specific dashboard.</p>
-            <div id="candidate-specific-data" class="hidden">
-                <h3 class="text-xl font-semibold text-gray-800 mb-3">Your Party's Votes:</h3>
-                <p class="text-lg text-gray-700 mb-4">Total Votes for <span id="dashboard-party-name" class="font-bold"></span>: <span id="dashboard-vote-count" class="font-bold text-blue-600"></span></p>
-                <h3 class="text-xl font-semibold text-gray-800 mb-3">Recent Votes:</h3>
-                <ul id="recent-votes-list" class="list-disc list-inside bg-gray-50 p-4 rounded-lg shadow-inner">
-                    <!-- Recent votes for the logged-in candidate's party will be listed here -->
-                </ul>
             </div>
         </div>
     </div>
 
-    <!-- Candidate Details Modal -->
-    <div id="candidate-details-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-party-name" class="text-2xl font-bold text-gray-900"></h3>
-                <button id="close-modal-button" class="close-button">&times;</button>
-            </div>
-            <p class="text-lg text-gray-700 mb-2"><span class="font-semibold">Leader:</span> <span id="modal-candidate-name"></span></p>
-            <p class="text-sm text-gray-600 mt-4">This is where more detailed information about the candidate and their party would go (e.g., manifesto, vision, etc., if added to `candidates.json`).</p>
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert-modal" class="custom-alert-modal">
+        <div class="custom-alert-content">
+            <p id="alert-message" class="text-lg font-semibold mb-4"></p>
+            <button id="alert-ok-btn" class="alert-ok-button">OK</button>
         </div>
     </div>
 
     <script>
-        // API Endpoint for your Cloudflare Worker
-        const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
+        document.addEventListener('DOMContentLoaded', async () => {
+            // --- DOM Elements ---
+            const initialLoginSection = document.getElementById('initial-login-section');
+            const votingIdInputInitial = document.getElementById('voting-id-input-initial');
+            const votingIdLoginBtnInitial = document.getElementById('voting-id-login-btn-initial');
+            const mainAppContainer = document.getElementById('main-app-container');
 
-        // Global variables to store current state
-        let currentVotingId = sessionStorage.getItem('currentVotingId');
-        let currentVotingIdData = null; // Will be populated from sessionStorage or API
-        let loggedInCandidate = sessionStorage.getItem('loggedInCandidate');
-        let isVotingDisabledForUsedId = sessionStorage.getItem('isVotingDisabledForUsedId') === 'true';
+            // Tab Buttons
+            const tabVote = document.getElementById('tab-vote');
+            const tabCandidateLogin = document.getElementById('tab-candidate-login');
+            const tabRegisterCandidate = document.getElementById('tab-register-candidate');
 
-        // DOM Elements
-        const initialLoginSection = document.getElementById('initial-login-section');
-        const mainAppContainer = document.getElementById('main-app-container');
+            // Tab Contents
+            const contentVote = document.getElementById('content-vote');
+            const contentCandidateLogin = document.getElementById('content-candidate-login');
+            const contentRegisterCandidate = document.getElementById('content-register-candidate');
 
-        // Login Tabs
-        const tabLoginVotingId = document.getElementById('tab-login-voting-id');
-        const tabLoginParty = document.getElementById('tab-login-party');
-        const tabRegisterParty = document.getElementById('tab-register-party');
+            // Vote Section Elements (after initial login)
+            const voteSectionDetails = document.getElementById('vote-section-details');
+            const votingDisabledMessage = document.getElementById('voting-disabled-message');
+            const playerInfoDisplay = document.getElementById('player-info-display');
+            const displayMinecraftName = document.getElementById('display-minecraft-name');
+            const displayGameEdition = document.getElementById('display-game-edition');
+            const bedrockHint = document.getElementById('bedrock-hint'); // New hint element
+            const partyListForVoting = document.getElementById('party-list-for-voting');
+            const partyListDiv = document.getElementById('party-list');
 
-        const contentLoginVotingId = document.getElementById('content-login-voting-id');
-        const contentLoginParty = document.getElementById('content-login-party');
-        const contentRegisterParty = document.getElementById('content-register-party');
-
-        // Main Tabs
-        const tabVote = document.getElementById('tab-vote');
-        const tabLiveResults = document.getElementById('tab-live-results');
-        const tabCandidateDashboard = document.getElementById('tab-candidate-dashboard');
-
-        const contentVote = document.getElementById('content-vote');
-        const contentLiveResults = document.getElementById('content-live-results');
-        const contentCandidateDashboard = document.getElementById('content-candidate-dashboard');
-
-        // Forms
-        const votingIdLoginForm = document.getElementById('voting-id-login-form');
-        const partyLoginForm = document.getElementById('party-login-form');
-        const registerPartyForm = document.getElementById('register-party-form');
-
-        // Buttons
-        const logoutButton = document.getElementById('logout-button');
-
-        // --- Helper Functions ---
-
-        /**
-         * Shows a specific tab content and activates its button.
-         * @param {HTMLElement} contentElement - The content div to show.
-         * @param {HTMLElement} tabButtonElement - The tab button to activate.
-         */
-        function showTab(contentElement, tabButtonElement) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-            // Deactivate all tab buttons
-            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
-
-            // Show the selected content and activate the selected button
-            contentElement.classList.remove('hidden');
-            tabButtonElement.classList.add('active');
-        }
-
-        /**
-         * Displays a message on the UI.
-         * @param {string} elementId - The ID of the paragraph element to display the message.
-         * @param {string} message - The message text.
-         * @param {'success'|'error'|'info'} type - Type of message for styling.
-         */
-        function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = message;
-                element.classList.remove('hidden', 'text-green-500', 'text-red-500', 'text-blue-500');
-                if (type === 'success') {
-                    element.classList.add('text-green-500');
-                } else if (type === 'error') {
-                    element.classList.add('text-red-500');
-                } else {
-                    element.classList.add('text-blue-500');
-                }
-            }
-        }
-
-        /**
-         * Makes a POST request to the API.
-         * @param {string} path - The API endpoint path (e.g., '/check-voting-id').
-         * @param {object} data - The data to send in the request body.
-         * @returns {Promise<object>} - The JSON response from the API.
-         */
-        async function postData(path, data) {
-            try {
-                const response = await fetch(`${API_BASE_URL}${path}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error(`Network error posting to ${path}:`, error);
-                throw error;
-            }
-        }
-
-        /**
-         * Makes a GET request to the API.
-         * @param {string} path - The API endpoint path (e.g., '/candidates').
-         * @returns {Promise<object>} - The JSON response from the API.
-         */
-        async function fetchData(path) {
-            try {
-                const response = await fetch(`${API_BASE_URL}${path}`);
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error(`Network error fetching from ${path}:`, error);
-                throw error;
-            }
-        }
-
-        // --- Core Application Logic ---
-
-        /**
-         * Handles voting ID login.
-         * @param {string} votingId - The voting ID entered by the user.
-         */
-        async function loginVotingId(votingId) {
-            try {
-                const result = await postData('/check-voting-id', { votingId });
-
-                if (result.success && result.valid) {
-                    currentVotingId = votingId;
-                    currentVotingIdData = { // Store the full object
-                        id: votingId,
-                        playerName: result.playerName,
-                        gameEdition: result.gameEdition
-                    };
-                    sessionStorage.setItem('currentVotingId', votingId);
-                    sessionStorage.setItem('currentVotingIdData', JSON.stringify(currentVotingIdData)); // Store as JSON string
-                    sessionStorage.setItem('isVotingDisabledForUsedId', result.used);
-                    isVotingDisabledForUsedId = result.used;
-
-                    showMessage('login-message', result.message, 'success');
-                    initialLoginSection.classList.add('hidden');
-                    mainAppContainer.classList.remove('hidden');
-                    updateVoteSectionUI(); // Call after data is set
-                    await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-                    showTab(contentVote, tabVote);
-                } else {
-                    showMessage('login-message', result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error checking voting ID:', error);
-                showMessage('login-message', `Network error checking ID: ${error.message}`, 'error');
-            }
-        }
-
-        /**
-         * Handles party login.
-         * @param {string} partyName - The party name.
-         * @param {string} password - The party password.
-         */
-        async function loginCandidate(partyName, password) {
-            try {
-                const candidates = await fetchData('/candidates');
-                const candidate = candidates.find(c => c.partyName === partyName && c.password === password);
-
-                if (candidate) {
-                    loggedInCandidate = partyName;
-                    sessionStorage.setItem('loggedInCandidate', partyName);
-                    showMessage('party-login-message', 'Logged in as party successfully!', 'success');
-                    initialLoginSection.classList.add('hidden');
-                    mainAppContainer.classList.remove('hidden');
-                    await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-                    showTab(contentCandidateDashboard, tabCandidateDashboard);
-                } else {
-                    showMessage('party-login-message', 'Invalid party name or password.', 'error');
-                }
-            } catch (error) {
-                console.error('Error logging in party:', error);
-                showMessage('party-login-message', `Network error logging in: ${error.message}`, 'error');
-            }
-        }
-
-        /**
-         * Handles party registration.
-         * @param {object} newCandidate - The new candidate data.
-         */
-        async function registerParty(newCandidate) {
-            try {
-                const result = await postData('/register-candidate', newCandidate);
-                if (result.success) {
-                    showMessage('register-message', result.message, 'success');
-                    registerPartyForm.reset(); // Clear form on success
-                    // Automatically log in the new candidate
-                    await loginCandidate(newCandidate.partyName, newCandidate.password);
-                } else {
-                    showMessage('register-message', result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error registering party:', error);
-                showMessage('register-message', `Network error registering: ${error.message}`, 'error');
-            }
-        }
-
-        /**
-         * Updates the UI for the vote section based on current voting ID data.
-         */
-        function updateVoteSectionUI() {
-            const votingIdDisplay = document.getElementById('voting-id-display');
-            const playerNameDisplay = document.getElementById('player-name-display');
-            const gameEditionDisplay = document.getElementById('game-edition-display');
-            const voteButton = document.getElementById('submit-vote-button');
-            const voteMessage = document.getElementById('vote-message');
-            const bedrockHint = document.getElementById('bedrock-hint');
-
+            // Optional Details Elements
             const realNameInput = document.getElementById('real-name-input');
             const contactInfoInput = document.getElementById('contact-info-input');
             const enteredDetailsDisplay = document.getElementById('entered-details-display');
             const displayRealName = document.getElementById('display-real-name');
             const displayContactInfo = document.getElementById('display-contact-info');
 
-            if (currentVotingIdData) {
-                votingIdDisplay.textContent = currentVotingIdData.id;
-                gameEditionDisplay.textContent = currentVotingIdData.gameEdition;
-                playerNameDisplay.textContent = currentVotingIdData.playerName; // This should now be safe
 
-                if (currentVotingIdData.gameEdition === 'Bedrock') {
+            // Live Vote Count Elements
+            const liveVoteCountDiv = document.getElementById('live-vote-count');
+
+            // Candidate Management Elements
+            const partyManagementLoginSection = document.getElementById('party-management-login-section');
+            const partyLoginForm = document.getElementById('party-login-form');
+            const candidateDashboard = document.getElementById('candidate-dashboard');
+            const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
+
+            // Register Candidate Elements
+            const registerCandidateForm = document.getElementById('register-candidate-form');
+            const logoPreview = document.getElementById('logo-preview');
+            const uploadLogoBtn = document.getElementById('upload-logo-btn');
+            const partyLogoUpload = document.getElementById('party-logo-upload');
+
+            // Custom Alert Modal Elements
+            const customAlertModal = document.getElementById('custom-alert-modal');
+            const alertMessage = document.getElementById('alert-message');
+            const alertOkBtn = document.getElementById('alert-ok-btn');
+
+            // --- Constants & State Variables ---
+            const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
+            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
+            const MAX_IMAGE_SIZE_MB = 5;
+
+            let candidates = [];
+            let votes = [];
+            let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
+            let currentVotingPlayerDetails = JSON.parse(sessionStorage.getItem('currentVotingPlayerDetails')) || null;
+            let loggedInCandidate = JSON.parse(sessionStorage.getItem('loggedInCandidate')) || null;
+            let isVotingDisabledForUsedId = false;
+
+            // --- API Fetch Functions ---
+            async function fetchData(endpoint) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error(`API Error fetching ${endpoint}: ${response.status} - ${errorText}`);
+                        showCustomAlert(`Error loading data: ${response.statusText}`);
+                        return null;
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Network error fetching ${endpoint}:`, error);
+                    showCustomAlert(`Network error: Could not connect to server.`);
+                    return null;
+                }
+            }
+
+            async function postData(endpoint, data) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error(`API Error posting to ${endpoint}: ${response.status} - ${errorText}`);
+                        showCustomAlert(`Error: ${errorText || response.statusText}`);
+                        return null;
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Network error posting to ${endpoint}:`, error);
+                    showCustomAlert(`Network error: Could not connect to server.`);
+                    return null;
+                }
+            }
+
+            // --- Helper Functions ---
+            function showCustomAlert(message) {
+                alertMessage.textContent = message;
+                customAlertModal.classList.add('visible');
+            }
+
+            function hideCustomAlert() {
+                customAlertModal.classList.remove('visible');
+            }
+
+            function getPartyVoteCount(partyName) {
+                return votes.filter(vote => vote.party === partyName).length;
+            }
+
+            // --- UI Management Functions ---
+
+            /**
+             * Shows a specific tab content and activates its button.
+             * @param {HTMLElement} tabContentToShow - The content div to display.
+             * @param {HTMLElement} tabButtonToActivate - The button to mark as active.
+             */
+            function showTab(tabContentToShow, tabButtonToActivate) {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                // Deactivate all tab buttons
+                document.querySelectorAll('.tab-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                // Show the selected tab content
+                tabContentToShow.classList.remove('hidden');
+                // Activate the selected tab button
+                tabButtonToActivate.classList.add('active');
+
+                // Perform specific updates for each tab
+                if (tabContentToShow === contentVote) {
+                    updateVoteSectionUI();
+                } else if (tabContentToShow === contentCandidateLogin) {
+                    displayCandidateDashboard(); // Show login form or dashboard
+                } else if (tabContentToShow === contentRegisterCandidate) {
+                    // No specific update needed on tab switch, form is always visible
+                }
+            }
+
+            /**
+             * Updates the UI of the Vote section based on login status and voting ID usage.
+             */
+            function updateVoteSectionUI() {
+                // This function is now only called AFTER a successful initial login
+                voteSectionDetails.classList.remove('hidden');
+
+                // Display player info from the validated voting ID
+                displayMinecraftName.textContent = currentVotingPlayerDetails.playerName || 'N/A';
+                displayGameEdition.textContent = currentVotingPlayerDetails.gameEdition || 'N/A';
+                playerInfoDisplay.classList.remove('hidden');
+
+                if (currentVotingPlayerDetails.gameEdition === 'Bedrock') {
                     bedrockHint.classList.remove('hidden');
                 } else {
                     bedrockHint.classList.add('hidden');
                 }
 
                 // Update entered details display dynamically as user types
-                realNameInput.addEventListener('input', () => {
-                    displayRealName.textContent = `Real Name: ${realNameInput.value}`;
-                    if (realNameInput.value || contactInfoInput.value) {
-                        enteredDetailsDisplay.classList.remove('hidden');
-                    } else {
-                        enteredDetailsDisplay.classList.add('hidden');
-                    }
-                });
-                contactInfoInput.addEventListener('input', () => {
-                    displayContactInfo.textContent = `Contact: ${contactInfoInput.value}`;
-                    if (realNameInput.value || contactInfoInput.value) {
-                        enteredDetailsDisplay.classList.remove('hidden');
-                    } else {
-                        enteredDetailsDisplay.classList.add('hidden');
-                    }
-                });
+                realNameInput.addEventListener('input', updateEnteredDetailsDisplay);
+                contactInfoInput.addEventListener('input', updateEnteredDetailsDisplay);
+                updateEnteredDetailsDisplay(); // Initial call to set display based on current values
 
-                // Initial display of entered details if values are pre-filled (e.g., after a refresh)
+
+                if (isVotingDisabledForUsedId) {
+                    votingDisabledMessage.classList.remove('hidden');
+                    partyListForVoting.classList.add('hidden');
+                } else {
+                    votingDisabledMessage.classList.add('hidden');
+                    partyListForVoting.classList.remove('hidden');
+                    displayPartyList(); // Only display party list if voting is enabled
+                }
+            }
+
+            function updateEnteredDetailsDisplay() {
                 displayRealName.textContent = `Real Name: ${realNameInput.value}`;
                 displayContactInfo.textContent = `Contact: ${contactInfoInput.value}`;
                 if (realNameInput.value || contactInfoInput.value) {
@@ -530,303 +563,342 @@
                 } else {
                     enteredDetailsDisplay.classList.add('hidden');
                 }
-
-
-                if (isVotingDisabledForUsedId) {
-                    voteButton.disabled = true;
-                    voteButton.textContent = 'Already Voted';
-                    voteButton.classList.add('opacity-50', 'cursor-not-allowed');
-                    voteMessage.textContent = 'You have already used this Voting ID to cast a vote.';
-                    voteMessage.classList.remove('hidden');
-                } else {
-                    voteButton.disabled = false;
-                    voteButton.textContent = 'Submit Vote';
-                    voteButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                    voteMessage.classList.add('hidden');
-                }
-            } else {
-                console.error("currentVotingIdData is null. Cannot update vote section UI.");
-                votingIdDisplay.textContent = 'N/A';
-                playerNameDisplay.textContent = 'N/A';
-                gameEditionDisplay.textContent = 'N/A';
-                voteButton.disabled = true;
-                voteButton.textContent = 'Error';
-                voteMessage.textContent = 'Error loading voting ID data. Please try logging in again.';
-                voteMessage.classList.remove('hidden');
-                bedrockHint.classList.add('hidden'); // Hide hint on error
-                enteredDetailsDisplay.classList.add('hidden'); // Hide details on error
-            }
-        }
-
-        /**
-         * Submits a vote for a given party.
-         * @param {string} party - The name of the party to vote for.
-         */
-        async function submitVote(party) {
-            if (!currentVotingId || !currentVotingIdData) {
-                showMessage('vote-message', 'Please log in with a valid Voting ID first.', 'error');
-                return;
             }
 
-            const realName = document.getElementById('real-name-input').value;
-            const discordInsta = document.getElementById('contact-info-input').value;
 
-            try {
-                const result = await postData('/submit-vote', {
-                    votingId: currentVotingId,
-                    party: party,
-                    realName: realName, // Include real name
-                    discordInsta: discordInsta // Include contact info
-                });
+            /**
+             * Updates and displays the live vote count for all parties.
+             */
+            async function updateLiveVoteCount() {
+                votes = await fetchData('/votes');
+                if (!votes) return;
 
-                if (result.success) {
-                    showMessage('vote-message', result.message, 'success');
-                    isVotingDisabledForUsedId = true; // Mark as used immediately
-                    sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                    updateVoteSectionUI(); // Update UI to show "Already Voted"
-                    await updateLiveVoteCount(); // Refresh vote counts
-                } else {
-                    showMessage('vote-message', result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error submitting vote:', error);
-                showMessage('vote-message', `Network error submitting vote: ${error.message}`, 'error');
-            }
-        }
-
-        /**
-         * Updates and displays the live vote counts for all parties.
-         */
-        async function updateLiveVoteCount() {
-            const liveVoteCountDiv = document.getElementById('live-vote-count');
-            liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">Loading live results...</p>';
-
-            try {
-                const votes = await fetchData('/votes');
-                const candidates = await fetchData('/candidates');
-
+                liveVoteCountDiv.innerHTML = '';
                 const voteCounts = {};
-                candidates.forEach(c => voteCounts[c.partyName] = 0); // Initialize counts for all parties
+
+                // Initialize counts for all known candidates
+                candidates.forEach(c => voteCounts[c.partyName] = 0);
 
                 votes.forEach(vote => {
-                    if (voteCounts.hasOwnProperty(vote.party)) {
-                        voteCounts[vote.party]++;
+                    if (voteCounts.hasOwnProperty(vote.party)) { // Ensure party exists
+                        voteCounts[vote.party] = (voteCounts[vote.party] || 0) + 1;
                     }
                 });
 
-                liveVoteCountDiv.innerHTML = ''; // Clear loading message
+                const sortedVoteCounts = Object.entries(voteCounts).sort(([, countA], [, countB]) => countB - countA);
 
-                if (Object.keys(voteCounts).length > 0) {
-                    for (const partyName in voteCounts) {
-                        const partyResult = document.createElement('div');
-                        partyResult.className = 'bg-white p-4 rounded-lg shadow-md flex items-center justify-between';
-                        partyResult.innerHTML = `
-                            <span class="text-lg font-semibold text-gray-800">${partyName}:</span>
-                            <span class="text-2xl font-bold text-blue-600">${voteCounts[partyName]}</span>
-                        `;
-                        liveVoteCountDiv.appendChild(partyResult);
-                    }
+                if (sortedVoteCounts.length > 0) {
+                    sortedVoteCounts.forEach(([party, count]) => {
+                        const partyData = candidates.find(c => c.partyName === party);
+                        const div = document.createElement('div');
+                        div.classList.add('vote-count-item', 'flex', 'items-center', 'p-2', 'bg-gray-50', 'rounded-md', 'shadow-sm', 'text-gray-800');
+
+                        if (partyData && partyData.partyLogo) {
+                            const logo = document.createElement('img');
+                            logo.src = partyData.partyLogo;
+                            logo.alt = partyData.partyName;
+                            logo.classList.add('party-logo-small');
+                            div.appendChild(logo);
+                        } else if (partyData && partyData.partyChinn) {
+                            const symbolSpan = document.createElement('span');
+                            symbolSpan.textContent = partyData.partyChinn;
+                            symbolSpan.classList.add('text-2xl', 'mr-2');
+                            div.appendChild(symbolSpan);
+                        }
+
+
+                        const text = document.createElement('span');
+                        text.textContent = `${party}: ${count} votes`;
+                        div.appendChild(text);
+
+                        liveVoteCountDiv.appendChild(div);
+                    });
                 } else {
-                    liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">No votes cast yet.</p>';
+                    liveVoteCountDiv.textContent = 'No votes cast yet.';
+                    liveVoteCountDiv.classList.add('text-center', 'text-gray-500');
                 }
-            } catch (error) {
-                console.error('Error updating live vote count:', error);
-                liveVoteCountDiv.innerHTML = '<p class="text-center text-red-500">Failed to load live results. Please try again later.</p>';
             }
-        }
 
-        /**
-         * Displays the list of parties available for voting.
-         */
-        async function displayPartyList() {
-            const partyListDiv = document.getElementById('party-list');
-            partyListDiv.innerHTML = '<p class="text-center text-gray-500">Loading parties...</p>';
+            /**
+             * Displays the list of registered parties for voting.
+             */
+            async function displayPartyList() {
+                candidates = await fetchData('/candidates');
+                if (!candidates) return;
 
-            try {
-                const candidates = await fetchData('/candidates');
-                partyListDiv.innerHTML = ''; // Clear loading message
+                partyListDiv.innerHTML = '';
+                if (candidates.length === 0) {
+                    partyListDiv.textContent = 'No parties registered yet. Be the first to register!';
+                    partyListDiv.classList.add('text-center', 'text-gray-500');
+                    return;
+                }
 
-                if (candidates && candidates.length > 0) {
-                    candidates.forEach(candidate => {
-                        const partyItem = document.createElement('div');
-                        partyItem.className = 'bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex flex-col items-center text-center';
-                        partyItem.innerHTML = `
-                            <div class="w-24 h-24 mb-4 rounded-full bg-blue-200 flex items-center justify-center text-4xl font-bold text-blue-800 border-4 border-blue-400">
-                                ${candidate.partyName.charAt(0).toUpperCase()}
-                            </div>
-                            <h4 class="text-xl font-bold text-gray-900 mb-1">${candidate.partyName}</h4>
-                            <p class="text-md text-gray-700 mb-4">Leader: ${candidate.candidateName}</p>
-                            <button class="vote-button bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 transition duration-300 ease-in-out font-semibold text-sm w-full mb-2" data-party="${candidate.partyName}">Vote for ${candidate.partyName}</button>
-                            <button class="details-button bg-gray-300 text-gray-800 py-2 px-4 rounded-full shadow-md hover:bg-gray-400 transition duration-300 ease-in-out font-semibold text-sm w-full" data-party-details='${JSON.stringify(candidate)}'>Details</button>
-                        `;
-                        partyListDiv.appendChild(partyItem);
+                candidates.forEach(candidate => {
+                    const partyCard = document.createElement('div');
+                    partyCard.classList.add('party-card', 'bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'flex', 'flex-col', 'items-center', 'text-center', 'border', 'border-gray-200');
+
+                    const partyLogo = document.createElement('img');
+                    partyLogo.src = candidate.partyLogo || placeholderImage;
+                    partyLogo.alt = candidate.partyName;
+                    partyLogo.classList.add('w-24', 'h-24', 'object-cover', 'rounded-full', 'mb-4', 'border', 'border-gray-300');
+
+                    const partyName = document.createElement('h3');
+                    partyName.textContent = candidate.partyName;
+                    partyName.classList.add('text-xl', 'font-semibold', 'mb-2', 'text-gray-800');
+
+                    const partyLeader = document.createElement('p');
+                    partyLeader.textContent = `Leader: ${candidate.candidateName}`;
+                    partyLeader.classList.add('text-gray-600', 'text-sm');
+
+                    const partyChinn = document.createElement('p');
+                    partyChinn.textContent = `Symbol: ${candidate.partyChinn}`;
+                    partyChinn.classList.add('text-gray-600', 'text-sm', 'mb-4');
+
+                    const voteButton = document.createElement('button');
+                    voteButton.textContent = 'Vote for this Party';
+                    voteButton.classList.add('action-button', 'w-full');
+                    voteButton.addEventListener('click', async () => {
+                        if (!currentVotingId) {
+                            showCustomAlert('Please log in with your Voting ID first.');
+                            return;
+                        }
+                        if (isVotingDisabledForUsedId) {
+                            showCustomAlert('This Voting ID has already been used. You cannot cast another vote.');
+                            return;
+                        }
+
+                        const voteData = {
+                            votingId: currentVotingId,
+                            party: candidate.partyName,
+                            realName: realNameInput.value, // Include optional real name
+                            discordInsta: contactInfoInput.value // Include optional contact info
+                        };
+
+                        const result = await postData('/submit-vote', voteData);
+                        if (result && result.success) {
+                            showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
+                            isVotingDisabledForUsedId = true;
+                            sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
+                            updateVoteSectionUI();
+                            await updateLiveVoteCount();
+                        } else {
+                            showCustomAlert(result ? result.message : 'Failed to submit vote.');
+                        }
                     });
 
-                    // Add event listeners for vote buttons
-                    document.querySelectorAll('.vote-button').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const party = e.target.dataset.party;
-                            submitVote(party);
-                        });
-                    });
+                    partyCard.appendChild(partyLogo);
+                    partyCard.appendChild(partyName);
+                    partyCard.appendChild(partyLeader);
+                    partyCard.appendChild(partyChinn);
+                    partyCard.appendChild(voteButton);
+                    partyListDiv.appendChild(partyCard);
+                });
+            }
 
-                    // Add event listeners for details buttons
-                    document.querySelectorAll('.details-button').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const candidateDetails = JSON.parse(e.target.dataset.partyDetails);
-                            showCandidateDetailsModal(candidateDetails);
-                        });
-                    });
+            /**
+             * Handles candidate login.
+             */
+            async function loginCandidate(partyName, password) {
+                candidates = await fetchData('/candidates');
+                if (!candidates) return;
 
+                // Passwords are stored base64 encoded
+                loggedInCandidate = candidates.find(c => c.partyName === partyName && c.password === btoa(password));
+
+                if (loggedInCandidate) {
+                    sessionStorage.setItem('loggedInCandidate', JSON.stringify(loggedInCandidate));
+                    showCustomAlert('Login successful! Welcome to your dashboard.');
+                    displayCandidateDashboard();
                 } else {
-                    partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties registered yet.</p>';
+                    showCustomAlert('Invalid Party Name or Password.');
+                    loggedInCandidate = null;
+                    sessionStorage.removeItem('loggedInCandidate');
+                    displayCandidateDashboard();
                 }
-            } catch (error) {
-                console.error('Error fetching candidates:', error);
-                partyListDiv.innerHTML = '<p class="text-center text-red-500">Failed to load parties. Please try again later.</p>';
             }
-        }
 
-        /**
-         * Displays the candidate-specific dashboard if a party is logged in.
-         */
-        async function displayCandidateDashboard() {
-            const dashboardMessage = document.getElementById('dashboard-message');
-            const candidateSpecificData = document.getElementById('candidate-specific-data');
-            const dashboardPartyName = document.getElementById('dashboard-party-name');
-            const dashboardVoteCount = document.getElementById('dashboard-vote-count');
-            const recentVotesList = document.getElementById('recent-votes-list');
+            /**
+             * Handles candidate logout.
+             */
+            function logoutCandidate() {
+                loggedInCandidate = null;
+                sessionStorage.removeItem('loggedInCandidate');
+                displayCandidateDashboard();
+                showCustomAlert('Logged out successfully.');
+            }
 
-            if (loggedInCandidate) {
-                dashboardMessage.classList.add('hidden');
-                candidateSpecificData.classList.remove('hidden');
-                dashboardPartyName.textContent = loggedInCandidate;
+            /**
+             * Displays the candidate's dashboard if logged in, or the login form otherwise.
+             */
+            async function displayCandidateDashboard() {
+                if (loggedInCandidate) {
+                    partyManagementLoginSection.classList.add('hidden');
+                    candidateDashboard.classList.remove('hidden');
+                    await updateLiveVoteCount(); // Ensure votes are fresh for dashboard
 
-                recentVotesList.innerHTML = '<p class="text-gray-500">Loading votes...</p>';
+                    candidateDashboard.innerHTML = `
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Welcome, ${loggedInCandidate.candidateName}!</h3>
+                        <p class="text-gray-600">Party: ${loggedInCandidate.partyName}</p>
+                        <p class="text-gray-600 mb-4">Symbol: ${loggedInCandidate.partyChinn}</p>
+                        <img src="${loggedInCandidate.partyLogo}" alt="${loggedInCandidate.partyName}" class="party-logo-large mb-4">
+                        <p class="text-lg font-bold text-gray-800">Your party currently has <strong>${getPartyVoteCount(loggedInCandidate.partyName)}</strong> votes.</p>
+                        <button id="logout-candidate-btn" class="action-button bg-red-600 hover:bg-red-700 w-full mt-4">Logout</button>
+                    `;
+                    document.getElementById('logout-candidate-btn').addEventListener('click', logoutCandidate);
+                } else {
+                    partyManagementLoginSection.classList.remove('hidden');
+                    candidateDashboard.classList.add('hidden');
+                    partyLoginForm.reset();
+                }
+            }
 
-                try {
-                    const allVotes = await fetchData('/votes');
-                    const myPartyVotes = allVotes.filter(vote => vote.party === loggedInCandidate);
+            // --- Event Listeners ---
 
-                    dashboardVoteCount.textContent = myPartyVotes.length;
-                    recentVotesList.innerHTML = ''; // Clear loading message
+            // Custom Alert OK button
+            alertOkBtn.addEventListener('click', hideCustomAlert);
 
-                    if (myPartyVotes.length > 0) {
-                        // Display last 5 votes
-                        myPartyVotes.slice(-5).reverse().forEach(vote => {
-                            const listItem = document.createElement('li');
-                            listItem.className = 'mb-1 text-gray-800';
-                            listItem.textContent = `ID: ${vote.votingId} (Minecraft: ${vote.minecraftName}, Edition: ${vote.gameEdition}) - ${new Date(vote.timestamp).toLocaleString()}`;
-                            recentVotesList.appendChild(listItem);
-                        });
+            // Initial Voting ID Login Button
+            votingIdLoginBtnInitial.addEventListener('click', async () => {
+                const id = votingIdInputInitial.value.trim();
+                if (!id) {
+                    showCustomAlert('Please enter your Voting ID.');
+                    return;
+                }
+
+                const result = await postData('/check-voting-id', { votingId: id });
+
+                if (result && result.success && result.valid) {
+                    currentVotingId = id;
+                    sessionStorage.setItem('currentVotingId', currentVotingId);
+                    currentVotingPlayerDetails = {
+                        playerName: result.playerName,
+                        gameEdition: result.gameEdition
+                    };
+                    sessionStorage.setItem('currentVotingPlayerDetails', JSON.stringify(currentVotingPlayerDetails));
+
+                    if (result.used) {
+                        isVotingDisabledForUsedId = true;
+                        sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
+                        showCustomAlert('Login successful, but this Voting ID has already been used. You cannot vote again.');
                     } else {
-                        recentVotesList.innerHTML = '<p class="text-gray-500">No votes received yet.</p>';
+                        isVotingDisabledForUsedId = false;
+                        sessionStorage.removeItem('isVotingDisabledForUsedId');
+                        showCustomAlert('Login successful! Welcome.');
                     }
 
-                } catch (error) {
-                    console.error('Error fetching candidate dashboard data:', error);
-                    recentVotesList.innerHTML = '<p class="text-red-500">Failed to load dashboard data.</p>';
+                    initialLoginSection.classList.add('hidden');
+                    mainAppContainer.classList.remove('hidden');
+                    showTab(contentVote, tabVote); // Automatically go to Vote tab
+                    await updateLiveVoteCount();
+                    await displayPartyList();
+                } else {
+                    showCustomAlert(result ? result.message : 'Invalid Voting ID.');
                 }
+            });
 
-            } else {
-                dashboardMessage.classList.remove('hidden');
-                candidateSpecificData.classList.add('hidden');
-            }
-        }
+            // Logout Button (for general app logout)
+            document.getElementById('logout-button').addEventListener('click', () => {
+                sessionStorage.clear(); // Clear all session data
+                currentVotingId = null;
+                currentVotingPlayerDetails = null;
+                loggedInCandidate = null;
+                isVotingDisabledForUsedId = false;
 
-        // Function to show candidate details modal
-        function showCandidateDetailsModal(candidate) {
-            document.getElementById('modal-party-name').textContent = candidate.partyName;
-            document.getElementById('modal-candidate-name').textContent = candidate.candidateName;
-            // You can add more details here if your candidates.json has additional fields
-            document.getElementById('candidate-details-modal').classList.remove('hidden');
-            document.getElementById('candidate-details-modal').style.display = 'flex'; // Ensure flex for centering
-        }
+                initialLoginSection.classList.remove('hidden'); // Show initial login
+                mainAppContainer.classList.add('hidden'); // Hide main app
 
-        // Close modal event listener
-        document.getElementById('close-modal-button').addEventListener('click', () => {
-            document.getElementById('candidate-details-modal').classList.add('hidden');
-            document.getElementById('candidate-details-modal').style.display = 'none';
-        });
+                votingIdInputInitial.value = ''; // Clear initial ID input
+                partyLoginForm.reset(); // Clear party login form
+                registerCandidateForm.reset(); // Clear register form
+                logoPreview.src = placeholderImage; // Reset logo preview
 
-
-        // --- Event Listeners ---
-
-        // Tab Navigation
-        tabLoginVotingId.addEventListener('click', () => showTab(contentLoginVotingId, tabLoginVotingId));
-        tabLoginParty.addEventListener('click', () => showTab(contentLoginParty, tabLoginParty));
-        tabRegisterParty.addEventListener('click', () => showTab(contentRegisterParty, tabRegisterParty));
-
-        tabVote.addEventListener('click', async () => {
-            showTab(contentVote, tabVote);
-            await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]); // Refresh data on tab switch
-        });
-        tabLiveResults.addEventListener('click', async () => {
-            showTab(contentLiveResults, tabLiveResults);
-            await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]); // Refresh data on tab switch
-        });
-        tabCandidateDashboard.addEventListener('click', async () => {
-            showTab(contentCandidateDashboard, tabCandidateDashboard);
-            await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]); // Refresh data on tab switch
-        });
+                showCustomAlert('Logged out successfully.');
+            });
 
 
-        // Logout Button
-        logoutButton.addEventListener('click', () => {
-            sessionStorage.clear(); // Clear all session data
-            currentVotingId = null;
-            currentVotingIdData = null;
-            loggedInCandidate = null;
-            isVotingDisabledForUsedId = false;
-            initialLoginSection.classList.remove('hidden');
-            mainAppContainer.classList.add('hidden');
-            showMessage('login-message', 'Logged out successfully.', 'info');
-            votingIdLoginForm.reset();
-            partyLoginForm.reset();
-            registerPartyForm.reset();
-            showTab(contentLoginVotingId, tabLoginVotingId); // Go back to voting ID login tab
-        });
+            // Tab Navigation Buttons
+            tabVote.addEventListener('click', () => showTab(contentVote, tabVote));
+            tabCandidateLogin.addEventListener('click', () => showTab(contentCandidateLogin, tabCandidateLogin));
+            tabRegisterCandidate.addEventListener('click', () => showTab(contentRegisterCandidate, tabRegisterCandidate));
 
-        // Form Submissions
-        votingIdLoginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const votingId = document.getElementById('voting-id').value;
-            loginVotingId(votingId);
-        });
+            // Party Logo Upload
+            uploadLogoBtn.addEventListener('click', () => {
+                partyLogoUpload.click();
+            });
 
-        partyLoginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const loginPartyName = document.getElementById('login-party-name').value;
-            const loginPartyPassword = document.getElementById('login-party-password').value;
-            loginCandidate(loginPartyName, loginPartyPassword);
-        });
+            partyLogoUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+                        showCustomAlert(`Image size should be less than ${MAX_IMAGE_SIZE_MB}MB.`);
+                        event.target.value = '';
+                        logoPreview.src = placeholderImage;
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        logoPreview.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        registerPartyForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const partyName = document.getElementById('register-party-name').value;
-            const candidateName = document.getElementById('register-candidate-name').value;
-            const password = document.getElementById('register-party-password').value;
-            registerParty({ partyName, candidateName, password });
-        });
+            // Register Candidate Form Submission
+            registerCandidateForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
+                const candidateName = document.getElementById('candidate-name').value;
+                const partyName = document.getElementById('party-name-reg').value;
+                const partyPassword = document.getElementById('party-password-reg').value;
+                const partyChinn = document.getElementById('party-chinn').value;
+                const partyLogo = logoPreview.src;
 
-        // --- Initial Setup on Load ---
-        document.addEventListener('DOMContentLoaded', async () => {
+                const newCandidate = {
+                    candidateName,
+                    partyName,
+                    password: btoa(partyPassword), // Base64 encode password for storage
+                    partyChinn,
+                    partyLogo
+                };
+
+                const result = await postData('/register-candidate', newCandidate);
+
+                if (result && result.success) {
+                    showCustomAlert('Candidate registered successfully!');
+                    registerCandidateForm.reset();
+                    logoPreview.src = placeholderImage;
+                    // Automatically log in the new candidate
+                    await loginCandidate(partyName, partyPassword);
+                    await Promise.all([updateLiveVoteCount(), displayPartyList()]);
+                } else {
+                    showCustomAlert(result ? result.message : 'Failed to register candidate.');
+                }
+            });
+
+            // Party Login Form Submission
+            partyLoginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const loginPartyName = document.getElementById('login-party-name').value;
+                const loginPartyPassword = document.getElementById('login-party-password').value;
+                loginCandidate(loginPartyName, loginPartyPassword);
+            });
+
+            // --- Initial Setup on Load ---
             // Determine which screen to show on page load
             if (currentVotingId) {
                 // Attempt to retrieve stored voting ID data
-                const storedVotingIdData = sessionStorage.getItem('currentVotingIdData');
+                const storedVotingIdData = sessionStorage.getItem('currentVotingPlayerDetails');
                 if (storedVotingIdData) {
                     try {
-                        currentVotingIdData = JSON.parse(storedVotingIdData);
+                        currentVotingPlayerDetails = JSON.parse(storedVotingIdData);
                     } catch (e) {
-                        console.error("Error parsing stored currentVotingIdData:", e);
-                        sessionStorage.removeItem('currentVotingIdData'); // Clear invalid data
+                        console.error("Error parsing stored currentVotingPlayerDetails:", e);
+                        sessionStorage.removeItem('currentVotingPlayerDetails'); // Clear invalid data
                         currentVotingId = null; // Force re-login
                     }
                 }
 
-                if (currentVotingId && currentVotingIdData) { // Proceed only if both are valid
+                if (currentVotingId && currentVotingPlayerDetails) { // Proceed only if both are valid
                     initialLoginSection.classList.add('hidden');
                     mainAppContainer.classList.remove('hidden');
                     isVotingDisabledForUsedId = sessionStorage.getItem('isVotingDisabledForUsedId') === 'true';
@@ -837,21 +909,21 @@
                     // If currentVotingId exists but data is missing/corrupted, force login screen
                     console.warn("Voting ID found but data missing or corrupted. Redirecting to login.");
                     sessionStorage.removeItem('currentVotingId');
-                    sessionStorage.removeItem('currentVotingIdData');
+                    sessionStorage.removeItem('currentVotingPlayerDetails');
                     sessionStorage.removeItem('isVotingDisabledForUsedId');
                     initialLoginSection.classList.remove('hidden');
                     mainAppContainer.classList.add('hidden');
-                    showTab(contentLoginVotingId, tabLoginVotingId); // Ensure correct tab is shown
+                    // No specific tab to show here, as it's the initial login screen
                 }
             } else if (loggedInCandidate) {
                 initialLoginSection.classList.add('hidden');
                 mainAppContainer.classList.remove('hidden');
                 await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-                showTab(contentCandidateDashboard, tabCandidateDashboard);
+                showTab(contentCandidateLogin, tabCandidateLogin);
             } else {
                 initialLoginSection.classList.remove('hidden');
                 mainAppContainer.classList.add('hidden');
-                showTab(contentLoginVotingId, tabLoginVotingId); // Default to voting ID login
+                // No specific tab to show here, as it's the initial login screen
             }
         });
     </script>
