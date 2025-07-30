@@ -161,8 +161,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between; /* Pushes button to bottom */
-            width: 200px; /* Fixed width for rectangular shape */
-            height: 280px; /* Fixed height for rectangular shape */
+            /* Removed fixed width and height */
+            min-width: 180px; /* Ensure a reasonable minimum width */
+            height: auto; /* Allow height to adjust */
             margin: auto; /* Center the cards within their grid cells */
         }
         .party-card:hover {
@@ -375,7 +376,7 @@
                                 <label for="party-logo-upload" class="block text-sm font-medium text-gray-700">Party Logo:</label>
                                 <input type="file" id="party-logo-upload" accept="image/*" class="hidden">
                                 <button type="button" id="upload-logo-btn" class="action-button mt-1">Upload Logo</button>
-                                <img id="logo-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC" alt="Logo Preview" class="mt-2 w-24 h-24 object-cover rounded-md border border-gray-300">
+                                <img id="logo-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTSuQmCC" alt="Logo Preview" class="mt-2 w-24 h-24 object-cover rounded-md border border-gray-300">
                             </div>
                             <button type="submit" class="action-button w-full">Register Party</button>
                         </form>
