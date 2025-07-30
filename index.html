@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -128,7 +128,8 @@
                 <h2 class="text-2xl font-semibold text-gray-800">Vote</h2>
                 <button class="toggle-btn text-blue-500 hover:text-blue-700 font-bold">^</button>
             </div>
-            <div class="section-content">
+            <div id="vote-section-content" class="section-content">
+                <!-- Content here will be dynamically replaced for used IDs -->
                 <div id="player-details-form-container" class="mb-6">
                     <h3 class="text-xl font-medium mb-4">Enter Your Player Details</h3>
                     <form id="player-details-form" class="space-y-4">
@@ -256,13 +257,15 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => { // Marked as async
+        document.addEventListener('DOMContentLoaded', async () => {
             // --- DOM Elements ---
             const initialLoginSection = document.getElementById('initial-login-section');
             const votingIdInput = document.getElementById('voting-id-input');
             const votingIdLoginBtn = document.getElementById('voting-id-login-btn');
             const mainAppContainer = document.getElementById('main-app-container');
             const container = document.querySelector('.container');
+            const voteSectionContent = document.getElementById('vote-section-content');
+
 
             const editionSelect = document.getElementById('edition');
             const bedrockNameField = document.getElementById('bedrock-name-field');
@@ -285,6 +288,8 @@
             const partyManagementLoginSection = document.getElementById('party-management-login-section');
             const partyLoginForm = document.getElementById('party-login-form');
             const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
+            const liveVoteSection = document.getElementById('live-vote-section'); // Added for default activation
+
 
             // Custom Alert Modal Elements
             const customAlertModal = document.getElementById('custom-alert-modal');
@@ -293,7 +298,7 @@
 
             // --- Constants & State Variables ---
             // IMPORTANT: Replace this with your actual deployed Cloudflare Worker URL
-            const API_BASE_URL = 'YOUR_CLOUDFLARE_WORKER_URL/api';
+            const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api'; // Corrected URL
             const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
             const MAX_IMAGE_SIZE_MB = 5;
 
@@ -304,6 +309,7 @@
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null; // Persist validated voting ID
             let playerData = JSON.parse(sessionStorage.getItem('playerData')) || null;
             let loggedInCandidate = JSON.parse(sessionStorage.getItem('loggedInCandidate')) || null;
+            let isVotingDisabledForUsedId = false; // New flag to control voting section access
 
             // --- API Fetch Functions ---
 
@@ -474,6 +480,10 @@
                             showCustomAlert('Please log in with your Voting ID first.');
                             return;
                         }
+                        if (isVotingDisabledForUsedId) { // Check the flag here
+                            showCustomAlert('This Voting ID has already been used. You cannot cast another vote.');
+                            return;
+                        }
                         if (!playerData) {
                             showCustomAlert('Please enter your player details first in the "Vote" section.');
                             activateSection(voteSection);
@@ -584,9 +594,17 @@
 
             /**
              * Manages the display of the vote section based on whether player data is entered.
+             * This function is now also aware of the isVotingDisabledForUsedId flag.
              */
             function updateVoteSectionDisplay() {
-                if (playerData) {
+                if (isVotingDisabledForUsedId) {
+                    // If voting is disabled, show the message and hide forms/lists
+                    voteSectionContent.innerHTML = `
+                        <p class="text-xl text-red-600 font-semibold text-center py-8">
+                            This Voting ID has already been used. You cannot cast another vote.
+                        </p>
+                    `;
+                } else if (playerData) {
                     playerDetailsFormContainer.style.display = 'none';
                     playerDetailsDisplay.style.display = 'block';
                     partyListForVoting.style.display = 'block';
@@ -636,7 +654,7 @@
                     container.classList.add('two-column-active');
 
                     if (sectionToActivate.id === 'vote-section') {
-                        updateVoteSectionDisplay();
+                        updateVoteSectionDisplay(); // This will now handle the disabled state
                     }
                     if (sectionToActivate.id === 'live-vote-section') {
                         updateLiveVoteCount();
@@ -662,17 +680,30 @@
 
                 const result = await postData('/check-voting-id', { votingId: id });
 
-                if (result && result.success && result.valid && !result.used) {
+                if (result && result.success && result.valid) { // Valid ID, could be used or not
                     currentVotingId = id;
                     sessionStorage.setItem('currentVotingId', currentVotingId);
                     initialLoginSection.style.display = 'none';
-                    mainAppContainer.style.display = 'flex'; // Use flex for the main container
-                    showCustomAlert('Login successful! Welcome.');
-                    // Initialize main app content after successful login
-                    await Promise.all([updateLiveVoteCount(), displayPartyList()]); // Fetch initial data
-                    activateSection(voteSection); // Activate vote section by default
+                    mainAppContainer.style.display = 'flex';
+
+                    if (result.used) { // ID is valid but already used
+                        isVotingDisabledForUsedId = true;
+                        showCustomAlert('Login successful, but this Voting ID has already been used. You cannot vote again.');
+                        // Update vote section to show message instead of form/parties
+                        updateVoteSectionDisplay(); // Call this to set the message
+                        // Still allow other sections to activate normally
+                        await Promise.all([updateLiveVoteCount(), displayCandidateDashboard()]);
+                        activateSection(liveVoteSection); // Default to live vote count
+                    } else { // ID is valid and NOT used
+                        isVotingDisabledForUsedId = false;
+                        showCustomAlert('Login successful! Welcome.');
+                        // Re-initialize vote section to its normal state
+                        updateVoteSectionDisplay(); // This function already handles showing/hiding form/parties based on playerData
+                        await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
+                        activateSection(voteSection); // Default to vote section
+                    }
                 } else {
-                    showCustomAlert(result ? result.message : 'Invalid or already used Voting ID.');
+                    showCustomAlert(result ? result.message : 'Invalid Voting ID.');
                 }
             });
 
@@ -804,8 +835,18 @@
                 initialLoginSection.style.display = 'none';
                 mainAppContainer.style.display = 'flex'; // Use flex for the main container
                 // Re-fetch all data and set up UI
+                const checkIdResult = await fetchData(`/check-voting-id?votingId=${currentVotingId}`); // Fetch status of current ID
+                if (checkIdResult && checkIdResult.valid && checkIdResult.used) {
+                    isVotingDisabledForUsedId = true;
+                    showCustomAlert('Welcome back! Your Voting ID has already been used. You cannot vote again.');
+                    updateVoteSectionDisplay(); // Display the disabled message
+                    activateSection(liveVoteSection); // Default to live vote count
+                } else {
+                    isVotingDisabledForUsedId = false;
+                    updateVoteSectionDisplay(); // Display normal voting UI
+                    activateSection(voteSection); // Activate vote section by default
+                }
                 await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-                activateSection(voteSection); // Activate vote section by default
             } else {
                 initialLoginSection.style.display = 'flex'; // Show login screen
                 mainAppContainer.style.display = 'none'; // Hide main app
@@ -814,288 +855,3 @@
     </script>
 </body>
 </html>
-`;
-
-/**
- * Fetches file content from GitHub.
- * @param {string} filePath - The path to the file in the repository.
- * @param {string} token - GitHub Personal Access Token.
- * @returns {Promise<{content: any, sha: string}|null>} - File content (parsed JSON) and its SHA, or null on error.
- */
-async function fetchGitHubFile(filePath, token) {
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${BRANCH}`;
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-
-        if (response.status === 404) {
-            console.warn(`File not found on GitHub: ${filePath}. Returning empty content.`);
-            // For new files, return an empty array and null SHA so it can be created
-            return { content: [], sha: null };
-        }
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`GitHub API Error fetching ${filePath}: ${response.status} - ${errorText}`);
-            throw new Error(`Failed to fetch file from GitHub: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        const content = JSON.parse(atob(data.content)); // Decode base64 content
-        return { content, sha: data.sha };
-    } catch (error) {
-        console.error(`Network or parsing error fetching ${filePath}:`, error);
-        return null;
-    }
-}
-
-/**
- * Updates file content on GitHub.
- * @param {string} filePath - The path to the file in the repository.
- * @param {any} newContent - The new content to write (will be stringified).
- * @param {string|null} sha - The SHA of the file's current version for optimistic concurrency.
- * Pass null for creating a new file.
- * @param {string} token - GitHub Personal Access Token.
- * @param {string} commitMessage - The commit message.
- * @returns {Promise<boolean>} - True if successful, false otherwise.
- */
-async function updateGitHubFile(filePath, newContent, sha, token, commitMessage) {
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
-    const contentBase64 = btoa(JSON.stringify(newContent, null, 2)); // Encode new content to base64
-
-    const body = {
-        message: commitMessage,
-        content: contentBase64,
-        branch: BRANCH
-    };
-
-    // SHA is required for updating existing files, but not for creating new ones.
-    if (sha) {
-        body.sha = sha;
-    }
-
-    try {
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            if (response.status === 409 && errorData.message.includes('sha mismatch')) {
-                // Explicitly throw an error for SHA mismatch to trigger retry logic
-                throw new Error('sha mismatch: File has been updated by another process.');
-            }
-            console.error(`GitHub API Error updating ${filePath}: ${response.status} - ${JSON.stringify(errorData)}`);
-            return false;
-        }
-
-        return true;
-    } catch (error) {
-        console.error(`Network or API error updating ${filePath}:`, error);
-        throw error; // Re-throw to be caught by retry logic in handleRequest
-    }
-}
-
-// Main Cloudflare Worker Event Listener
-// The 'env' object is how Cloudflare Workers expose environment variables/secrets.
-// Ensure GITHUB_TOKEN_VAR is set as a secret in your Cloudflare Worker settings.
-addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request, event.env));
-});
-
-async function handleRequest(request, env) {
-    const url = new URL(request.url);
-    const path = url.pathname;
-
-    // Retrieve GitHub token from environment variables
-    // IMPORTANT: Make sure you have added GITHUB_TOKEN_VAR as a secret in your Cloudflare Worker settings.
-    const GITHUB_TOKEN = env.GITHUB_TOKEN_VAR;
-
-    if (!GITHUB_TOKEN) {
-        return new Response('GitHub token is not configured in Cloudflare Worker secrets.', { status: 500 });
-    }
-
-    // Handle API requests (only paths starting with /api/)
-    if (path.startsWith('/api/')) {
-        const apiPath = path.substring(5); // Remove '/api/' prefix
-
-        try {
-            switch (apiPath) {
-                case 'candidates':
-                    if (request.method === 'GET') {
-                        const { content } = await fetchGitHubFile(CANDIDATES_PATH, GITHUB_TOKEN) || { content: [] };
-                        return new Response(JSON.stringify(content), { headers: { 'Content-Type': 'application/json' } });
-                    }
-                    break;
-
-                case 'votes':
-                    if (request.method === 'GET') {
-                        const { content } = await fetchGitHubFile(VOTES_PATH, GITHUB_TOKEN) || { content: [] };
-                        return new Response(JSON.stringify(content), { headers: { 'Content-Type': 'application/json' } });
-                    }
-                    break;
-
-                case 'voting-ids':
-                    if (request.method === 'GET') {
-                        const { content } = await fetchGitHubFile(VOTING_IDS_PATH, GITHUB_TOKEN) || { content: [] };
-                        return new Response(JSON.stringify(content), { headers: { 'Content-Type': 'application/json' } });
-                    }
-                    break;
-
-                case 'used-voting-ids':
-                    if (request.method === 'GET') {
-                        const { content } = await fetchGitHubFile(USED_VOTING_IDS_PATH, GITHUB_TOKEN) || { content: [] };
-                        return new Response(JSON.stringify(content), { headers: { 'Content-Type': 'application/json' } });
-                    }
-                    break;
-
-                case 'check-voting-id':
-                    if (request.method === 'POST') {
-                        const { votingId } = await request.json();
-                        if (!votingId) {
-                            return new Response(JSON.stringify({ success: false, message: 'Voting ID is required.' }), { status: 400 });
-                        }
-
-                        const { content: validIds } = await fetchGitHubFile(VOTING_IDS_PATH, GITHUB_TOKEN) || { content: [] };
-                        const { content: usedIds } = await fetchGitHubFile(USED_VOTING_IDS_PATH, GITHUB_TOKEN) || { content: [] };
-
-                        const isValid = validIds.includes(votingId);
-                        const isUsed = usedIds.includes(votingId);
-
-                        if (!isValid) {
-                            return new Response(JSON.stringify({ success: false, message: 'Invalid Voting ID.' }), { status: 401 });
-                        }
-                        if (isUsed) {
-                            return new Response(JSON.stringify({ success: false, message: 'Voting ID has already been used.' }), { status: 403 });
-                        }
-
-                        return new Response(JSON.stringify({ success: true, valid: true, used: false, message: 'Voting ID accepted.' }), { headers: { 'Content-Type': 'application/json' } });
-                    }
-                    break;
-
-                case 'register-candidate':
-                    if (request.method === 'POST') {
-                        const newCandidate = await request.json();
-                        if (!newCandidate.partyName || !newCandidate.candidateName || !newCandidate.password) {
-                            return new Response(JSON.stringify({ success: false, message: 'Missing required candidate fields.' }), { status: 400 });
-                        }
-
-                        // IMPORTANT: Passwords should be hashed and stored securely, not base64 encoded.
-                        // This implementation is for demonstration purposes only.
-
-                        const MAX_RETRIES = 3;
-                        for (let i = 0; i < MAX_RETRIES; i++) {
-                            try {
-                                let candidatesData = await fetchGitHubFile(CANDIDATES_PATH, GITHUB_TOKEN);
-                                let candidates = candidatesData ? candidatesData.content : [];
-                                let sha = candidatesData ? candidatesData.sha : null;
-
-                                // Server-side check for duplicate party name
-                                if (candidates.some(c => c.partyName.toLowerCase() === newCandidate.partyName.toLowerCase())) {
-                                    return new Response(JSON.stringify({ success: false, message: 'A party with this name already exists.' }), { status: 409 });
-                                }
-
-                                candidates.push(newCandidate);
-
-                                const success = await updateGitHubFile(CANDIDATES_PATH, candidates, sha, GITHUB_TOKEN, `Add new candidate: ${newCandidate.candidateName}`);
-                                if (success) {
-                                    return new Response(JSON.stringify({ success: true, message: 'Candidate registered successfully.' }), { headers: { 'Content-Type': 'application/json' } });
-                                }
-                            } catch (e) {
-                                console.warn(`Retry ${i + 1} for updating candidates.json:`, e.message);
-                                if (e.message.includes('sha mismatch')) {
-                                    // This retry will automatically refetch the latest file in the next iteration
-                                    // and re-attempt the update.
-                                    continue; // Continue to the next retry attempt
-                                } else {
-                                    throw e; // Re-throw other errors
-                                }
-                            }
-                        }
-                        return new Response(JSON.stringify({ success: false, message: 'Failed to register candidate after multiple retries due to concurrent updates.' }), { status: 500 });
-                    }
-                    break;
-
-                case 'submit-vote':
-                    if (request.method === 'POST') {
-                        const voteData = await request.json();
-                        const { votingId, party } = voteData;
-
-                        if (!votingId || !party) {
-                            return new Response(JSON.stringify({ success: false, message: 'Missing voting ID or party for vote submission.' }), { status: 400 });
-                        }
-
-                        const MAX_RETRIES = 3;
-                        for (let i = 0; i < MAX_RETRIES; i++) {
-                            try {
-                                // Re-validate voting ID and check if used (important for server-side)
-                                const { content: validIds } = await fetchGitHubFile(VOTING_IDS_PATH, GITHUB_TOKEN) || { content: [] };
-                                if (!validIds.includes(votingId)) {
-                                    return new Response(JSON.stringify({ success: false, message: 'Invalid Voting ID provided for vote submission.' }), { status: 401 });
-                                }
-
-                                let usedIdsData = await fetchGitHubFile(USED_VOTING_IDS_PATH, GITHUB_TOKEN);
-                                let usedIds = usedIdsData ? usedIdsData.content : [];
-                                let usedIdsSha = usedIdsData ? usedIdsData.sha : null;
-
-                                if (usedIds.includes(votingId)) {
-                                    return new Response(JSON.stringify({ success: true, message: 'This Voting ID has already been used to vote.' }), { headers: { 'Content-Type': 'application/json' } });
-                                }
-
-                                let votesFile = await fetchGitHubFile(VOTES_PATH, GITHUB_TOKEN);
-                                let currentVotes = votesFile ? votesFile.content : [];
-                                let votesSha = votesFile ? votesFile.sha : null;
-
-                                // Add vote and mark ID as used
-                                currentVotes.push(voteData);
-                                usedIds.push(votingId);
-
-                                // Try to update votes.json
-                                const votesUpdated = await updateGitHubFile(VOTES_PATH, currentVotes, votesSha, GITHUB_TOKEN, `Add vote for ${party} by ${votingId}`);
-                                if (!votesUpdated) throw new Error('Failed to update votes.json');
-
-                                // Try to update used_voting_ids.json
-                                const usedIdsUpdated = await updateGitHubFile(USED_VOTING_IDS_PATH, usedIds, usedIdsSha, GITHUB_TOKEN, `Mark voting ID ${votingId} as used`);
-                                if (!usedIdsUpdated) throw new Error('Failed to update used_voting_ids.json');
-
-                                return new Response(JSON.stringify({ success: true, message: 'Vote submitted successfully.' }), { headers: { 'Content-Type': 'application/json' } });
-
-                            } catch (e) {
-                                console.warn(`Retry ${i + 1} for vote submission:`, e.message);
-                                if (e.message.includes('sha mismatch')) {
-                                    // This retry will automatically refetch the latest files in the next iteration
-                                    // and re-attempt the updates.
-                                    continue; // Continue to the next retry attempt
-                                } else {
-                                    throw e; // Re-throw other errors
-                                }
-                            }
-                        }
-                        return new Response(JSON.stringify({ success: false, message: 'Failed to submit vote after multiple retries due to concurrent updates.' }), { status: 500 });
-                    }
-                    break;
-
-                default:
-                    return new Response('Not Found', { status: 404 });
-            }
-        } catch (error) {
-            console.error('API Handler Error:', error);
-            return new Response(JSON.stringify({ success: false, message: error.message || 'Internal Server Error' }), { status: 500 });
-        }
-    }
-
-    // If the path is not an API endpoint, return a 404.
-    // In a real setup, this might serve other static assets if you had them.
-    return new Response('Not Found', { status: 404 });
-}
-
