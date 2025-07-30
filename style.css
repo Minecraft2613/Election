@@ -1,0 +1,582 @@
+/* General Body Styling */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5; /* Light grey background */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Main Title */
+h1 {
+    font-family: 'Inter', sans-serif;
+    color: #2c3e50; /* Darker blue-grey for headings */
+    margin-bottom: 30px;
+    font-size: 3em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Container for Sections (CSS Grid Layout) */
+.container {
+    display: grid;
+    /* Default: auto-fit columns, min 300px, max 1fr (fills available space) */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: start; /* Align items to the top of their grid cells */
+    grid-auto-rows: minmax(min-content, max-content); /* Rows adjust to content height */
+    transition: grid-template-columns 0.5s ease-in-out; /* Smooth transition for column changes */
+}
+
+/* Two-column layout when a section is expanded (for larger screens) */
+.container.two-column-active {
+    grid-template-columns: 2fr 1fr; /* Expanded section wider (2 parts), sidebar narrower (1 part) */
+}
+
+/* Section Styling */
+section {
+    background-color: #ffffff; /* White background for sections */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* Soft, modern shadow */
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, grid-column 0.5s ease-in-out, grid-row 0.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 280px; /* Ensures sections don't get too small */
+}
+
+section:hover {
+    transform: translateY(-5px); /* Subtle lift on hover */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+/* Styles for the currently expanded main section */
+section.expanded-main-section {
+    grid-column: 1; /* Place in the first column (wider) */
+    grid-row: 1 / -1; /* Span from the first row line to the last, taking all vertical space */
+}
+
+/* Styles for sections in the sidebar (collapsed) */
+section.sidebar-section {
+    grid-column: 2; /* Place in the second column (narrower) */
+    grid-row: auto; /* Stack vertically within this column */
+}
+
+/* Section Header */
+.section-header {
+    background-color: #3498db; /* Vibrant blue for headers */
+    color: #fff;
+    padding: 18px 25px;
+    font-size: 1.6em;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    flex-shrink: 0;
+}
+
+.toggle-icon {
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.section-header.active .toggle-icon {
+    transform: rotate(45deg);
+}
+
+/* Section Content (Collapsible) */
+.section-content {
+    padding: 25px;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, padding 0.5s ease-out;
+    max-height: 1000px; /* Arbitrarily large value for expanded state */
+    opacity: 1;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Hide default h2 */
+h2 {
+    display: none;
+}
+
+/* Form Elements */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+form label {
+    display: block;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.95em;
+    text-align: left;
+}
+
+form input[type="text"],
+form input[type="password"],
+form select,
+form textarea {
+    width: calc(100% - 28px); /* Account for padding */
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+.bedrock-input {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding-right: 14px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.bedrock-input span {
+    padding: 0 12px;
+    font-weight: 500;
+    color: #777;
+    font-size: 1.1em;
+    font-family: 'Inter', sans-serif;
+}
+
+.bedrock-input input {
+    flex-grow: 1;
+    border: none;
+    margin-bottom: 0;
+    padding: 14px 0;
+    background-color: transparent;
+    width: auto;
+}
+
+.bedrock-input input:focus {
+    box-shadow: none;
+}
+
+/* Buttons */
+form button, .action-button {
+    background-color: #2ecc71; /* Green for primary actions */
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+    font-family: 'Inter', sans-serif;
+    margin-top: 10px; /* Spacing for buttons */
+}
+
+form button:hover, .action-button:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(46, 204, 113, 0.4);
+}
+
+form button:active, .action-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(46, 204, 113, 0.2);
+}
+
+/* Specific button styles */
+#upload-logo-btn {
+    background-color: #f39c12; /* Orange for upload */
+    box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+}
+
+#upload-logo-btn:hover {
+    background-color: #e67e22;
+    box-shadow: 0 6px 12px rgba(243, 156, 18, 0.4);
+}
+
+#logout-candidate-btn, #change-player-details-btn {
+    background-color: #e74c3c; /* Red for destructive/secondary actions */
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+#logout-candidate-btn:hover, #change-player-details-btn:hover {
+    background-color: #c0392b;
+    box-shadow: 0 6px 12px rgba(231, 76, 60, 0.4);
+}
+
+/* Live Vote Count */
+#live-vote-count .vote-count-item {
+    display: flex;
+    align-items: center;
+    background-color: #ecf0f1; /* Light grey for items */
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.party-logo-small {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Party List (Voting) */
+#party-list {
+    display: grid; /* Use grid internally for party cards */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px; /* Space from heading */
+}
+
+.party-card {
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.party-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.party-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.party-card h3 {
+    color: #2c3e50;
+    font-size: 1.3em;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.party-card p {
+    font-size: 0.95em;
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.party-card button {
+    margin-top: auto;
+    background-color: #3498db; /* Blue for voting button */
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.party-card button:hover {
+    background-color: #2980b9;
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+}
+
+/* Candidate Dashboard */
+#candidate-dashboard {
+    text-align: center;
+    color: #2c3e50;
+}
+
+#candidate-dashboard .party-logo-large {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+#candidate-dashboard h3 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+#candidate-dashboard p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Logo Upload Preview */
+.logo-preview-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#logo-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 2px dashed #ccc; /* Lighter dashed border */
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    display: inline-block;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+}
+
+/* Custom Alert Modal */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.custom-modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.visible .custom-modal-content {
+    transform: translateY(0);
+}
+
+.custom-modal-content p {
+    font-size: 1.1em;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.custom-modal-content button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
+}
+
+.custom-modal-content button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+}
+
+/* Player Details Display (when already entered) */
+#player-details-display {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: left;
+    color: #555;
+}
+
+#player-details-display p {
+    margin-bottom: 8px;
+    font-size: 1em;
+}
+
+#player-details-display strong {
+    color: #2c3e50;
+}
+
+/* Initial Login Section */
+#initial-login-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    margin: 50px auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+#initial-login-section h2 {
+    display: block; /* Override hidden h2 */
+    color: #2c3e50;
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+#initial-login-section input[type="text"] {
+    width: calc(100% - 28px);
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+#initial-login-section button {
+    background-color: #3498db;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 600;
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#initial-login-section button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+}
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 992px) { /* Adjust breakpoint for two-column to single-column transition */
+    .container, .container.two-column-active {
+        grid-template-columns: 1fr; /* Stack all sections on smaller screens */
+    }
+    section.expanded-main-section,
+    section.sidebar-section {
+        grid-column: auto; /* Reset column span */
+        grid-row: auto; /* Reset row span */
+    }
+    /* Ensure section content is collapsed if it's not the active one on mobile */
+    .section-content.collapsed {
+        max-height: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.2em;
+    }
+
+    .section-header {
+        font-size: 1.4em;
+    }
+
+    .container {
+        gap: 15px;
+    }
+
+    section {
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        padding: 15px 20px;
+        font-size: 1.1em;
+    }
+
+    .section-content {
+        padding: 20px;
+    }
+
+    form input, form select, form textarea, form button, .action-button {
+        padding: 12px;
+        font-size: 0.9em;
+    }
+
+    .party-card img {
+        width: 80px;
+        height: 80px;
+    }
+}

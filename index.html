@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Application</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Initial Login Section -->
+    <section id="initial-login-section">
+        <h2>Enter Voting ID</h2>
+        <input type="text" id="voting-id-input" placeholder="Your Voting ID" required>
+        <button id="voting-id-login-btn">Login</button>
+    </section>
+
+    <!-- Main Application Container (initially hidden) -->
+    <div id="main-app-container" style="display: none;">
+        <h1>Election System</h1>
+        <div class="container">
+            <!-- Vote Section (now includes player details and party list for voting) -->
+            <section id="vote-section" class="active">
+                <div class="section-header">Vote <span class="toggle-icon">+</span></div>
+                <div class="section-content">
+                    <!-- Player Details Form (initially shown or hidden based on playerData) -->
+                    <div id="player-details-form-container">
+                        <form id="player-details-form">
+                            <label for="edition">Select Edition:</label>
+                            <select id="edition" name="edition">
+                                <option value="bedrock">Bedrock</option>
+                                <option value="java">Java</option>
+                            </select>
+
+                            <div id="minecraft-name-fields">
+                                <div id="bedrock-name-field">
+                                    <label for="bedrock-name">Minecraft Name:</label>
+                                    <div class="bedrock-input">
+                                        <span>.</span>
+                                        <input type="text" id="bedrock-name" name="bedrock-name" required>
+                                    </div>
+                                </div>
+                                <div id="java-name-field" style="display: none;">
+                                    <label for="java-name">Minecraft Name:</label>
+                                    <input type="text" id="java-name" name="java-name">
+                                </div>
+                            </div>
+
+                            <label for="real-name">Real Name:</label>
+                            <input type="text" id="real-name" name="real-name">
+
+                            <label for="discord-insta">Discord or Instagram Username:</label>
+                            <input type="text" id="discord-insta" name="discord-insta">
+
+                            <button type="button" id="next-btn">Next</button>
+                        </form>
+                    </div>
+
+                    <!-- Player Details Display (shown if playerData exists) -->
+                    <div id="player-details-display" style="display: none;">
+                        <p>Welcome, <strong><span id="display-minecraft-name"></span></strong>!</p>
+                        <p>Edition: <strong><span id="display-edition"></span></strong></p>
+                        <p>Real Name: <strong><span id="display-real-name"></span></strong></p>
+                        <p>Social: <strong><span id="display-discord-insta"></span></strong></p>
+                        <button type="button" id="change-player-details-btn" class="action-button">Change Player Details</button>
+                    </div>
+
+                    <!-- Party List for Voting (shown after player details or if already entered) -->
+                    <div id="party-list-for-voting" style="display: none;">
+                        <h3>Select a Party to Vote For:</h3>
+                        <div id="party-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Register as Candidate Section -->
+            <section id="register-candidate-section">
+                <div class="section-header">Register as Candidate <span class="toggle-icon">+</span></div>
+                <div class="section-content collapsed">
+                    <form id="register-candidate-form">
+                        <label for="candidate-name">Candidate Name:</label>
+                        <input type="text" id="candidate-name" name="candidate-name" required>
+
+                        <label for="party-name-reg">Party Name:</label>
+                        <input type="text" id="party-name-reg" name="party-name-reg" required>
+
+                        <label for="party-password-reg">Party Password:</label>
+                        <input type="password" id="party-password-reg" name="party-password-reg" required>
+
+                        <label for="party-logo-upload">Party Logo:</label>
+                        <div class="logo-preview-container">
+                            <img id="logo-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC" alt="Party Logo Preview">
+                        </div>
+                        <input type="file" id="party-logo-upload" accept="image/*" style="display: none;">
+                        <button type="button" id="upload-logo-btn">Upload Logo</button>
+
+                        <label for="party-chinn">Party Symbol/Chinn:</label>
+                        <input type="text" id="party-chinn" name="party-chinn" required>
+
+                        <button type="submit">Register</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Live Vote Count Section -->
+            <section id="live-vote-section">
+                <div class="section-header">Live Vote Count <span class="toggle-icon">+</span></div>
+                <div class="section-content collapsed">
+                    <div id="live-vote-count"></div>
+                </div>
+            </section>
+
+            <!-- Party Management Login Section -->
+            <section id="party-management-login-section">
+                <div class="section-header">Party Management Login <span class="toggle-icon">+</span></div>
+                <div class="section-content collapsed">
+                    <form id="party-login-form">
+                        <label for="login-party-name">Party Name:</label>
+                        <input type="text" id="login-party-name" name="login-party-name" required>
+
+                        <label for="login-party-password">Password:</label>
+                        <input type="password" id="login-party-password" name="login-party-password" required>
+
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Candidate Management Section - Initially hidden -->
+            <section id="candidate-management-section" style="display: none;">
+                <div class="section-header">Candidate Dashboard <span class="toggle-icon">+</span></div>
+                <div class="section-content collapsed">
+                    <div id="candidate-dashboard"></div>
+                    <button id="logout-candidate-btn" class="action-button">Logout</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal Structure -->
+    <div id="custom-alert-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <p id="alert-message"></p>
+            <button id="alert-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="worker.js"></script>
+</body>
+</html>
