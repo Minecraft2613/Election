@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Displays the list of registered parties for voting.
      */
-    async function displayPartyList() {
+        async function displayPartyList() {
         candidates = await fetchData('/candidates');
         if (!candidates) return; // Exit if data fetch failed
 
