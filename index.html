@@ -729,7 +729,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             // --- DOM Elements ---
             const initialLoginSection = document.getElementById('initial-login-section');
             const votingIdInput = document.getElementById('voting-id-input');
@@ -934,7 +934,20 @@
 
                     const voteButton = document.createElement('button');
                     voteButton.textContent = 'Vote for this Party';
+                    const canVote = sessionStorage.getItem('canVote') === 'true';
+
+                    if (!canVote) {
+                        voteButton.disabled = true;
+                        voteButton.textContent = 'Already Voted';
+                        voteButton.style.backgroundColor = '#cccccc'; // Grey out button
+                        voteButton.style.cursor = 'not-allowed';
+                    }
+
                     voteButton.addEventListener('click', async () => {
+                        if (!canVote) {
+                            showCustomAlert('You have already used your Voting ID to vote.');
+                            return;
+                        }
                         if (!currentVotingId) {
                             showCustomAlert('Please log in with your Voting ID first.');
                             return;
@@ -958,10 +971,11 @@
                         if (result && result.success) {
                             showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
                             await updateLiveVoteCount(); // Refresh vote count
-                            // After voting, clear player data for a new vote if desired, or keep it
-                            // playerData = null;
-                            // sessionStorage.removeItem('playerData');
-                            // updateVoteSectionDisplay();
+                            sessionStorage.setItem('canVote', 'false'); // Mark as voted
+                            voteButton.disabled = true;
+                            voteButton.textContent = 'Already Voted';
+                            voteButton.style.backgroundColor = '#cccccc';
+                            voteButton.style.cursor = 'not-allowed';
                         } else {
                             showCustomAlert(result ? result.message : 'Failed to submit vote.');
                         }
@@ -1120,17 +1134,25 @@
 
                 const result = await postData('/check-voting-id', { votingId: id });
 
-                if (result && result.valid && !result.used) {
+                if (result && result.valid) {
                     currentVotingId = id;
                     sessionStorage.setItem('currentVotingId', currentVotingId);
                     initialLoginSection.style.display = 'none';
                     mainAppContainer.style.display = 'block';
-                    showCustomAlert('Login successful! Welcome.');
+
+                    if (result.used) {
+                        showCustomAlert('Login successful! This Voting ID has already been used to vote. You can view results but cannot vote again.');
+                        sessionStorage.setItem('canVote', 'false'); // Store canVote status
+                    } else {
+                        showCustomAlert('Login successful! Welcome.');
+                        sessionStorage.setItem('canVote', 'true'); // Store canVote status
+                    }
+
                     // Initialize main app content after successful login
-                    await Promise.all([updateLiveVoteCount(), displayPartyList()]); // Fetch initial data
+                    await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
                     activateSection(voteSection); // Activate vote section by default
                 } else {
-                    showCustomAlert(result ? result.message : 'Invalid or already used Voting ID.');
+                    showCustomAlert(result ? result.message : 'Invalid Voting ID.');
                 }
             });
 
@@ -1259,6 +1281,12 @@
             if (currentVotingId) {
                 initialLoginSection.style.display = 'none';
                 mainAppContainer.style.display = 'block';
+
+                // If currentVotingId exists, check if canVote is set, otherwise assume false (already voted)
+                if (sessionStorage.getItem('canVote') === null) {
+                    sessionStorage.setItem('canVote', 'false');
+                }
+
                 // Re-fetch all data and set up UI
                 await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
                 activateSection(voteSection); // Activate vote section by default
