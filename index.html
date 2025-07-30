@@ -406,7 +406,7 @@
 
 
             // Live Vote Count Elements
-            const liveVoteCountDiv = document.getElementById('live-vote-count');
+            const liveVoteCountDiv = document.getElementById('live-vote-count'); // Correctly defined
 
             // Candidate Management Elements
             const partyManagementLoginSection = document.getElementById('party-management-login-section');
@@ -427,7 +427,7 @@
 
             // --- Constants & State Variables ---
             const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
-            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANlRUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
+            const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTkSuQmCC';
             const MAX_IMAGE_SIZE_MB = 5;
 
             let candidates = [];
@@ -617,7 +617,8 @@
                         liveVoteCountDiv.appendChild(div);
                     });
                 } else {
-                    liveVoteDiv.innerHTML = '<p class="text-center text-gray-500">No votes cast yet.</p>';
+                    // Corrected: Use liveVoteCountDiv instead of liveVoteDiv
+                    liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">No votes cast yet.</p>';
                     liveVoteCountDiv.classList.add('text-center', 'text-gray-500');
                 }
             }
