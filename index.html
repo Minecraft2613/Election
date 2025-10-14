@@ -474,7 +474,7 @@
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
             let currentVotingPlayerDetails = JSON.parse(sessionStorage.getItem('currentVotingPlayerDetails')) || null;
             let loggedInCandidate = JSON.parse(sessionStorage.getItem('loggedInCandidate')) || null;
-            let isVotingDisabledForUsedId = false;
+            let isVotingDisabledForUsedId = true;
 
             // --- API Fetch Functions ---
             async function fetchData(endpoint) {
