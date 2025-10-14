@@ -462,7 +462,7 @@
             const IS_VOTING_ENABLED = true; // Set to true to enable voting as requested
             const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
 
-            const IS_REGISTRATION_ENABLED = true; // Set to true to enable candidate registration
+            const IS_REGISTRATION_ENABLED = false; // Set to false to disable candidate registration
             const REGISTRATION_DISABLED_CUSTOM_MESSAGE = "Voting is going on.";
             // --- End Feature Toggles ---
 
@@ -1015,6 +1015,8 @@
                         <p>${REGISTRATION_DISABLED_CUSTOM_MESSAGE}</p>
                     </div>
                 `;
+                // Ensure the form is hidden if the tab is not enabled
+                document.getElementById('register-candidate-form').classList.add('hidden');
             }
 
 
