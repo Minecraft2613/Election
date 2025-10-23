@@ -7,39 +7,36 @@
     <title>Minecraft Election</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-   <style>
+  <style>
     /* Custom styles for the app */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     /* Keyframes for animations */
     @keyframes pulse-shadow {
-        0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        0% { box-shadow: 0 0 0 0 rgba(199, 210, 254, 0.5); }
+        70% { box-shadow: 0 0 0 15px rgba(199, 210, 254, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(199, 210, 254, 0); }
     }
     
-    @keyframes button-press {
-        0% { transform: scale(1); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); }
-        100% { transform: scale(0.98) translateY(1px); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+    @keyframes pop-in {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
     }
 
-    /* Base Styling */
+    /* Base Styling - Reverting to original light blue gradient */
     body {
         font-family: 'Inter', sans-serif;
-        /* Cooler, deeper blue/purple gradient */
-        background: linear-gradient(135deg, #1e3a8a 0%, #4f46e5 100%); 
-        color: #e2e8f0; /* Light gray text for contrast */
+        background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Reverted Light blue gradient */
+        color: #374151; 
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 1rem;
-        transition: background-color 0.5s ease;
     }
 
-    /* Initial Login Screen */
+    /* Initial Login Screen - Minor shadow improvement */
     .initial-login-container {
-        /* Preserve positioning */
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -49,69 +46,68 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #1e3a8a 0%, #4f46e5 100%); 
+        background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed);
         z-index: 999; 
     }
     .initial-login-card {
         background-color: #ffffff;
         border-radius: 1.5rem; 
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* Stronger, cooler shadow */
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -3px rgba(0, 0, 0, 0.1); /* Deeper shadow */
         padding: 2.5rem;
         max-width: 400px; 
         width: 90%; 
         text-align: center;
         border: 1px solid #e2e8f0;
-        animation: fadeIn 0.5s ease-out;
-    }
-    .initial-login-card h2 {
-        color: #3b82f6; /* Blue title */
+        animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     /* Main App Container */
     .app-container {
         background-color: #ffffff;
-        border-radius: 2rem; /* More rounded */
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); /* Prominent shadow */
-        padding: 3rem; /* Slightly more padding */
+        border-radius: 2rem; 
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); 
+        padding: 3rem; 
         max-width: 1300px; 
         width: 100%;
         display: flex;
         flex-direction: column; 
         gap: 2rem; 
         min-height: 80vh; 
-        transition: all 0.5s ease; /* Smooth transition for resizing/state changes */
     }
 
-    /* Main content and sidebar areas */
+    /* Main content and sidebar areas - Added colorful glow on hover */
     .main-content-area, .sidebar-area {
-        background-color: #f7f9fd; /* Very light, off-white background */
+        background-color: #f8fafc; 
         border-radius: 1.5rem; 
         padding: 2rem;
-        box-shadow: inset 0 1px 5px rgba(0,0,0,0.08); /* Better inner shadow */
+        box-shadow: inset 0 1px 5px rgba(0,0,0,0.05), 0 0 0 0 #fff;
         border: 1px solid #eef2ff;
         flex-grow: 1; 
-        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
     }
     .main-content-area:hover, .sidebar-area:hover {
-        transform: translateY(-2px);
-        box-shadow: inset 0 1px 5px rgba(0,0,0,0.08), 0 5px 15px rgba(0,0,0,0.05);
+        transform: translateY(-4px); /* More lift */
+        /* Subtle glow effect using multiple box shadows */
+        box-shadow: inset 0 1px 5px rgba(0,0,0,0.08), 
+                    0 10px 20px rgba(0,0,0,0.08),
+                    0 0 15px rgba(99, 102, 241, 0.2); 
     }
     @media (min-width: 1024px) { 
         .app-container {
             flex-direction: row; 
         }
         .main-content-area {
-            flex: 3; 
+            flex: 2; 
         }
         .sidebar-area {
             flex: 1; 
         }
     }
 
-    /* Tab button styles (Cooler, with active indicator) */
+    /* Tab button styles - Underline Slide Animation */
     .tab-button {
-        background-color: transparent; /* Make background transparent */
-        color: #64748b; /* Slate text for inactive */
+        background-color: transparent; 
+        color: #64748b; 
         padding: 0.75rem 1rem;
         border-radius: 0.75rem;
         font-weight: 600;
@@ -125,27 +121,25 @@
         content: '';
         position: absolute;
         bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
         width: 0%;
         height: 4px;
-        background: #3b82f6;
+        background: linear-gradient(to right, #3b82f6, #6366f1);
         border-radius: 2px;
-        transition: width 0.3s ease-out;
+        transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother slide */
     }
     .tab-button:hover {
-        color: #3b82f6; /* Blue on hover */
+        color: #3b82f6; 
     }
     .tab-button.active {
-        color: #1e3a8a; /* Darker blue text for active */
+        color: #1e3a8a; 
         font-weight: 700;
     }
     .tab-button.active::after {
-        width: 100%; /* Full width blue underline for active */
-        background: linear-gradient(to right, #3b82f6, #6366f1);
+        width: 100%; 
     }
 
-    /* Input field styles - Added focus glow */
+    /* Input field styles - Enhanced focus glow */
     .input-field {
         background-color: #f1f5f9; 
         border: 1px solid #cbd5e0;
@@ -154,34 +148,31 @@
         border-radius: 0.5rem;
         transition: all 0.3s ease;
     }
-    .input-field::placeholder {
-        color: #94a3b8;
-    }
     .input-field:focus {
         outline: none;
         border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); /* Glow effect */
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.3); /* Larger, more noticeable glow */
     }
 
-    /* Action button styles (3D Press Effect) */
+    /* Action button styles (Cooler 3D Press Effect) */
     .action-button {
         background: linear-gradient(to right, #3b82f6, #6366f1); 
         color: white;
         padding: 0.75rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 600;
-        transition: all 0.15s ease-out;
-        box-shadow: 0 4px 0 0 #3649a9; /* Base 3D shadow */
+        transition: all 0.1s ease-out; /* Faster for a snappy feel */
+        box-shadow: 0 6px 0 0 #3649a9; /* Deeper 3D base shadow */
         border: none;
         cursor: pointer;
     }
     .action-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 0 0 #3649a9;
+        transform: translateY(-2px); /* Lift slightly more */
+        box-shadow: 0 8px 0 0 #3649a9;
     }
     .action-button:active {
-        transform: translateY(3px); /* Press down */
-        box-shadow: 0 1px 0 0 #3649a9; /* Reduce shadow to simulate press */
+        transform: translateY(4px); /* Press down visibly */
+        box-shadow: 0 2px 0 0 #3649a9; /* Very small shadow when pressed */
     }
     /* Disabled button style */
     .action-button:disabled {
@@ -189,18 +180,18 @@
         color: #94a3b8; 
         cursor: not-allowed;
         transform: none;
-        box-shadow: 0 4px 0 0 #a0aec0; /* Adjusted disabled 3D shadow */
+        box-shadow: 0 4px 0 0 #a0aec0; 
     }
 
     /* Party card styles - Enhanced box effect with hover animation */
     .party-card {
         background-color: #ffffff;
         border: 1px solid #e0e7ff; 
-        border-radius: 1.5rem; /* More rounded */
+        border-radius: 1.5rem; 
         padding: 1.5rem;
         text-align: center;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother transition */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Subtle initial shadow */
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08); 
         display: flex; 
         flex-direction: column;
         align-items: center;
@@ -208,9 +199,9 @@
         min-width: 180px; 
     }
     .party-card:hover {
-        transform: translateY(-8px); /* Lift significantly */
-        box-shadow: 0 15px 30px rgba(0,0,0,0.15); /* Deepen shadow */
-        border-color: #6366f1; /* Highlight border */
+        transform: scale(1.03) translateY(-6px); /* Pop and lift */
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15), 0 0 10px rgba(168, 85, 247, 0.4); /* Purple glow on hover */
+        border-color: #a855f7; 
     }
     .party-logo-small {
         width: 50px;
@@ -218,22 +209,14 @@
         object-fit: cover;
         border-radius: 50%;
         margin-right: 10px;
-        border: 2px solid #a855f7; 
-        transition: transform 0.3s ease;
+        border: 3px solid #a855f7; /* Thicker border */
+        transition: transform 0.4s ease-in-out;
     }
     .party-card:hover .party-logo-small {
-        transform: scale(1.1) rotate(5deg);
+        transform: scale(1.1) rotate(360deg); /* Spinning logo on card hover */
     }
-    .party-logo-large {
-        max-width: 120px;
-        height: auto;
-        border-radius: 1rem;
-        margin-top: 10px;
-        border: 3px solid #6366f1; /* Stronger border */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-
-    /* Custom Alert Modal Styles - Added a pop animation */
+    
+    /* Custom Alert Modal Styles - More pronounced pop animation */
     .custom-alert-modal {
         display: none;
         position: fixed;
@@ -243,10 +226,10 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(0,0,0,0.7); /* Darker overlay */
+        background-color: rgba(0,0,0,0.5); 
         justify-content: center;
         align-items: center;
-        backdrop-filter: blur(4px); /* Subtle blur effect */
+        backdrop-filter: blur(2px);
     }
     .custom-alert-modal.visible {
         display: flex;
@@ -254,44 +237,40 @@
     .custom-alert-content {
         background-color: #ffffff;
         color: #374151;
-        padding: 3rem; /* More padding */
+        padding: 3rem; 
         border-radius: 1.5rem;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        animation: fadeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring-like pop */
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         border: 1px solid #e2e8f0;
         max-width: 450px;
         width: 90%;
     }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.8); }
-        to { opacity: 1; transform: scale(1); }
-    }
     .alert-ok-button {
-        /* Inherit action-button styles for consistency */
+        /* Inherit enhanced action-button styles */
         background: linear-gradient(to right, #3b82f6, #6366f1); 
         color: white;
         padding: 0.75rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 600;
-        transition: all 0.15s ease-out;
-        box-shadow: 0 4px 0 0 #3649a9; 
+        transition: all 0.1s ease-out;
+        box-shadow: 0 6px 0 0 #3649a9; 
         border: none;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
     }
     .alert-ok-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 0 0 #3649a9;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 0 0 #3649a9;
     }
     .alert-ok-button:active {
-        transform: translateY(3px); 
-        box-shadow: 0 1px 0 0 #3649a9; 
+        transform: translateY(4px); 
+        box-shadow: 0 2px 0 0 #3649a9; 
     }
     .hidden {
         display: none !important;
     }
 
-    /* Style for disabled message */
+    /* Style for disabled message - Added subtle background pulse */
     .disabled-message {
         text-align: center;
         padding: 1rem;
@@ -299,10 +278,10 @@
         margin-bottom: 1rem;
         font-size: 1.25rem;
         font-weight: 700;
-        color: #9d174d; /* Rose red text */
-        background-color: #fce7f3; /* Light pink background */
-        border: 2px solid #f472b6; /* Pink border */
-        animation: pulse-shadow 2s infinite; /* Subtle animation for urgency */
+        color: #1e40af; 
+        background-color: #dbeafe; 
+        border: 2px solid #93c5fd; 
+        animation: pulse-shadow 2.5s infinite; 
     }
 </style>
 </head>
