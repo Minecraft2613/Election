@@ -7,27 +7,15 @@
     <title>Minecraft Election</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Custom styles for the app */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+<style>
+    /* Custom styles for the app - Reverting to original, simpler styles */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* Keyframes for animations */
-    @keyframes pulse-shadow {
-        0% { box-shadow: 0 0 0 0 rgba(199, 210, 254, 0.5); }
-        70% { box-shadow: 0 0 0 15px rgba(199, 210, 254, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(199, 210, 254, 0); }
-    }
-    
-    @keyframes pop-in {
-        from { opacity: 0; transform: scale(0.8); }
-        to { opacity: 1; transform: scale(1); }
-    }
-
-    /* Base Styling - Reverting to original light blue gradient */
+    /* Base Styling - Reverting to original simple gradient and basic font */
     body {
         font-family: 'Inter', sans-serif;
-        background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Reverted Light blue gradient */
-        color: #374151; 
+        background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Original Light blue gradient */
+        color: #374151; /* Dark gray text */
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -35,7 +23,7 @@
         padding: 1rem;
     }
 
-    /* Initial Login Screen - Minor shadow improvement */
+    /* Initial Login Screen - Reverting to simple box shadow */
     .initial-login-container {
         min-height: 100vh;
         display: flex;
@@ -46,51 +34,42 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed);
+        background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); 
         z-index: 999; 
     }
     .initial-login-card {
         background-color: #ffffff;
         border-radius: 1.5rem; 
-        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -3px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
         padding: 2.5rem;
         max-width: 400px; 
         width: 90%; 
         text-align: center;
         border: 1px solid #e2e8f0;
-        animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Main App Container */
+    /* Main App Container - Reverting to original simple styling */
     .app-container {
         background-color: #ffffff;
-        border-radius: 2rem; 
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); 
-        padding: 3rem; 
-        max-width: 1300px; 
+        border-radius: 1.5rem; 
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); 
+        padding: 2.5rem;
+        max-width: 1200px; 
         width: 100%;
         display: flex;
         flex-direction: column; 
-        gap: 2rem; 
+        gap: 1.5rem; 
         min-height: 80vh; 
     }
 
-    /* Main content and sidebar areas - Added colorful glow on hover */
+    /* Main content and sidebar areas - Simple structure */
     .main-content-area, .sidebar-area {
         background-color: #f8fafc; 
-        border-radius: 1.5rem; 
-        padding: 2rem;
-        box-shadow: inset 0 1px 5px rgba(0,0,0,0.05), 0 0 0 0 #fff;
-        border: 1px solid #eef2ff;
+        border-radius: 1rem; 
+        padding: 1.5rem;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
         flex-grow: 1; 
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
-    }
-    .main-content-area:hover, .sidebar-area:hover {
-        transform: translateY(-4px); /* More lift */
-        /* Subtle glow effect using multiple box shadows */
-        box-shadow: inset 0 1px 5px rgba(0,0,0,0.08), 
-                    0 10px 20px rgba(0,0,0,0.08),
-                    0 0 15px rgba(99, 102, 241, 0.2); 
     }
     @media (min-width: 1024px) { 
         .app-container {
@@ -104,104 +83,86 @@
         }
     }
 
-    /* Tab button styles - Underline Slide Animation */
+    /* Tab button styles - Reverting to simple hover and active state */
     .tab-button {
-        background-color: transparent; 
-        color: #64748b; 
-        padding: 0.75rem 1rem;
+        background-color: #cbd5e0; 
+        color: #4a5568; 
+        padding: 0.75rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 600;
         transition: all 0.3s ease;
-        position: relative;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         flex-grow: 1; 
         text-align: center; 
-        border: none;
-    }
-    .tab-button::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0%;
-        height: 4px;
-        background: linear-gradient(to right, #3b82f6, #6366f1);
-        border-radius: 2px;
-        transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother slide */
     }
     .tab-button:hover {
-        color: #3b82f6; 
+        background-color: #a0aec0; 
+        color: white;
     }
     .tab-button.active {
-        color: #1e3a8a; 
-        font-weight: 700;
-    }
-    .tab-button.active::after {
-        width: 100%; 
+        background: linear-gradient(to right, #3b82f6, #6366f1); 
+        color: white;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    /* Input field styles - Enhanced focus glow */
+    /* Input field styles - Simple focus border */
     .input-field {
         background-color: #f1f5f9; 
         border: 1px solid #cbd5e0;
         color: #374151;
         padding: 0.75rem;
         border-radius: 0.5rem;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
     .input-field:focus {
         outline: none;
         border-color: #6366f1;
-        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.3); /* Larger, more noticeable glow */
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
     }
 
-    /* Action button styles (Cooler 3D Press Effect) */
+    /* Action button styles - Simple hover animation */
     .action-button {
         background: linear-gradient(to right, #3b82f6, #6366f1); 
         color: white;
         padding: 0.75rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 600;
-        transition: all 0.1s ease-out; /* Faster for a snappy feel */
-        box-shadow: 0 6px 0 0 #3649a9; /* Deeper 3D base shadow */
-        border: none;
-        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none; /* Ensure it's not inheriting a system border */
     }
     .action-button:hover {
-        transform: translateY(-2px); /* Lift slightly more */
-        box-shadow: 0 8px 0 0 #3649a9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+        background: linear-gradient(to right, #2563eb, #4f46e5);
     }
-    .action-button:active {
-        transform: translateY(4px); /* Press down visibly */
-        box-shadow: 0 2px 0 0 #3649a9; /* Very small shadow when pressed */
-    }
-    /* Disabled button style */
     .action-button:disabled {
         background: #cbd5e0; 
-        color: #94a3b8; 
+        color: #a0aec0; 
         cursor: not-allowed;
         transform: none;
-        box-shadow: 0 4px 0 0 #a0aec0; 
+        box-shadow: none;
     }
 
-    /* Party card styles - Enhanced box effect with hover animation */
+    /* Party card styles - Simple box effect */
     .party-card {
         background-color: #ffffff;
-        border: 1px solid #e0e7ff; 
-        border-radius: 1.5rem; 
+        border: 2px solid #6366f1; 
+        border-radius: 1rem;
         padding: 1.5rem;
         text-align: center;
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08); 
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         display: flex; 
         flex-direction: column;
         align-items: center;
         justify-content: space-between; 
         min-width: 180px; 
+        height: auto; 
     }
     .party-card:hover {
-        transform: scale(1.03) translateY(-6px); /* Pop and lift */
-        box-shadow: 0 15px 30px rgba(0,0,0,0.15), 0 0 10px rgba(168, 85, 247, 0.4); /* Purple glow on hover */
-        border-color: #a855f7; 
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
     }
     .party-logo-small {
         width: 50px;
@@ -209,14 +170,18 @@
         object-fit: cover;
         border-radius: 50%;
         margin-right: 10px;
-        border: 3px solid #a855f7; /* Thicker border */
-        transition: transform 0.4s ease-in-out;
+        border: 2px solid #a855f7; 
     }
-    .party-card:hover .party-logo-small {
-        transform: scale(1.1) rotate(360deg); /* Spinning logo on card hover */
+    .party-logo-large {
+        max-width: 120px;
+        height: auto;
+        border-radius: 1rem;
+        margin-top: 10px;
+        border: 2px solid #a855f7;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    
-    /* Custom Alert Modal Styles - More pronounced pop animation */
+
+    /* Custom Alert Modal Styles - Reverting to simple fade-in */
     .custom-alert-modal {
         display: none;
         position: fixed;
@@ -226,10 +191,9 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(0,0,0,0.5); 
+        background-color: rgba(0,0,0,0.6);
         justify-content: center;
         align-items: center;
-        backdrop-filter: blur(2px);
     }
     .custom-alert-modal.visible {
         display: flex;
@@ -237,51 +201,45 @@
     .custom-alert-content {
         background-color: #ffffff;
         color: #374151;
-        padding: 3rem; 
-        border-radius: 1.5rem;
+        padding: 2rem;
+        border-radius: 1rem;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        animation: fadeIn 0.3s ease-out;
         border: 1px solid #e2e8f0;
-        max-width: 450px;
-        width: 90%;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     .alert-ok-button {
-        /* Inherit enhanced action-button styles */
-        background: linear-gradient(to right, #3b82f6, #6366f1); 
+        background-color: #3b82f6;
         color: white;
         padding: 0.75rem 1.5rem;
-        border-radius: 0.75rem;
+        border-radius: 0.5rem;
         font-weight: 600;
-        transition: all 0.1s ease-out;
-        box-shadow: 0 6px 0 0 #3649a9; 
+        transition: all 0.2s ease;
+        margin-top: 1rem;
         border: none;
-        margin-top: 1.5rem;
     }
     .alert-ok-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 0 0 #3649a9;
-    }
-    .alert-ok-button:active {
-        transform: translateY(4px); 
-        box-shadow: 0 2px 0 0 #3649a9; 
+        background-color: #2563eb;
+        transform: translateY(-1px);
     }
     .hidden {
         display: none !important;
     }
-
-    /* Style for disabled message - Added subtle background pulse */
+    /* Style for disabled message - Simple style */
     .disabled-message {
         text-align: center;
-        padding: 1rem;
-        border-radius: 1rem;
-        margin-bottom: 1rem;
+        padding: 8px;
+        border-radius: 12px;
+        margin-bottom: 8px;
         font-size: 1.25rem;
-        font-weight: 700;
+        font-weight: 600;
         color: #1e40af; 
         background-color: #dbeafe; 
-        border: 2px solid #93c5fd; 
-        animation: pulse-shadow 2.5s infinite; 
+        border: 1px solid #93c5fd; 
     }
 </style>
 </head>
