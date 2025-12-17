@@ -45,38 +45,6 @@
             border: 1px solid #e2e8f0;
         }
 
-        @keyframes floatCard {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-}
-
-.initial-login-card {
-    animation: floatCard 4s ease-in-out infinite;
-}
-
-        #voting-id-input-initial:focus {
-    animation: glowPulse 1.5s infinite alternate;
-}
-
-@keyframes glowPulse {
-    from { box-shadow: 0 0 10px #6366f1; }
-    to { box-shadow: 0 0 25px #818cf8; }
-}
-
-        @keyframes votePop {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.15) rotate(2deg); }
-    100% { transform: scale(1); }
-}
-
-.party-card.voted {
-    animation: votePop 0.5s ease;
-    border-color: #22c55e;
-    box-shadow: 0 0 30px #22c55e;
-}
-
-
         /* Main App Container - Adjusted for a more centralized, compact look and responsiveness */
         .app-container {
             background-color: #ffffff;
@@ -133,34 +101,6 @@
             color: white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
-        /* =======================
-   3D BUTTON SYSTEM
-======================= */
-.button-3d {
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.button-3d::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: rgba(0,0,0,0.25);
-    transform: translateZ(-10px);
-}
-
-.button-3d:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 20px rgba(0,0,0,0.25);
-}
-
-.button-3d:active {
-    transform: translateY(2px) scale(0.98);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
 
         /* Input field styles */
         .input-field {
@@ -305,44 +245,9 @@
             background-color: #dbeafe; /* Light blue background */
             border: 1px solid #93c5fd; /* Blue border */
         }
-        /* =======================
-   DARK MODE
-======================= */
-.dark body,
-.dark .app-container,
-.dark .initial-login-card,
-.dark .main-content-area,
-.dark .sidebar-area {
-    background: #0f172a;
-    color: #e5e7eb;
-}
-
-.dark .input-field {
-    background: #1e293b;
-    border-color: #334155;
-    color: #f8fafc;
-}
-
-.dark .party-card {
-    background: #020617;
-    border-color: #6366f1;
-}
-
-        @media (max-width: 640px) {
-    .party-card {
-        width: 100%;
-    }
-}
-
-
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
-
-    <button id="theme-toggle" class="action-button button-3d ml-4">
-    🌙 / ☀️
-</button>
-
     <!-- Initial Login Section -->
     <div id="initial-login-section" class="initial-login-container">
         <div class="initial-login-card">
@@ -571,12 +476,6 @@
             let loggedInCandidate = JSON.parse(sessionStorage.getItem('loggedInCandidate')) || null;
             let isVotingDisabledForUsedId = false;
 
-const toggle = document.getElementById("theme-toggle");
-toggle.addEventListener("click", () => {
-    document.documentElement.classList.toggle("dark");
-});
-
-    
             // --- API Fetch Functions ---
             async function fetchData(endpoint) {
                 try {
@@ -1162,11 +1061,6 @@ toggle.addEventListener("click", () => {
                 // No specific tab to show here, as it's the initial login screen
             }
         });
-            function voteForParty(card) {
-    card.classList.add("voted");
-    setTimeout(() => card.classList.remove("voted"), 600);
-}
-
     </script>
 </body>
 </html>
