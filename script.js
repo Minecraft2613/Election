@@ -321,50 +321,78 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Update the global allCandidates array with the latest data
         allCandidates = latestCandidates;
 
-        liveVoteCountDiv.innerHTML = '';
+        liveVoteCountDiv.innerHTML = ''; // Clear previous content
         const voteCounts = {};
+        const totalVotes = votes.length;
+
+        // Add a header for the total vote count
+        const totalVotesHeader = document.createElement('h3');
+        totalVotesHeader.className = 'text-xl font-bold mb-4 text-center';
+        totalVotesHeader.textContent = `Total Votes: ${totalVotes}`;
+        liveVoteCountDiv.appendChild(totalVotesHeader);
 
         // Initialize counts for all known candidates
         allCandidates.forEach(c => voteCounts[c.partyName] = 0);
 
+        // Tally votes
         votes.forEach(vote => {
-            if (voteCounts.hasOwnProperty(vote.party)) { // Ensure party exists
-                voteCounts[vote.party] = (voteCounts[vote.party] || 0) + 1;
+            if (voteCounts.hasOwnProperty(vote.party)) {
+                voteCounts[vote.party]++;
             }
         });
 
         const sortedVoteCounts = Object.entries(voteCounts).sort(([, countA], [, countB]) => countB - countA);
 
         if (sortedVoteCounts.length > 0) {
-            sortedVoteCounts.forEach(([party, count]) => {
+            sortedVoteCounts.forEach(([party, count], index) => {
+                const rank = index + 1;
+                const percentage = totalVotes > 0 ? ((count / totalVotes) * 100).toFixed(2) : 0;
                 const partyData = allCandidates.find(c => c.partyName === party);
+                
                 const div = document.createElement('div');
-                div.classList.add('vote-count-item', 'flex', 'items-center', 'p-2', 'bg-gray-50', 'rounded-md', 'shadow-sm', 'text-gray-800');
+                div.className = 'vote-count-item flex items-center p-3 rounded-lg shadow-sm';
 
-                if (partyData) { // Ensure partyData exists before trying to access its properties
-                    if (partyData.partyLogo && partyData.partyLogo !== placeholderImage) { // Check if a valid logo exists
+                // Rank
+                const rankSpan = document.createElement('span');
+                rankSpan.className = 'text-lg font-bold mr-4';
+                rankSpan.textContent = `#${rank}`;
+                div.appendChild(rankSpan);
+
+                if (partyData) {
+                    if (partyData.partyLogo && partyData.partyLogo !== placeholderImage) {
                         const logo = document.createElement('img');
                         logo.src = partyData.partyLogo;
                         logo.alt = partyData.partyName;
-                        logo.classList.add('party-logo-small');
+                        logo.className = 'party-logo-small';
                         div.appendChild(logo);
-                    } else if (partyData.partyChinn) { // Fallback to symbol if no valid logo
+                    } else if (partyData.partyChinn) {
                         const symbolSpan = document.createElement('span');
                         symbolSpan.textContent = partyData.partyChinn;
-                        symbolSpan.classList.add('text-2xl', 'mr-2');
+                        symbolSpan.className = 'text-2xl mr-3';
                         div.appendChild(symbolSpan);
                     }
                 }
 
-                const text = document.createElement('span');
-                text.textContent = `${party}: ${count} votes`;
-                div.appendChild(text);
+                // Party name, votes, and percentage
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'flex-grow';
+                
+                const partyNameSpan = document.createElement('span');
+                partyNameSpan.className = 'font-semibold';
+                partyNameSpan.textContent = party;
+                
+                const voteDetailsSpan = document.createElement('span');
+                voteDetailsSpan.className = 'block text-sm';
+                voteDetailsSpan.textContent = `${count} votes (${percentage}%)`;
+
+                infoDiv.appendChild(partyNameSpan);
+                infoDiv.appendChild(voteDetailsSpan);
+                div.appendChild(infoDiv);
 
                 liveVoteCountDiv.appendChild(div);
             });
         } else {
-            liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">No votes cast yet.</p>';
-            liveVoteCountDiv.classList.add('text-center', 'text-gray-500');
+            liveVoteCountDiv.innerHTML += '<p class="text-center text-gray-500">No votes cast yet.</p>';
         }
     }
 
@@ -387,8 +415,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Set the grid to be vertical by default for small screens
-        partyListDiv.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4';
+        // Set the grid to be a single column with a gap
+        partyListDiv.className = 'grid grid-cols-1 gap-4';
 
         filteredList.forEach(candidate => {
             const partyCard = document.createElement('div');

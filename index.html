@@ -10,19 +10,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100 text-gray-800" data-theme="light">
+    <div class="background-wrapper">
+        <ul class="animated-cubes">
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+        </ul>
+    </div>
     <!-- Initial Login Section -->
     <div id="initial-login-section" class="initial-login-container with-animation">
-        <!-- Minecraft Background Blocks (dynamic content in script.js to place them) -->
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
-        <div class="minecraft-block"></div>
 
         <div class="initial-login-card">
             <div id="login-form-container">
@@ -40,15 +39,9 @@
 
     <!-- Main Application Container -->
     <div id="main-app-container" class="hidden app-container">
-        <!-- Header with Title, Theme Toggle, and Logout -->
+        <!-- Header with Title -->
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <h1 class="text-3xl font-bold text-blue-700">Minecraft Election</h1>
-            <div class="flex items-center space-x-4">
-                <button id="theme-toggle" class="bg-gray-700 text-white py-2 px-4 rounded-full shadow transition duration-300 ease-in-out font-semibold flex items-center gap-2">
-                    <span class="icon">🌙</span> Dark Mode
-                </button>
-                <button id="logout-button" class="bg-red-500 text-white py-2 px-4 rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out font-semibold">Logout</button>
-            </div>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 w-full">
@@ -175,6 +168,14 @@
                     <!-- Live vote counts will be displayed here -->
                 </div>
             </div>
+        </div>
+
+        <!-- App Controls -->
+        <div id="app-controls" class="absolute bottom-4 right-4 flex flex-col gap-2">
+            <button id="logout-button" class="action-button bg-red-500 hover:bg-red-600">Logout</button>
+            <button id="theme-toggle" class="action-button">
+                <span class="icon">🌙</span> Dark Mode
+            </button>
         </div>
     </div>
 
