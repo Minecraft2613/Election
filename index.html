@@ -6,424 +6,187 @@
     <title>Minecraft Election</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom styles for the app */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        :root {
-            --font-main: 'Inter', sans-serif;
-            --glow-color: #00ffff;
-            
-            /* Light Theme */
-            --bg-body-light: #f0f8ff;
-            --bg-app-container-light: rgba(255, 255, 255, 0.8);
-            --bg-content-area-light: #f8fafc;
-            --bg-input-light: #f1f5f9;
-            --bg-button-light: linear-gradient(to right, #3b82f6, #6366f1);
-            --bg-button-hover-light: linear-gradient(to right, #2563eb, #4f46e5);
-            --text-main-light: #374151;
-            --text-tab-active-light: #3b82f6;
-            --text-tab-inactive-light: #4a5568;
-            --border-light: #e2e8f0;
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --inset-shadow-light: rgba(0,0,0,0.05);
-
-            /* Dark Theme */
-            --bg-body-dark: #0f172a;
-            --bg-app-container-dark: rgba(26, 32, 44, 0.8);
-            --bg-content-area-dark: #1a202c;
-            --bg-input-dark: #4a5568;
-            --bg-button-dark: linear-gradient(to right, #4c51bf, #6b46c1);
-            --bg-button-hover-dark: linear-gradient(to right, #434190, #553c9a);
-            --text-main-dark: #e2e8f0;
-            --text-tab-active-dark: var(--glow-color);
-            --text-tab-inactive-dark: #a0aec0;
-            --border-dark: #4a5568;
-            --shadow-dark: rgba(0, 0, 0, 0.4);
-            --inset-shadow-dark: rgba(0,0,0,0.5);
-        }
-
-        html[data-theme="dark"] {
-            --bg-body: var(--bg-body-dark);
-            --bg-app-container: var(--bg-app-container-dark);
-            --bg-content-area: var(--bg-content-area-dark);
-            --bg-input: var(--bg-input-dark);
-            --bg-button: var(--bg-button-dark);
-            --bg-button-hover: var(--bg-button-hover-dark);
-            --text-main: var(--text-main-dark);
-            --text-tab-active: var(--text-tab-active-dark);
-            --text-tab-inactive: var(--text-tab-inactive-dark);
-            --border: var(--border-dark);
-            --shadow: var(--shadow-dark);
-            --inset-shadow: var(--inset-shadow-dark);
-        }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-body, var(--bg-body-light));
-            color: var(--text-main, var(--text-main-light));
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            transition: background-color 0.5s ease, color 0.5s ease;
-            overflow-x: hidden;
-        }
-
-        .background-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
-        .background-animation .cube { position: absolute; list-style: none; display: block; animation: move-cubes 25s linear infinite; bottom: -150px; }
-        #login-bg { background: linear-gradient(45deg, #1e3a8a, #312e81, #4c1d95); }
-        #login-bg .cube { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); }
-        #app-bg { background: var(--bg-body, var(--bg-body-light)); }
-        #app-bg .cube { background: rgba(127, 255, 212, 0.1); border: 1px solid rgba(127, 255, 212, 0.15); opacity: 0.5; }
-
-        @keyframes move-cubes {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-120vh) rotate(720deg); }
-        }
-        
-        .initial-login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; }
-        
-        .initial-login-card {
-            background-color: rgba(20, 20, 30, 0.7);
-            color: white;
-            backdrop-filter: blur(15px);
-            border-radius: 1.5rem;
-            box-shadow: inset 0 0 2px 1px rgba(255, 255, 255, 0.2), 0 10px 20px rgba(0, 0, 0, 0.3), 0 30px 60px rgba(0, 0, 0, 0.4);
-            padding: 2.5rem;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 10;
-            animation: float 6s ease-in-out infinite;
-            position: relative;
-        }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-
-        .loader { border: 5px solid rgba(255,255,255,0.2); border-top: 5px solid #fff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 1rem; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-text span { opacity: 0; animation: fade-in-out 3s ease-in-out infinite; }
-        .loading-text span:nth-child(1) { animation-delay: 0s; }
-        .loading-text span:nth-child(2) { animation-delay: 1s; }
-        .loading-text span:nth-child(3) { animation-delay: 2s; }
-        @keyframes fade-in-out { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-
-        .top-controls { position: fixed; top: 1rem; right: 1rem; z-index: 100; display: flex; gap: 0.5rem; }
-
-        .app-container {
-            background-color: var(--bg-app-container, var(--bg-app-container-light));
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            border: 1px solid var(--border, var(--border-light));
-            box-shadow: 0 20px 40px var(--shadow, var(--shadow-dark));
-            padding: 2rem;
-            width: 100%;
-            max-width: 1200px;
-        }
-        
-        .main-content-area, .sidebar-area { background-color: transparent; box-shadow: none; border: none; }
-        
-        .tab-content { transition: box-shadow 0.4s ease; border-radius: 1rem; padding: 1.5rem; }
-        .tab-content.active-content { box-shadow: inset 5px 5px 10px var(--inset-shadow, var(--inset-shadow-light)), inset -5px -5px 10px rgba(255,255,255,0.05); }
-
-        .tab-button { background: transparent; padding: 0.75rem 0.5rem; font-weight: 600; transition: color 0.3s ease; position: relative; border-bottom: 4px solid transparent; color: var(--text-tab-inactive, var(--text-tab-inactive-light)); }
-        .tab-button:hover { color: var(--text-tab-active, var(--text-tab-active-light)); }
-        .tab-button.active { color: var(--text-tab-active, var(--text-tab-active-light)); border-image: linear-gradient(to right, var(--glow-color), #3b82f6) 1; transition: all 0.4s ease; }
-        .tab-button.active::after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: var(--text-tab-active, var(--text-tab-active-light)); border-radius: 50%; box-shadow: 0 0 10px var(--text-tab-active, var(--text-tab-active-light)), 0 0 20px var(--text-tab-active, var(--text-tab-active-light)); }
-
-        .custom-alert-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-        .custom-alert-modal.visible { display: flex; }
-        .custom-alert-content { background-color: var(--bg-app-container, var(--bg-app-container-light)); color: var(--text-main, var(--text-main-light)); padding: 2rem; border-radius: 1rem; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.4); border: 1px solid var(--border, var(--border-dark)); overflow: hidden; position: relative; }
-        .confetti-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .confetti, .confetti-emoji { position: absolute; opacity: 0; animation: party-time 1.5s ease-out forwards; }
-        .confetti { width: 10px; height: 10px; }
-        .confetti-emoji { font-size: 2rem; }
-        @keyframes party-time {
-            0% { transform: translateY(100%) scale(0.5); opacity: 1; }
-            100% { transform: translateY(-150%) scale(1.2) rotate(360deg); opacity: 0; }
-        }
-        
-        #live-vote-count { display: flex; flex-direction: column; gap: 1rem; }
-        .vote-bar { background: linear-gradient(90deg, #4c51bf, #6b46c1); height: 2.5rem; border-radius: 0.5rem; width: 0%; transition: width 1s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 0 10px #6b46c1; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; color: white; font-weight: bold; }
-    
-        .action-button { background: var(--bg-button, var(--bg-button-light)); color: white; padding: 0.8rem 1.5rem; border-radius: 0.75rem; font-weight: 600; border: 1px solid rgba(0,0,0,0.2); border-bottom: 4px solid rgba(0,0,0,0.4); transition: all 0.1s ease-in-out; text-shadow: 0px -1px 0px rgba(0,0,0,0.2); }
-        .action-button:hover { transform: translateY(-2px); }
-        .action-button:active { transform: translateY(2px); border-bottom-width: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
-        .action-button:disabled { background: #cbd5e0; color: #a0aec0; cursor: not-allowed; transform: none; border-bottom-width: 1px; box-shadow: none; }
-        .input-field { background-color: var(--bg-input, var(--bg-input-light)); border: 1px solid var(--border, var(--border-light)); color: var(--text-main, var(--text-main-light)); padding: 0.75rem; border-radius: 0.5rem; }
-    </style>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="login-bg" class="background-animation"></div>
-    <div id="app-bg" class="background-animation hidden"></div>
+<body class="bg-gray-100 text-gray-800" data-theme="light">
+    <!-- Initial Login Section -->
+    <div id="initial-login-section" class="initial-login-container with-animation">
+        <!-- Minecraft Background Blocks (dynamic content in script.js to place them) -->
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
+        <div class="minecraft-block"></div>
 
-    <div class="top-controls">
-        <button id="theme-switcher-btn" class="action-button"></button>
-        <button id="logout-button" class="action-button hidden">Logout</button>
-    </div>
-
-    <div id="initial-login-section" class="initial-login-container">
         <div class="initial-login-card">
             <div id="login-form-container">
-                <h2 class="text-2xl font-bold mb-4">Minecraft Election</h2>
-                <p class="mb-6">Please enter your unique Voting ID to proceed.</p>
-                <input type="text" id="voting-id-input-initial" placeholder="Enter Voting ID" class="input-field w-full mb-4 bg-gray-800 text-white placeholder-gray-400">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome to Minecraft Election</h2>
+                <p class="mb-6 text-gray-600">Please enter your unique Voting ID to proceed.</p>
+                <input type="text" id="voting-id-input-initial" placeholder="Enter Voting ID" class="input-field w-full mb-4">
                 <button id="voting-id-login-btn-initial" class="action-button w-full">Login</button>
             </div>
-            <div id="login-loading-container" class="absolute inset-0 bg-inherit rounded-xl hidden items-center justify-center flex-col">
-                <div class="loader"></div>
-                <div class="loading-text font-semibold text-lg relative h-6 w-40 text-center">
-                    <span class="absolute w-full text-center">Checking ID...</span>
-                    <span class="absolute w-full text-center">Verifying details...</span>
-                    <span class="absolute w-full text-center">Authenticating...</span>
-                </div>
+            <div id="login-loading-animation" class="loading-wrapper hidden">
+                <div class="spinner"></div>
+                <p class="loading-text">Checking Voting ID...</p>
             </div>
         </div>
     </div>
 
+    <!-- Main Application Container -->
     <div id="main-app-container" class="hidden app-container">
-        <div class="flex flex-col lg:flex-row gap-6 w-full">
-            <div class="flex-grow-[2] main-content-area">
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-8">
-                    <button id="tab-vote" class="tab-button active">Vote</button>
-                    <button id="tab-candidate-login" class="tab-button">Candidate Login</button>
-                    <button id="tab-register-candidate" class="tab-button">Register Candidate</button>
-                </div>
-                <div id="content-vote" class="tab-content active-content"></div>
-                <div id="content-candidate-login" class="tab-content hidden"></div>
-                <div id="content-register-candidate" class="tab-content hidden"></div>
+        <!-- Header with Title, Theme Toggle, and Logout -->
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+            <h1 class="text-3xl font-bold text-blue-700">Minecraft Election</h1>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="bg-gray-700 text-white py-2 px-4 rounded-full shadow transition duration-300 ease-in-out font-semibold flex items-center gap-2">
+                    <span class="icon">🌙</span> Dark Mode
+                </button>
+                <button id="logout-button" class="bg-red-500 text-white py-2 px-4 rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out font-semibold">Logout</button>
             </div>
-            <div class="sidebar-area flex-grow-[1]">
-                <h2 class="text-3xl font-bold mb-6">Live Vote Count</h2>
-                <div id="live-vote-count"></div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6 w-full">
+            <!-- Main Content Area for Tabs -->
+            <div class="main-content-area flex-grow">
+                <!-- Tab Navigation -->
+                <nav class="tab-navigation flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-8">
+                    <div id="tab-vote" class="tab-item active">Vote</div>
+                    <div id="tab-candidate-login" class="tab-item">Candidate Login</div>
+                    <div id="tab-register-candidate" class="tab-item">Register Candidate</div>
+                </nav>
+
+                <!-- Tab Content: Vote Section -->
+                <div id="content-vote" class="tab-content">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Cast Your Vote</h2>
+                    <div id="vote-section-details">
+                        <div id="voting-disabled-message" class="hidden text-center p-8 bg-red-100 border border-red-300 rounded-xl mb-8 text-red-700">
+                            <p class="text-xl font-semibold">
+                                This Voting ID has already been used. You cannot cast another vote.
+                            </p>
+                            <p class="text-sm mt-2">You can still view live vote counts and candidate information.</p>
+                        </div>
+
+                        <div id="player-info-display" class="mb-6 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner text-blue-800">
+                            <h3 class="text-xl font-semibold mb-4">Your Voting Account Details:</h3>
+                            <p class="mb-2"><strong>Minecraft Name:</strong> <span id="display-minecraft-name"></span></p>
+                            <p><strong>Game Edition:</strong> <span id="display-game-edition"></span></p>
+                            <p class="text-sm text-blue-600 mt-2">
+                                <span id="bedrock-hint" class="hidden">For Bedrock Edition, your username might include a dot (e.g., `Player.Name`). Please ensure it matches your in-game name.</span>
+                            </p>
+                        </div>
+
+                        <!-- New Optional Details Section -->
+                        <div class="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+                            <h3 class="text-lg font-semibold mb-3 text-gray-700">Optional Details:</h3>
+                            <div class="mb-4">
+                                <label for="real-name-input" class="block text-sm font-medium text-gray-700 mb-1">Your Real Name (Optional):</label>
+                                <input type="text" id="real-name-input" placeholder="e.g., John Doe" class="input-field w-full">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-info-input" class="block text-sm font-medium text-gray-700 mb-1">Discord/WhatsApp/Instagram (Optional):</label>
+                                <input type="text" id="contact-info-input" placeholder="e.g., @yourdiscord, +1234567890" class="input-field w-full">
+                            </div>
+                            <div id="entered-details-display" class="mt-4 p-3 bg-white border border-gray-200 rounded-md hidden">
+                                <p class="text-sm font-medium text-gray-600">Entered Details:</p>
+                                <p id="display-real-name" class="text-sm text-gray-800"></p>
+                                <p id="display-contact-info" class="text-sm text-gray-800"></p>
+                            </div>
+                        </div>
+
+                        <div id="party-list-for-voting" class="hidden mt-6 p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+                            <h3 class="text-xl font-semibold mb-4 text-gray-800">Select a Party to Vote For:</h3>
+                            <!-- Party Search Input -->
+                            <div class="mb-4">
+                                <label for="party-search-input" class="block text-sm font-medium text-gray-700 mb-1">Search Party by Name, Leader, or Symbol:</label>
+                                <input type="text" id="party-search-input" placeholder="e.g., Sovereign, Yash, Lion" class="input-field w-full">
+                            </div>
+                            <div id="party-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                <!-- Party cards will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Candidate Login -->
+                <div id="content-candidate-login" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Candidate Login</h2>
+                    <div id="party-management-login-section" class="p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+                        <form id="party-login-form" class="space-y-4">
+                            <div>
+                                <label for="login-party-name" class="block text-sm font-medium text-gray-700">Party Name:</label>
+                                <input type="text" id="login-party-name" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="login-party-password" class="block text-sm font-medium text-gray-700">Password:</label>
+                                <input type="password" id="login-party-password" class="input-field w-full" required>
+                            </div>
+                            <button type="submit" class="action-button w-full">Login</button>
+                        </form>
+                    </div>
+                    <div id="candidate-dashboard" class="mt-6 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner hidden">
+                        <!-- Candidate dashboard content will be loaded here -->
+                        <button id="logout-candidate-btn" class="action-button bg-red-600 hover:bg-red-700 w-full mt-4">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Register Candidate -->
+                <div id="content-register-candidate" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Register New Candidate</h2>
+                    <div class="p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+                        <form id="register-candidate-form" class="space-y-4">
+                            <div>
+                                <label for="candidate-name" class="block text-sm font-medium text-gray-700">Candidate Name:</label>
+                                <input type="text" id="candidate-name" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-name-reg" class="block text-sm font-medium text-gray-700">Party Name:</label>
+                                <input type="text" id="party-name-reg" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-password-reg" class="block text-sm font-medium text-gray-700">Party Password:</label>
+                                <input type="password" id="party-password-reg" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-chinn" class="block text-sm font-medium text-gray-700">Party Symbol (Text/Emoji):</label>
+                                <input type="text" id="party-chinn" class="input-field w-full" required>
+                            </div>
+                            <div>
+                                <label for="party-logo-upload" class="block text-sm font-medium text-gray-700">Party Logo:</label>
+                                <input type="file" id="party-logo-upload" accept="image/*" class="hidden">
+                                <button type="button" id="upload-logo-btn" class="action-button mt-1">Upload Logo</button>
+                                <img id="logo-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTSuQmCC" alt="Logo Preview" class="mt-2 w-24 h-24 object-cover rounded-md border border-gray-300">
+                            </div>
+                            <button type="submit" class="action-button w-full">Register Party</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar: Live Vote Count -->
+            <div class="sidebar-area">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Live Vote Count</h2>
+                <div id="live-vote-count" class="space-y-3">
+                    <!-- Live vote counts will be displayed here -->
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Custom Alert Modal -->
     <div id="custom-alert-modal" class="custom-alert-modal">
         <div class="custom-alert-content">
             <p id="alert-message" class="text-lg font-semibold mb-4"></p>
-            <button id="alert-ok-btn" class="action-button mt-4">OK</button>
+            <button id="alert-ok-btn" class="alert-ok-button">OK</button>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Utils & State ---
-            const get = id => document.getElementById(id);
-            const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
-            let state = {
-                allCandidates: [],
-                votes: [],
-                currentVotingId: sessionStorage.getItem('currentVotingId') || null,
-                playerDetails: JSON.parse(sessionStorage.getItem('playerDetails')) || null,
-                isVoteUsed: sessionStorage.getItem('isVoteUsed') === 'true'
-            };
-
-            // --- DOM Elements ---
-            const themeSwitcherBtn = get('theme-switcher-btn');
-            const logoutButton = get('logout-button');
-            const initialLoginSection = get('initial-login-section');
-            const mainAppContainer = get('main-app-container');
-
-            // --- Theme Manager ---
-            const sunIcon = `☀️`; const moonIcon = `🌙`;
-            const applyTheme = (theme) => {
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                themeSwitcherBtn.innerHTML = theme === 'dark' ? sunIcon : moonIcon;
-            };
-            themeSwitcherBtn.addEventListener('click', () => applyTheme(localStorage.getItem('theme') === 'dark' ? 'light' : 'dark'));
-            applyTheme(localStorage.getItem('theme') || 'dark');
-
-            // --- API ---
-            const fetchData = async (endpoint) => {
-                try {
-                    const r = await fetch(`${API_BASE_URL}${endpoint}`);
-                    if (!r.ok) throw new Error(await r.text());
-                    return await r.json();
-                } catch (e) { showCustomAlert(`Error loading data: ${e.message}`); return null; }
-            };
-            const postData = async (endpoint, data) => {
-                try {
-                    const r = await fetch(`${API_BASE_URL}${endpoint}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-                    const result = await r.json();
-                    if (!r.ok) throw new Error(result.message || r.statusText);
-                    return result;
-                } catch (e) { showCustomAlert(`Error: ${e.message}`); return null; }
-            };
-
-            // --- Alerts & Modals ---
-            const showCustomAlert = (message, type, partyName) => {
-                const modal = get('custom-alert-modal'), content = modal.querySelector('.custom-alert-content');
-                const msgEl = get('alert-message');
-                content.querySelector('.confetti-container')?.remove();
-
-                if (type === 'vote_success') {
-                    msgEl.innerHTML = `You have voted for <span class="font-bold" style="color:var(--text-tab-active)">${partyName}</span>!`;
-                    if ('speechSynthesis' in window) {
-                        const fullMessage = `Congratulations you have voted for the ${partyName} party. Wait until the election ends to see who wins.`;
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance(fullMessage));
-                    }
-                    const confettiContainer = document.createElement('div');
-                    confettiContainer.className = 'confetti-container';
-                    for (let i = 0; i < 50; i++) {
-                        const confetti = document.createElement('div');
-                        const isEmoji = Math.random() > 0.8;
-                        confetti.className = isEmoji ? 'confetti-emoji' : 'confetti';
-                        confetti.style.setProperty('--x', Math.random());
-                        confetti.style.setProperty('--y', Math.random());
-                        if(isEmoji) confetti.innerText = ['🎉', '🎊', '👍', '✨', '🎈'][Math.floor(Math.random() * 5)];
-                        else confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                        confettiContainer.appendChild(confetti);
-                    }
-                    content.appendChild(confettiContainer);
-                } else {
-                    msgEl.textContent = message;
-                }
-                modal.classList.add('visible');
-            };
-            get('alert-ok-btn').addEventListener('click', () => get('custom-alert-modal').classList.remove('visible'));
-
-            // --- Rendering Logic ---
-            const renderVoteContent = () => {
-                const target = get('content-vote');
-                target.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-6">Cast Your Vote</h2>
-                    <div id="party-list" class="grid grid-cols-1 gap-6"></div>`;
-                displayPartyList();
-            };
-
-            const displayPartyList = async () => {
-                const listDiv = get('party-list');
-                state.allCandidates = await fetchData('/candidates');
-                if (!state.allCandidates) { listDiv.innerHTML = '<p>Could not load candidates.</p>'; return; }
-                
-                listDiv.innerHTML = '';
-                state.allCandidates.forEach(candidate => {
-                    const card = document.createElement('div');
-                    card.className = 'party-card flex flex-row items-center gap-4 p-4 rounded-lg'; // Adjust styles as needed
-                    card.innerHTML = `
-                        <img src="${candidate.partyLogo || ''}" alt="${candidate.partyName}" class="w-20 h-20 object-cover rounded-full border-2 border-purple-500">
-                        <div class="text-left flex-grow">
-                            <h3 class="text-xl font-semibold">${candidate.partyName}</h3>
-                            <p class="text-sm">Leader: ${candidate.candidateName} | Symbol: ${candidate.partyChinn}</p>
-                        </div>
-                        <button class="action-button vote-btn" data-party="${candidate.partyName}">Vote</button>`;
-                    listDiv.appendChild(card);
-                });
-
-                listDiv.querySelectorAll('.vote-btn').forEach(btn => {
-                    if (state.isVoteUsed) {
-                        btn.disabled = true;
-                        btn.textContent = 'Voted';
-                    }
-                    btn.addEventListener('click', async (e) => {
-                        const partyName = e.target.dataset.party;
-                        const result = await postData('/submit-vote', { votingId: state.currentVotingId, party: partyName });
-                        if (result && result.success) {
-                            showCustomAlert('', 'vote_success', partyName);
-                            state.isVoteUsed = true;
-                            sessionStorage.setItem('isVoteUsed', 'true');
-                            document.querySelectorAll('.vote-btn').forEach(b => {b.disabled = true; b.textContent = 'Voted';});
-                            updateLiveVoteCount();
-                        }
-                    });
-                });
-            };
-
-            const updateLiveVoteCount = async () => {
-                state.votes = await fetchData('/votes');
-                state.allCandidates = await fetchData('/candidates');
-                if (!state.votes || !state.allCandidates) return;
-                
-                const totalVotes = state.votes.length;
-                const voteCounts = state.allCandidates.reduce((acc, c) => ({...acc, [c.partyName]: 0}), {});
-                state.votes.forEach(v => { if(voteCounts.hasOwnProperty(v.party)) voteCounts[v.party]++; });
-                
-                get('live-vote-count').innerHTML = '';
-                Object.entries(voteCounts).sort(([,a],[,b]) => b-a).forEach(([party, count]) => {
-                    const percentage = totalVotes > 0 ? (count / totalVotes * 100) : 0;
-                    const el = document.createElement('div');
-                    el.innerHTML = `
-                        <div class="flex justify-between items-center mb-1 text-sm font-bold">
-                            <span>${party}</span>
-                            <span>${count} Votes (${percentage.toFixed(1)}%)</span>
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-lg h-8"><div class="vote-bar" style="width: 0%;"></div></div>`;
-                    get('live-vote-count').appendChild(el);
-                    // Animate the bar width
-                    setTimeout(() => { el.querySelector('.vote-bar').style.width = `${percentage}%`; }, 100);
-                });
-            };
-
-            // --- App Initialization & Flow ---
-            const initApp = async () => {
-                initialLoginSection.style.opacity = '0';
-                setTimeout(() => initialLoginSection.classList.add('hidden'), 500);
-                mainAppContainer.classList.remove('hidden');
-                logoutButton.classList.remove('hidden');
-                get('app-bg').classList.remove('hidden');
-                
-                showTab('vote');
-                await updateLiveVoteCount();
-                setInterval(updateLiveVoteCount, 15000); // Refresh votes periodically
-            };
-
-            get('voting-id-login-btn-initial').addEventListener('click', async () => {
-                get('login-form-container').classList.add('hidden');
-                get('login-loading-container').classList.remove('hidden');
-                
-                const result = await postData('/check-voting-id', { votingId: get('voting-id-input-initial').value.trim() });
-                
-                if (result && result.success && result.valid) {
-                    state.currentVotingId = result.votingId;
-                    state.playerDetails = { playerName: result.playerName, gameEdition: result.gameEdition };
-                    state.isVoteUsed = result.used;
-                    sessionStorage.setItem('currentVotingId', state.currentVotingId);
-                    sessionStorage.setItem('playerDetails', JSON.stringify(state.playerDetails));
-                    if(state.isVoteUsed) sessionStorage.setItem('isVoteUsed', 'true');
-                    initApp();
-                } else {
-                    showCustomAlert(result ? result.message : 'Invalid Voting ID.');
-                    get('login-form-container').classList.remove('hidden');
-                    get('login-loading-container').classList.add('hidden');
-                }
-            });
-
-            logoutButton.addEventListener('click', () => {
-                sessionStorage.clear();
-                window.location.reload();
-            });
-
-            // --- Tabs ---
-            const tabs = {
-                vote: { btn: get('tab-vote'), content: get('content-vote'), render: renderVoteContent },
-                candidateLogin: { btn: get('tab-candidate-login'), content: get('content-candidate-login'), render: () => get('content-candidate-login').innerHTML = 'Candidate login coming soon...' },
-                registerCandidate: { btn: get('tab-register-candidate'), content: get('content-register-candidate'), render: () => get('content-register-candidate').innerHTML = 'Candidate registration coming soon...' },
-            };
-            const showTab = (tabName) => {
-                Object.values(tabs).forEach(t => {
-                    t.btn.classList.remove('active');
-                    t.content.classList.add('hidden');
-                    t.content.classList.remove('active-content');
-                });
-                const tab = tabs[tabName];
-                tab.btn.classList.add('active');
-                tab.content.classList.remove('hidden');
-                tab.content.classList.add('active-content');
-                tab.render();
-            };
-            Object.keys(tabs).forEach(key => tabs[key].btn.addEventListener('click', () => showTab(key)));
-
-            // --- Initial Load Check ---
-            if (state.currentVotingId) {
-                initApp();
-            }
-        });
-    </script>
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
 </body>
 </html>
