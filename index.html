@@ -13,15 +13,15 @@
     <div class="background-wrapper">
         <ul class="animated-cubes">
             <li class="cube"></li>
+            <li class="cube circle"></li>
             <li class="cube"></li>
+            <li class="cube triangle"></li>
             <li class="cube"></li>
+            <li class="cube circle"></li>
             <li class="cube"></li>
+            <li class="cube triangle"></li>
             <li class="cube"></li>
-            <li class="cube"></li>
-            <li class="cube"></li>
-            <li class="cube"></li>
-            <li class="cube"></li>
-            <li class="cube"></li>
+            <li class="cube circle"></li>
             <li class="cube"></li>
             <li class="cube"></li>
         </ul>
@@ -30,14 +30,19 @@
     <div id="initial-login-section" class="initial-login-container with-animation">
 
         <div class="initial-login-card">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome to Minecraft Election</h2>
             <div id="login-form-container">
-                <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome to Minecraft Election</h2>
                 <p class="mb-6 text-gray-600">Please enter your unique Voting ID to proceed.</p>
                 <input type="text" id="voting-id-input-initial" placeholder="Enter Voting ID" class="input-field w-full mb-4">
                 <button id="voting-id-login-btn-initial" class="action-button w-full">Login</button>
             </div>
             <div id="login-loading-animation" class="loading-wrapper hidden">
-                <div class="spinner"></div>
+                <div class="loading-animation">
+                    <div class="loading-bar"></div>
+                    <div class="loading-bar"></div>
+                    <div class="loading-bar"></div>
+                    <div class="loading-bar"></div>
+                </div>
                 <p class="loading-text">Checking Voting ID...</p>
             </div>
         </div>
@@ -48,6 +53,9 @@
         <!-- Header with Title -->
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <h1 class="text-3xl font-bold text-blue-700">Minecraft Election</h1>
+            <button id="theme-toggle" class="action-button">
+                <span class="icon">🌙</span> Dark Mode
+            </button>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 w-full">
@@ -178,9 +186,6 @@
 
         <!-- App Controls -->
         <div id="app-controls" class="absolute bottom-4 right-4 flex flex-col gap-2">
-            <button id="theme-toggle" class="action-button">
-                <span class="icon">🌙</span> Dark Mode
-            </button>
             <button id="logout-button" class="action-button logout-button">Logout</button>
         </div>
     </div>

@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function triggerConfettiAndEmojis() {
-        const confettiCount = 50;
-        const emojiCount = 10;
+        const confettiCount = 150;
+        const emojiCount = 30;
         const emojis = ['🎉', '🥳', '✨', '⚡️', '🚀', '🔥', '🌟', '💎', '💯', '🏆']; // Minecraft/gamer themed emojis
 
         // Confetti
