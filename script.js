@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     applyTheme(savedTheme);
 
     themeToggle.addEventListener('click', () => {
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return await response.json();
         } catch (error) {
             console.error(`Network error fetching ${endpoint}:`, error);
-            showCustomAlert(`Network error: Could not connect to server.`);
+            showCustomAlert("Network error: Could not connect to the server. Please check your connection or try again later.");
             return null;
         }
     }
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return await response.json();
         } catch (error) {
             console.error(`Network error posting to ${endpoint}:`, error);
-            showCustomAlert(`Network error: Could not connect to server.`);
+            showCustomAlert("Network error: Could not connect to the server. Please check your connection or try again later.");
             return null;
         }
     }
