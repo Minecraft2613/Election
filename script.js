@@ -60,6 +60,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loginFormContainer = document.getElementById('login-form-container');
     const loginLoadingAnimation = document.getElementById('login-loading-animation');
 
+    // Vote Casting Animation Elements
+    const voteCastingOverlay = document.getElementById('vote-casting-overlay');
+    const voteCastingText = document.getElementById('vote-casting-text');
+
     // --- Feature Toggles and Custom Messages ---
     const IS_VOTING_ENABLED = true; // Set to true to enable voting as requested
     const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
@@ -158,10 +162,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return votes.filter(vote => vote.party === partyName).length;
     }
 
-    function triggerConfettiAndEmojis() {
+    function triggerConfettiAndEmojis(partyName) {
         const confettiCount = 150;
         const emojiCount = 30;
-        const emojis = ['🎉', '🥳', '✨', '⚡️', '🚀', '🔥', '🌟', '💎', '💯', '🏆']; // Minecraft/gamer themed emojis
+        const emojis = ['🎉', '🥳', '✨', '⚡️', '🚀', '🔥', '🌟', '💎', '💯', '🏆'];
+        
+        // Simple color mapping for parties
+        const partyColors = {
+            'Sovereign': '240', // Blue
+            'Default': '0',     // Red for others
+        };
+        const hue = partyColors[partyName] || partyColors['Default'];
 
         // Confetti
         for (let i = 0; i < confettiCount; i++) {
@@ -169,9 +180,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             confetti.classList.add('confetti');
             confetti.style.left = `${Math.random() * 100}vw`;
             confetti.style.top = `${Math.random() * 100}vh`;
-            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            confetti.style.setProperty('--x', `${Math.random() * 500 - 250}px`); // Random horizontal movement
-            confetti.style.setProperty('--y', `${Math.random() * 500 - 250}px`); // Random vertical movement
+            // Use party-specific color, with some variation
+            confetti.style.backgroundColor = `hsl(${hue}, 100%, ${Math.random() * 50 + 50}%)`;
+            confetti.style.setProperty('--x', `${Math.random() * 500 - 250}px`);
+            confetti.style.setProperty('--y', `${Math.random() * 500 - 250}px`);
             confetti.style.setProperty('--x-end', `${Math.random() * 1000 - 500}px`);
             confetti.style.setProperty('--y-end', `${window.innerHeight + 200}px`);
             document.body.appendChild(confetti);
@@ -327,9 +339,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Add a header for the total vote count
         const totalVotesHeader = document.createElement('h3');
-        totalVotesHeader.className = 'text-xl font-bold mb-4 text-center';
+        totalVotesHeader.className = 'text-xl font-bold mb-2 text-center'; // Reduced margin-bottom
         totalVotesHeader.textContent = `Total Votes: ${totalVotes}`;
         liveVoteCountDiv.appendChild(totalVotesHeader);
+
+        // Add "Minecraft_2613" text
+        const customText = document.createElement('p');
+        customText.className = 'text-sm text-gray-400 text-center mb-4';
+        customText.textContent = 'Minecraft_2613';
+        liveVoteCountDiv.appendChild(customText);
 
         // Initialize counts for all known candidates
         allCandidates.forEach(c => voteCounts[c.partyName] = 0);
@@ -458,31 +476,49 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showCustomAlert('This Voting ID has already been used. You cannot cast another vote.');
                     return;
                 }
-                // Check IS_VOTING_ENABLED before allowing vote submission
                 if (!IS_VOTING_ENABLED) {
                     showCustomAlert(VOTING_DISABLED_CUSTOM_MESSAGE);
                     return;
                 }
 
-                const voteData = {
-                    votingId: currentVotingId,
-                    party: candidate.partyName,
-                    realName: realNameInput.value, // Include optional real name
-                    discordInsta: contactInfoInput.value // Include optional contact info
-                };
+                // Show vote casting animation
+                voteCastingText.textContent = `${currentVotingPlayerDetails.playerName} is casting a vote for ${candidate.partyName}...`;
+                voteCastingOverlay.classList.remove('hidden');
+                voteCastingOverlay.classList.add('flex'); // Use flex to center content
 
-                const result = await postData('/submit-vote', voteData);
-                if (result && result.success) {
-                    showCustomAlert(`Congratulations! You have voted for ${candidate.partyName}! Wait until the election ends and see who wins!`, true);
-                    playRoboticSound(`Congratulations! You have voted for ${candidate.partyName}! Wait until the election ends and see who wins!`);
-                    triggerConfettiAndEmojis();
-                    isVotingDisabledForUsedId = true;
-                    sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                    updateVoteSectionUI(); // Re-render UI to disable vote buttons
-                    await updateLiveVoteCount();
-                } else {
-                    showCustomAlert(result ? result.message : 'Failed to submit vote.');
-                }
+                // Simulate casting animation duration (3 seconds)
+                setTimeout(async () => {
+                    const voteData = {
+                        votingId: currentVotingId,
+                        party: candidate.partyName,
+                        realName: realNameInput.value,
+                        discordInsta: contactInfoInput.value
+                    };
+
+                    const result = await postData('/submit-vote', voteData);
+
+                    // Hide the animation overlay
+                    voteCastingOverlay.classList.add('hidden');
+                    voteCastingOverlay.classList.remove('flex');
+                    
+                    if (result && result.success) {
+                        showCustomAlert(`Congratulations! You have voted for ${candidate.partyName}! Wait until the election ends and see who wins!`, true);
+                        playRoboticSound(`Congratulations! You have voted for ${candidate.partyName}!`);
+                        triggerConfettiAndEmojis(candidate.partyName);
+                        isVotingDisabledForUsedId = true;
+                        sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
+                        updateVoteSectionUI();
+                        await updateLiveVoteCount();
+                    } else {
+                        // Trigger vote failure animation on the specific card
+                        partyCard.classList.add('failed');
+                        showCustomAlert(result ? result.message : 'Failed to submit vote.');
+                        // Remove the class after animation so it can be triggered again
+                        setTimeout(() => {
+                            partyCard.classList.remove('failed');
+                        }, 1000); // Duration of the break-down animation
+                    }
+                }, 3000); // 3-second animation duration
             });
 
             partyCard.appendChild(partyLogo);
