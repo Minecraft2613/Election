@@ -9,173 +9,286 @@
     <style>
         /* Custom styles for the app */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --font-main: 'Inter', sans-serif;
+            
+            /* Light Theme */
+            --bg-body-light: linear-gradient(to bottom right, #e0f2f7, #c1e4ed);
+            --bg-app-container-light: #ffffff;
+            --bg-content-area-light: #f8fafc;
+            --bg-input-light: #f1f5f9;
+            --bg-button-light: linear-gradient(to right, #3b82f6, #6366f1);
+            --bg-button-hover-light: linear-gradient(to right, #2563eb, #4f46e5);
+            --bg-tab-inactive-light: transparent;
+            --text-main-light: #374151;
+            --text-button-light: white;
+            --text-tab-inactive-light: #4a5568;
+            --text-tab-active-light: #3b82f6;
+            --border-light: #e2e8f0;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --inset-shadow-light: rgba(0,0,0,0.05);
+
+            /* Dark Theme */
+            --bg-body-dark: linear-gradient(to bottom right, #1a202c, #2d3748);
+            --bg-app-container-dark: #2d3748;
+            --bg-content-area-dark: #1a202c;
+            --bg-input-dark: #4a5568;
+            --bg-button-dark: linear-gradient(to right, #4c51bf, #6b46c1);
+            --bg-button-hover-dark: linear-gradient(to right, #434190, #553c9a);
+            --bg-tab-inactive-dark: transparent;
+            --text-main-dark: #e2e8f0;
+            --text-button-dark: white;
+            --text-tab-inactive-dark: #a0aec0;
+            --text-tab-active-dark: #63b3ed;
+            --border-dark: #4a5568;
+            --shadow-dark: rgba(0, 0, 0, 0.4);
+            --inset-shadow-dark: rgba(0,0,0,0.5);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: var(--bg-body-dark);
+            --bg-app-container: var(--bg-app-container-dark);
+            --bg-content-area: var(--bg-content-area-dark);
+            --bg-input: var(--bg-input-dark);
+            --bg-button: var(--bg-button-dark);
+            --bg-button-hover: var(--bg-button-hover-dark);
+            --bg-tab-inactive: var(--bg-tab-inactive-dark);
+            --text-main: var(--text-main-dark);
+            --text-button: var(--text-button-dark);
+            --text-tab-inactive: var(--text-tab-inactive-dark);
+            --text-tab-active: var(--text-tab-active-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+            --inset-shadow: var(--inset-shadow-dark);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Light blue gradient */
-            color: #374151; /* Dark gray text */
+            font-family: var(--font-main);
+            background: var(--bg-body, var(--bg-body-light));
+            color: var(--text-main, var(--text-main-light));
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Styles for the initial login screen (matching screenshot) */
+        /* Styles for the initial login screen with animated background */
         .initial-login-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: fixed; /* Fixed to cover entire screen */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom right, #e0f2f7, #c1e4ed); /* Match body background */
-            z-index: 999; /* Ensure it's on top */
-        }
-        .initial-login-card {
-            background-color: #ffffff;
-            border-radius: 1.5rem; /* More rounded */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
-            padding: 2.5rem;
-            max-width: 400px; /* Compact width */
-            width: 90%; /* Responsive width */
-            text-align: center;
-            border: 1px solid #e2e8f0;
+            background: #1a202c; /* Base color for animation */
+            overflow: hidden; /* Hide overflowing blocks */
+            z-index: 999;
         }
 
-        /* Main App Container - Adjusted for a more centralized, compact look and responsiveness */
-        .app-container {
-            background-color: #ffffff;
-            border-radius: 1.5rem; /* Rounded corners */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
+        @keyframes move-cubes {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .animated-cubes {
+            position: absolute;
+            top: 100vh;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .animated-cubes .cube {
+            position: absolute;
+            list-style: none;
+            display: block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: move-cubes 20s linear infinite;
+        }
+
+        .animated-cubes .cube:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .animated-cubes .cube:nth-child(2) { left: 20%; width: 30px; height: 30px; animation-delay: 1.5s; animation-duration: 10s; }
+        .animated-cubes .cube:nth-child(3) { left: 30%; width: 100px; height: 100px; animation-delay: 3s; }
+        .animated-cubes .cube:nth-child(4) { left: 45%; width: 50px; height: 50px; animation-delay: 0s; animation-duration: 15s; }
+        .animated-cubes .cube:nth-child(5) { left: 65%; width: 40px; height: 40px; animation-delay: 0s; }
+        .animated-cubes .cube:nth-child(6) { left: 80%; width: 120px; height: 120px; animation-delay: 2s; animation-duration: 12s; }
+
+
+        .initial-login-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             padding: 2.5rem;
-            max-width: 1200px; /* Increased max width for overall app */
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 10;
+        }
+        
+        .minecraft-title {
+            font-family: 'Minecraft', 'Inter', sans-serif; /* Fallback to Inter */
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4a4a4a;
+            text-shadow: 2px 2px 0 #fff, 4px 4px 0 #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 3D App Container */
+        .app-container {
+            background-color: var(--bg-app-container, var(--bg-app-container-light));
+            border-radius: 1.5rem;
+            border: 1px solid var(--border, var(--border-light));
+            box-shadow: 
+                0px 5px 15px var(--shadow, var(--shadow-light)),
+                0px 15px 35px var(--shadow, var(--shadow-light));
+            padding: 2rem;
+            max-width: 1200px;
             width: 100%;
             display: flex;
-            flex-direction: column; /* Default to column on small screens */
-            gap: 1.5rem; /* Spacing between main content and sidebar */
-            min-height: 80vh; /* Ensure it takes up a good portion of the viewport */
+            flex-direction: column;
+            gap: 1.5rem;
+            min-height: 80vh;
         }
 
-        /* Main content and sidebar are now stacked vertically on small screens, side-by-side on larger */
+        /* Inset (Swimming Pool) effect for content areas */
         .main-content-area, .sidebar-area {
-            background-color: #f8fafc; /* Lighter background for content */
-            border-radius: 1rem; /* Slightly less rounded than container */
+            background-color: var(--bg-content-area, var(--bg-content-area-light));
+            border-radius: 1rem;
             padding: 1.5rem;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            flex-grow: 1; /* Allows content to grow */
-        }
-        @media (min-width: 1024px) { /* On large screens (lg), arrange side-by-side */
-            .app-container {
-                flex-direction: row; /* Row direction for desktop */
-            }
-            .main-content-area {
-                flex: 2; /* Main content takes 2 parts */
-            }
-            .sidebar-area {
-                flex: 1; /* Sidebar takes 1 part */
-            }
+            border: 1px solid var(--border, var(--border-light));
+            box-shadow: inset 3px 3px 7px var(--inset-shadow, var(--inset-shadow-light)), 
+                        inset -3px -3px 7px #ffffff20;
+            flex-grow: 1;
         }
 
-        /* Tab button styles */
+        @media (min-width: 1024px) {
+            .app-container { flex-direction: row; }
+            .main-content-area { flex: 2; }
+            .sidebar-area { flex: 1; }
+        }
+
+        /* New Tab button styles */
         .tab-button {
-            background-color: #cbd5e0; /* Light gray for inactive tabs */
-            color: #4a5568; /* Darker text */
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
+            background: var(--bg-tab-inactive, var(--bg-tab-inactive-light));
+            color: var(--text-tab-inactive, var(--text-tab-inactive-light));
+            padding: 0.75rem 0.5rem;
+            border-radius: 0;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            flex-grow: 1; /* Allow buttons to grow and fill space */
-            text-align: center; /* Center text in buttons */
+            transition: color 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            border-bottom: 3px solid transparent;
+            flex-grow: 1;
+            text-align: center;
         }
         .tab-button:hover {
-            background-color: #a0aec0; /* Darker gray on hover */
-            color: white;
+            color: var(--text-tab-active, var(--text-tab-active-light));
         }
         .tab-button.active {
-            background: linear-gradient(to right, #3b82f6, #6366f1); /* Blue to indigo gradient */
-            color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: var(--text-tab-active, var(--text-tab-active-light));
+            border-bottom-color: var(--text-tab-active, var(--text-tab-active-light));
+        }
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--text-tab-active, var(--text-tab-active-light));
+            border-radius: 50%;
+            animation: pop-up 0.3s ease-out;
+        }
+
+        @keyframes pop-up {
+            from { transform: translateX(-50%) scale(0); }
+            to { transform: translateX(-50%) scale(1); }
         }
 
         /* Input field styles */
         .input-field {
-            background-color: #f1f5f9; /* Off-white for inputs */
-            border: 1px solid #cbd5e0;
-            color: #374151;
+            background-color: var(--bg-input, var(--bg-input-light));
+            border: 1px solid var(--border, var(--border-light));
+            color: var(--text-main, var(--text-main-light));
             padding: 0.75rem;
             border-radius: 0.5rem;
             transition: all 0.2s ease;
         }
-        .input-field::placeholder {
-            color: #94a3b8;
-        }
+        .input-field::placeholder { color: #94a3b8; }
         .input-field:focus {
             outline: none;
             border-color: #6366f1;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
         }
-        .input-field option {
-            background-color: #ffffff; /* White background for select options */
-            color: #374151;
-        }
 
-        /* Action button styles */
+        /* 3D Action button styles */
         .action-button {
-            background: linear-gradient(to right, #3b82f6, #6366f1); /* Blue to indigo gradient */
-            color: white;
-            padding: 0.75rem 1.5rem;
+            background: var(--bg-button, var(--bg-button-light));
+            color: var(--text-button, var(--text-button-light));
+            padding: 0.8rem 1.5rem;
             border-radius: 0.75rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.2);
+            border-bottom: 4px solid rgba(0,0,0,0.4);
+            transition: all 0.1s ease-in-out;
+            text-shadow: 0px -1px 0px rgba(0,0,0,0.2);
         }
         .action-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
-            background: linear-gradient(to right, #2563eb, #4f46e5);
+            background: var(--bg-button-hover, var(--bg-button-hover-light));
         }
-        /* Disabled button style */
+        .action-button:active {
+            transform: translateY(2px);
+            border-bottom-width: 1px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
         .action-button:disabled {
-            background: #cbd5e0; /* Light gray */
-            color: #a0aec0; /* Darker gray */
+            background: #cbd5e0;
+            color: #a0aec0;
             cursor: not-allowed;
             transform: none;
+            border-bottom-width: 1px;
             box-shadow: none;
         }
 
-        /* Party card styles - Modified for rectangular box effect and fixed dimensions */
+        /* Party card styles */
         .party-card {
-            background-color: #ffffff;
-            border: 2px solid #6366f1; /* Stronger border for the "box" effect */
+            background-color: var(--bg-app-container, var(--bg-app-container-light));
+            border: 1px solid var(--border, var(--border-light));
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex; /* Use flexbox for better alignment */
+            box-shadow: 0 4px 6px var(--shadow, var(--shadow-light));
+            display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* Pushes button to bottom */
-            min-width: 180px; /* Ensure a reasonable minimum width */
-            height: auto; /* Allow height to adjust */
-            /* Removed margin: auto; to fix grid collapse issue */
+            justify-content: space-between;
+            width: 100%; /* Make responsive */
+            min-width: 0; /* Override previous min-width */
         }
         .party-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px var(--shadow, var(--shadow-light));
         }
+
         .party-logo-small {
             width: 50px;
             height: 50px;
             object-fit: cover;
             border-radius: 50%;
             margin-right: 10px;
-            border: 2px solid #a855f7; /* Purple border */
+            border: 2px solid #a855f7;
         }
         .party-logo-large {
             max-width: 120px;
@@ -186,7 +299,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* Custom Alert Modal Styles */
+        /* Custom Alert & Vote Success Modal Styles */
         .custom-alert-modal {
             display: none;
             position: fixed;
@@ -195,45 +308,43 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0,0,0,0.6);
             justify-content: center;
             align-items: center;
         }
-        .custom-alert-modal.visible {
-            display: flex;
-        }
+        .custom-alert-modal.visible { display: flex; }
         .custom-alert-content {
-            background-color: #ffffff;
-            color: #374151;
+            background-color: var(--bg-app-container, var(--bg-app-container-light));
+            color: var(--text-main, var(--text-main-light));
             padding: 2rem;
             border-radius: 1rem;
             text-align: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.4);
             animation: fadeIn 0.3s ease-out;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border, var(--border-dark));
         }
+        
+        /* Vote Success Animation */
+        .vote-success-animation {
+            animation: pop-in-and-shake 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        @keyframes pop-in-and-shake {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            70% { transform: scale(0.9) rotate(-3deg); }
+            80% { transform: scale(1.05) rotate(3deg); }
+            90% { transform: scale(0.95) rotate(-1deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .alert-ok-button {
-            background-color: #3b82f6;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            margin-top: 1rem;
+             /* Uses .action-button styles now */
         }
-        .alert-ok-button:hover {
-            background-color: #2563eb;
-            transform: translateY(-1px);
-        }
-        .hidden {
-            display: none !important;
-        }
-        /* Style for disabled message */
+        .hidden { display: none !important; }
         .disabled-message {
             text-align: center;
             padding: 8px;
@@ -241,18 +352,26 @@
             margin-bottom: 8px;
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1e40af; /* Darker blue text */
-            background-color: #dbeafe; /* Light blue background */
-            border: 1px solid #93c5fd; /* Blue border */
+            color: #1e40af;
+            background-color: #dbeafe;
+            border: 1px solid #93c5fd;
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
     <!-- Initial Login Section -->
     <div id="initial-login-section" class="initial-login-container">
+        <ul class="animated-cubes">
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+            <li class="cube"></li>
+        </ul>
         <div class="initial-login-card">
-            <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome to Minecraft Election</h2>
-            <p class="mb-6 text-gray-600">Please enter your unique Voting ID to proceed.</p>
+            <h2 class="minecraft-title">Minecraft Election</h2>
+            <p class="mb-6 text-gray-600" style="color: #5a5a5a;">Please enter your unique Voting ID to proceed.</p>
             <input type="text" id="voting-id-input-initial" placeholder="Enter Voting ID" class="input-field w-full mb-4">
             <button id="voting-id-login-btn-initial" class="action-button w-full">Login</button>
         </div>
@@ -261,9 +380,14 @@
     <!-- Main Application Container -->
     <div id="main-app-container" class="hidden app-container">
         <!-- Header with Title and Logout -->
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-            <h1 class="text-3xl font-bold text-blue-700">Minecraft Election</h1>
-            <button id="logout-button" class="bg-red-500 text-white py-2 px-4 rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out font-semibold">Logout</button>
+        <div class="flex justify-between items-center mb-6 pb-4" style="border-bottom: 1px solid var(--border, var(--border-light));">
+            <h1 class="text-3xl font-bold" style="color: var(--text-tab-active, var(--text-tab-active-light));">Minecraft Election</h1>
+            <div class="flex items-center gap-4">
+                <button id="theme-switcher-btn" class="p-2 rounded-full" style="color: var(--text-tab-inactive, var(--text-tab-inactive-light));">
+                    <!-- Sun/Moon Icon will be injected by JS -->
+                </button>
+                <button id="logout-button" class="action-button bg-red-500 hover:bg-red-600">Logout</button>
+            </div>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 w-full">
@@ -408,6 +532,8 @@
             const votingIdInputInitial = document.getElementById('voting-id-input-initial');
             const votingIdLoginBtnInitial = document.getElementById('voting-id-login-btn-initial');
             const mainAppContainer = document.getElementById('main-app-container');
+            const themeSwitcherBtn = document.getElementById('theme-switcher-btn');
+            const logoutButton = document.getElementById('logout-button');
 
             // Tab Buttons
             const tabVote = document.getElementById('tab-vote');
@@ -419,16 +545,16 @@
             const contentCandidateLogin = document.getElementById('content-candidate-login');
             const contentRegisterCandidate = document.getElementById('content-register-candidate');
 
-            // Vote Section Elements (after initial login)
+            // Vote Section Elements
             const voteSectionDetails = document.getElementById('vote-section-details');
             const votingDisabledMessage = document.getElementById('voting-disabled-message');
             const playerInfoDisplay = document.getElementById('player-info-display');
             const displayMinecraftName = document.getElementById('display-minecraft-name');
             const displayGameEdition = document.getElementById('display-game-edition');
-            const bedrockHint = document.getElementById('bedrock-hint'); // New hint element
+            const bedrockHint = document.getElementById('bedrock-hint');
             const partyListForVoting = document.getElementById('party-list-for-voting');
             const partyListDiv = document.getElementById('party-list');
-            const partySearchInput = document.getElementById('party-search-input'); // New search input element
+            const partySearchInput = document.getElementById('party-search-input');
 
             // Optional Details Elements
             const realNameInput = document.getElementById('real-name-input');
@@ -437,16 +563,14 @@
             const displayRealName = document.getElementById('display-real-name');
             const displayContactInfo = document.getElementById('display-contact-info');
 
-
             // Live Vote Count Elements
-            const liveVoteCountDiv = document.getElementById('live-vote-count'); // Correctly defined
+            const liveVoteCountDiv = document.getElementById('live-vote-count');
 
             // Candidate Management Elements
             const partyManagementLoginSection = document.getElementById('party-management-login-section');
             const partyLoginForm = document.getElementById('party-login-form');
             const candidateDashboard = document.getElementById('candidate-dashboard');
-            const logoutCandidateBtn = document.getElementById('logout-candidate-btn');
-
+            
             // Register Candidate Elements
             const registerCandidateForm = document.getElementById('register-candidate-form');
             const logoPreview = document.getElementById('logo-preview');
@@ -455,21 +579,46 @@
 
             // Custom Alert Modal Elements
             const customAlertModal = document.getElementById('custom-alert-modal');
+            const customAlertContent = customAlertModal.querySelector('.custom-alert-content');
             const alertMessage = document.getElementById('alert-message');
             const alertOkBtn = document.getElementById('alert-ok-btn');
 
+            // --- Theme Manager ---
+            const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+            const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeSwitcherBtn.innerHTML = sunIcon;
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    themeSwitcherBtn.innerHTML = moonIcon;
+                }
+            }
+
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            }
+
+            themeSwitcherBtn.addEventListener('click', toggleTheme);
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+
             // --- Feature Toggles and Custom Messages ---
-            const IS_VOTING_ENABLED = true; // Set to true to enable voting as requested
+            const IS_VOTING_ENABLED = true;
             const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow. Please check back tomorrow at 1 pm !";
-
-            const IS_REGISTRATION_ENABLED = true; // Set to true to enable candidate registration
+            const IS_REGISTRATION_ENABLED = true;
             const REGISTRATION_DISABLED_CUSTOM_MESSAGE = "Voting is going on.";
-            // --- End Feature Toggles ---
-
+            
             // --- Constants & State Variables ---
             const API_BASE_URL = 'https://voting.1987sakshamsingh.workers.dev/api';
             const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaElEQVR42u3PQREAAAgDoC2G/Yt62e20IIDz9wYBAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgMDbA3cAAR2gLdJPAAAAAElFTSuQmCC';
-            let allCandidates = []; // Stores all fetched candidates for search
+            let allCandidates = [];
             let votes = [];
             let currentVotingId = sessionStorage.getItem('currentVotingId') || null;
             let currentVotingPlayerDetails = JSON.parse(sessionStorage.getItem('currentVotingPlayerDetails')) || null;
@@ -480,16 +629,11 @@
             async function fetchData(endpoint) {
                 try {
                     const response = await fetch(`${API_BASE_URL}${endpoint}`);
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error(`API Error fetching ${endpoint}: ${response.status} - ${errorText}`);
-                        showCustomAlert(`Error loading data: ${response.statusText}`);
-                        return null;
-                    }
+                    if (!response.ok) throw new Error(await response.text());
                     return await response.json();
                 } catch (error) {
-                    console.error(`Network error fetching ${endpoint}:`, error);
-                    showCustomAlert(`Network error: Could not connect to server.`);
+                    console.error(`API Error fetching ${endpoint}:`, error);
+                    showCustomAlert(`Error loading data: ${error.message}`);
                     return null;
                 }
             }
@@ -498,28 +642,38 @@
                 try {
                     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data),
                     });
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error(`API Error posting to ${endpoint}: ${response.status} - ${errorText}`);
-                        showCustomAlert(`Error: ${errorText || response.statusText}`);
-                        return null;
-                    }
-                    return await response.json();
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message || response.statusText);
+                    return result;
                 } catch (error) {
-                    console.error(`Network error posting to ${endpoint}:`, error);
-                    showCustomAlert(`Network error: Could not connect to server.`);
+                    console.error(`API Error posting to ${endpoint}:`, error);
+                    showCustomAlert(`Error: ${error.message}`);
                     return null;
                 }
             }
 
             // --- Helper Functions ---
-            function showCustomAlert(message) {
+            function showCustomAlert(message, type = 'normal', partyName = '') {
                 alertMessage.textContent = message;
+                customAlertContent.classList.remove('vote-success-animation');
+
+                if (type === 'vote_success') {
+                    const successMessage = `Congratulations! You have voted for ${partyName}. Wait until the election ends to see who wins.`;
+                    alertMessage.textContent = successMessage;
+                    customAlertContent.classList.add('vote-success-animation');
+
+                    // Robotic voice
+                    if ('speechSynthesis' in window) {
+                        const utterance = new SpeechSynthesisUtterance(successMessage.replace('Congratualions','Congratulations'));
+                        utterance.pitch = 0.5;
+                        utterance.rate = 0.9;
+                        window.speechSynthesis.speak(utterance);
+                    }
+                }
+                
                 customAlertModal.classList.add('visible');
             }
 
@@ -532,292 +686,161 @@
             }
 
             // --- UI Management Functions ---
-
-            /**
-             * Shows a specific tab content and activates its button.
-             * @param {HTMLElement} tabContentToShow - The content div to display.
-             * @param {HTMLElement} tabButtonToActivate - The button to mark as active.
-             */
             function showTab(tabContentToShow, tabButtonToActivate) {
-                // Hide all tab contents
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.add('hidden');
-                });
-                // Deactivate all tab buttons
-                document.querySelectorAll('.tab-button').forEach(button => {
-                    button.classList.remove('active');
-                });
-
-                // Show the selected tab content
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
                 tabContentToShow.classList.remove('hidden');
-                // Activate the selected tab button
                 tabButtonToActivate.classList.add('active');
 
-                // Perform specific updates for each tab
-                if (tabContentToShow === contentVote) {
-                    updateVoteSectionUI();
-                } else if (tabContentToShow === contentCandidateLogin) {
-                    displayCandidateDashboard(); // Show login form or dashboard
-                } else if (tabContentToShow === contentRegisterCandidate) {
-                    // No specific update needed on tab switch, form is always visible
-                }
+                if (tabContentToShow === contentVote) updateVoteSectionUI();
+                else if (tabContentToShow === contentCandidateLogin) displayCandidateDashboard();
             }
 
-            /**
-             * Updates the UI of the Vote section based on login status and voting ID usage.
-             */
             function updateVoteSectionUI() {
-                // This function is now only called AFTER a successful initial login
-
-                // Check if voting is generally enabled
                 if (!IS_VOTING_ENABLED) {
-                    voteSectionDetails.classList.remove('hidden'); // Ensure container is visible for message
-                    playerInfoDisplay.classList.add('hidden');
-                    realNameInput.classList.add('hidden');
-                    contactInfoInput.classList.add('hidden');
-                    enteredDetailsDisplay.classList.add('hidden');
-                    partyListForVoting.classList.add('hidden');
-                    votingDisabledMessage.classList.remove('hidden');
-                    votingDisabledMessage.innerHTML = `<p class="text-xl font-semibold">${VOTING_DISABLED_CUSTOM_MESSAGE}</p>`;
-                    votingDisabledMessage.classList.remove('bg-red-100', 'border-red-300', 'text-red-700');
-                    votingDisabledMessage.classList.add('disabled-message'); // Apply custom style
-                    return; // Exit early if voting is disabled
+                    // ... (handling for voting disabled globally)
+                    return;
                 }
-
                 voteSectionDetails.classList.remove('hidden');
-
-                // Display player info from the validated voting ID
                 displayMinecraftName.textContent = currentVotingPlayerDetails.playerName || 'N/A';
                 displayGameEdition.textContent = currentVotingPlayerDetails.gameEdition || 'N/A';
                 playerInfoDisplay.classList.remove('hidden');
+                bedrockHint.classList.toggle('hidden', currentVotingPlayerDetails.gameEdition !== 'Bedrock');
 
-                if (currentVotingPlayerDetails.gameEdition === 'Bedrock') {
-                    bedrockHint.classList.remove('hidden');
-                } else {
-                    bedrockHint.classList.add('hidden');
-                }
-
-                // Update entered details display dynamically as user types
                 realNameInput.addEventListener('input', updateEnteredDetailsDisplay);
                 contactInfoInput.addEventListener('input', updateEnteredDetailsDisplay);
-                updateEnteredDetailsDisplay(); // Initial call to set display based on current values
-
+                updateEnteredDetailsDisplay();
 
                 if (isVotingDisabledForUsedId) {
                     votingDisabledMessage.classList.remove('hidden');
-                    votingDisabledMessage.innerHTML = `
-                        <p class="text-xl font-semibold">
-                            This Voting ID has already been used. You cannot cast another vote.
-                        </p>
-                        <p class="text-sm mt-2">You can still view live vote counts and candidate information.</p>
-                    `;
-                    votingDisabledMessage.classList.add('bg-red-100', 'border-red-300', 'text-red-700');
-                    votingDisabledMessage.classList.remove('disabled-message'); // Remove custom style if it was applied
                     partyListForVoting.classList.add('hidden');
                 } else {
                     votingDisabledMessage.classList.add('hidden');
                     partyListForVoting.classList.remove('hidden');
-                    // Ensure search input is visible and party list is displayed
-                    partySearchInput.value = ''; // Clear search input on UI update
-                    displayPartyList(); // Display all parties initially
+                    partySearchInput.value = '';
+                    displayPartyList();
                 }
             }
 
             function updateEnteredDetailsDisplay() {
                 displayRealName.textContent = `Real Name: ${realNameInput.value}`;
                 displayContactInfo.textContent = `Contact: ${contactInfoInput.value}`;
-                if (realNameInput.value || contactInfoInput.value) {
-                    enteredDetailsDisplay.classList.remove('hidden');
-                } else {
-                    enteredDetailsDisplay.classList.add('hidden');
-                }
+                enteredDetailsDisplay.classList.toggle('hidden', !realNameInput.value && !contactInfoInput.value);
             }
 
-
-            /**
-             * Updates and displays the live vote count for all parties.
-             */
             async function updateLiveVoteCount() {
-                // Fetch latest votes and candidates directly to ensure data consistency
                 votes = await fetchData('/votes');
                 const latestCandidates = await fetchData('/candidates');
-
                 if (!votes || !latestCandidates) {
-                    liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">Error loading vote data or candidate data.</p>';
+                    liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">Error loading vote data.</p>';
                     return;
                 }
-
-                // Update the global allCandidates array with the latest data
                 allCandidates = latestCandidates;
-
                 liveVoteCountDiv.innerHTML = '';
-                const voteCounts = {};
-
-                // Initialize counts for all known candidates
-                allCandidates.forEach(c => voteCounts[c.partyName] = 0);
-
+                const voteCounts = allCandidates.reduce((acc, c) => ({...acc, [c.partyName]: 0}), {});
                 votes.forEach(vote => {
-                    if (voteCounts.hasOwnProperty(vote.party)) { // Ensure party exists
-                        voteCounts[vote.party] = (voteCounts[vote.party] || 0) + 1;
-                    }
+                    if (voteCounts.hasOwnProperty(vote.party)) voteCounts[vote.party]++;
                 });
 
-                const sortedVoteCounts = Object.entries(voteCounts).sort(([, countA], [, countB]) => countB - countA);
+                const sorted = Object.entries(voteCounts).sort(([, a], [, b]) => b - a);
 
-                if (sortedVoteCounts.length > 0) {
-                    sortedVoteCounts.forEach(([party, count]) => {
+                if (sorted.length > 0) {
+                    sorted.forEach(([party, count]) => {
                         const partyData = allCandidates.find(c => c.partyName === party);
                         const div = document.createElement('div');
-                        div.classList.add('vote-count-item', 'flex', 'items-center', 'p-2', 'bg-gray-50', 'rounded-md', 'shadow-sm', 'text-gray-800');
+                        div.className = 'vote-count-item flex items-center p-2 rounded-md shadow-sm';
+                        div.style.backgroundColor = 'var(--bg-app-container, var(--bg-app-container-light))';
 
-                        if (partyData) { // Ensure partyData exists before trying to access its properties
-                            if (partyData.partyLogo && partyData.partyLogo !== placeholderImage) { // Check if a valid logo exists
+                        if (partyData) {
+                            const logoSrc = partyData.partyLogo && partyData.partyLogo !== placeholderImage ? partyData.partyLogo : null;
+                            if (logoSrc) {
                                 const logo = document.createElement('img');
-                                logo.src = partyData.partyLogo;
+                                logo.src = logoSrc;
                                 logo.alt = partyData.partyName;
                                 logo.classList.add('party-logo-small');
                                 div.appendChild(logo);
-                            } else if (partyData.partyChinn) { // Fallback to symbol if no valid logo
-                                const symbolSpan = document.createElement('span');
-                                symbolSpan.textContent = partyData.partyChinn;
-                                symbolSpan.classList.add('text-2xl', 'mr-2');
-                                div.appendChild(symbolSpan);
+                            } else if (partyData.partyChinn) {
+                                const symbol = document.createElement('span');
+                                symbol.textContent = partyData.partyChinn;
+                                symbol.className = 'text-2xl mr-2';
+                                div.appendChild(symbol);
                             }
                         }
-
                         const text = document.createElement('span');
                         text.textContent = `${party}: ${count} votes`;
                         div.appendChild(text);
-
                         liveVoteCountDiv.appendChild(div);
                     });
                 } else {
                     liveVoteCountDiv.innerHTML = '<p class="text-center text-gray-500">No votes cast yet.</p>';
-                    liveVoteCountDiv.classList.add('text-center', 'text-gray-500');
                 }
             }
 
-            /**
-             * Displays the list of registered parties for voting.
-             * @param {Array} [filteredList=null] - Optional array of candidates to display (for search).
-             */
             async function displayPartyList(filteredList = null) {
-                // If no filtered list is provided, fetch all candidates
                 if (filteredList === null) {
-                    allCandidates = await fetchData('/candidates'); // Populate allCandidates
+                    allCandidates = await fetchData('/candidates');
                     if (!allCandidates) return;
-                    filteredList = allCandidates; // Use all candidates if no filter
+                    filteredList = allCandidates;
                 }
-
                 partyListDiv.innerHTML = '';
                 if (filteredList.length === 0) {
-                    partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties found matching your search, or no parties registered yet.</p>';
-                    partyListDiv.classList.add('text-center', 'text-gray-500');
+                    partyListDiv.innerHTML = '<p class="text-center text-gray-500">No parties found.</p>';
                     return;
                 }
-
                 filteredList.forEach(candidate => {
                     const partyCard = document.createElement('div');
-                    // **FIX:** Only add the 'party-card' class. The rest of the styling is in the CSS.
-                    partyCard.classList.add('party-card');
+                    partyCard.className = 'party-card';
 
-                    const partyLogo = document.createElement('img');
-                    partyLogo.src = candidate.partyLogo || placeholderImage;
-                    partyLogo.alt = candidate.partyName;
-                    // Using Tailwind classes here is fine as they don't conflict with the .party-card definition
-                    partyLogo.classList.add('w-24', 'h-24', 'object-cover', 'rounded-full', 'mb-4', 'border', 'border-gray-300');
-
-                    const partyName = document.createElement('h3');
-                    partyName.textContent = candidate.partyName;
-                    partyName.classList.add('text-xl', 'font-semibold', 'mb-2', 'text-gray-800');
-
-                    const partyLeader = document.createElement('p');
-                    partyLeader.textContent = `Leader: ${candidate.candidateName}`;
-                    partyLeader.classList.add('text-gray-600', 'text-sm');
-
-                    const partyChinn = document.createElement('p');
-                    partyChinn.textContent = `Symbol: ${candidate.partyChinn}`;
-                    partyChinn.classList.add('text-gray-600', 'text-sm', 'mb-4');
-
-                    const voteButton = document.createElement('button');
-                    voteButton.textContent = 'Vote for this Party';
-                    voteButton.classList.add('action-button', 'w-full', 'mt-auto'); // Added mt-auto to push button to bottom
+                    partyCard.innerHTML = `
+                        <img src="${candidate.partyLogo || placeholderImage}" alt="${candidate.partyName}" class="w-24 h-24 object-cover rounded-full mb-4 border border-gray-300">
+                        <h3 class="text-xl font-semibold mb-2">${candidate.partyName}</h3>
+                        <p class="text-sm mb-1">Leader: ${candidate.candidateName}</p>
+                        <p class="text-sm mb-4">Symbol: ${candidate.partyChinn}</p>
+                        <button class="action-button w-full mt-auto vote-btn" ${isVotingDisabledForUsedId || !IS_VOTING_ENABLED ? 'disabled' : ''}>
+                            ${isVotingDisabledForUsedId ? 'Already Voted' : 'Vote for this Party'}
+                        </button>
+                    `;
                     
-                    // Disable button if voting is disabled for this ID or generally
-                    if (isVotingDisabledForUsedId || !IS_VOTING_ENABLED) {
-                        voteButton.disabled = true;
-                        voteButton.textContent = isVotingDisabledForUsedId ? 'Already Voted' : 'Voting Disabled';
-                    }
-
-                    voteButton.addEventListener('click', async () => {
-                        if (!currentVotingId) {
-                            showCustomAlert('Please log in with your Voting ID first.');
-                            return;
-                        }
-                        if (isVotingDisabledForUsedId) {
-                            showCustomAlert('This Voting ID has already been used. You cannot cast another vote.');
-                            return;
-                        }
-                        // Check IS_VOTING_ENABLED before allowing vote submission
-                        if (!IS_VOTING_ENABLED) {
-                            showCustomAlert(VOTING_DISABLED_CUSTOM_MESSAGE);
-                            return;
-                        }
-
+                    partyCard.querySelector('.vote-btn').addEventListener('click', async () => {
+                        if (isVotingDisabledForUsedId) return;
 
                         const voteData = {
                             votingId: currentVotingId,
                             party: candidate.partyName,
-                            realName: realNameInput.value, // Include optional real name
-                            discordInsta: contactInfoInput.value // Include optional contact info
+                            realName: realNameInput.value,
+                            discordInsta: contactInfoInput.value
                         };
 
                         const result = await postData('/submit-vote', voteData);
                         if (result && result.success) {
-                            showCustomAlert(`You have successfully voted for ${candidate.partyName}!`);
+                            showCustomAlert(`You have successfully voted for ${candidate.partyName}!`, 'vote_success', candidate.partyName);
                             isVotingDisabledForUsedId = true;
                             sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                            updateVoteSectionUI(); // Re-render UI to disable vote buttons
+                            updateVoteSectionUI();
                             await updateLiveVoteCount();
                         } else {
                             showCustomAlert(result ? result.message : 'Failed to submit vote.');
                         }
                     });
-
-                    partyCard.appendChild(partyLogo);
-                    partyCard.appendChild(partyName);
-                    partyCard.appendChild(partyLeader);
-                    partyCard.appendChild(partyChinn);
-                    partyCard.appendChild(voteButton);
                     partyListDiv.appendChild(partyCard);
                 });
             }
 
-            /**
-             * Handles candidate login.
-             */
             async function loginCandidate(partyName, password) {
-                allCandidates = await fetchData('/candidates'); // Use allCandidates here
+                allCandidates = await fetchData('/candidates');
                 if (!allCandidates) return;
-
-                // Passwords are stored base64 encoded
                 loggedInCandidate = allCandidates.find(c => c.partyName === partyName && c.password === btoa(password));
-
                 if (loggedInCandidate) {
                     sessionStorage.setItem('loggedInCandidate', JSON.stringify(loggedInCandidate));
                     showCustomAlert('Login successful! Welcome to your dashboard.');
-                    displayCandidateDashboard();
                 } else {
                     showCustomAlert('Invalid Party Name or Password.');
                     loggedInCandidate = null;
                     sessionStorage.removeItem('loggedInCandidate');
-                    displayCandidateDashboard();
                 }
+                displayCandidateDashboard();
             }
 
-            /**
-             * Handles candidate logout.
-             */
             function logoutCandidate() {
                 loggedInCandidate = null;
                 sessionStorage.removeItem('loggedInCandidate');
@@ -825,24 +848,20 @@
                 showCustomAlert('Logged out successfully.');
             }
 
-            /**
-             * Displays the candidate's dashboard if logged in, or the login form otherwise.
-             */
             async function displayCandidateDashboard() {
                 if (loggedInCandidate) {
                     partyManagementLoginSection.classList.add('hidden');
                     candidateDashboard.classList.remove('hidden');
-                    await updateLiveVoteCount(); // Ensure votes are fresh for dashboard
-
+                    await updateLiveVoteCount();
                     candidateDashboard.innerHTML = `
-                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Welcome, ${loggedInCandidate.candidateName}!</h3>
-                        <p class="text-gray-600">Party: ${loggedInCandidate.partyName}</p>
-                        <p class="text-gray-600 mb-4">Symbol: ${loggedInCandidate.partyChinn}</p>
+                        <h3 class="text-xl font-semibold mb-2">Welcome, ${loggedInCandidate.candidateName}!</h3>
+                        <p>Party: ${loggedInCandidate.partyName}</p>
+                        <p class="mb-4">Symbol: ${loggedInCandidate.partyChinn}</p>
                         <img src="${loggedInCandidate.partyLogo}" alt="${loggedInCandidate.partyName}" class="party-logo-large mb-4">
-                        <p class="text-lg font-bold text-gray-800">Your party currently has <strong>${getPartyVoteCount(loggedInCandidate.partyName)}</strong> votes.</p>
+                        <p class="text-lg font-bold">Your party currently has <strong>${getPartyVoteCount(loggedInCandidate.partyName)}</strong> votes.</p>
                         <button id="logout-candidate-btn" class="action-button bg-red-600 hover:bg-red-700 w-full mt-4">Logout</button>
                     `;
-                    document.getElementById('logout-candidate-btn').addEventListener('click', logoutCandidate);
+                    candidateDashboard.querySelector('#logout-candidate-btn').addEventListener('click', logoutCandidate);
                 } else {
                     partyManagementLoginSection.classList.remove('hidden');
                     candidateDashboard.classList.add('hidden');
@@ -851,215 +870,117 @@
             }
 
             // --- Event Listeners ---
-
-            // Custom Alert OK button
             alertOkBtn.addEventListener('click', hideCustomAlert);
 
-            // Initial Voting ID Login Button
             votingIdLoginBtnInitial.addEventListener('click', async () => {
                 const id = votingIdInputInitial.value.trim();
-                if (!id) {
-                    showCustomAlert('Please enter your Voting ID.');
-                    return;
-                }
-
+                if (!id) { showCustomAlert('Please enter your Voting ID.'); return; }
                 const result = await postData('/check-voting-id', { votingId: id });
-
                 if (result && result.success && result.valid) {
                     currentVotingId = id;
                     sessionStorage.setItem('currentVotingId', currentVotingId);
-                    currentVotingPlayerDetails = {
-                        playerName: result.playerName,
-                        gameEdition: result.gameEdition
-                    };
+                    currentVotingPlayerDetails = { playerName: result.playerName, gameEdition: result.gameEdition };
                     sessionStorage.setItem('currentVotingPlayerDetails', JSON.stringify(currentVotingPlayerDetails));
-
                     if (result.used) {
                         isVotingDisabledForUsedId = true;
                         sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
-                        showCustomAlert('Login successful, but this Voting ID has already been used. You cannot vote again.');
+                        showCustomAlert('Login successful, but this ID has been used. You cannot vote again.');
                     } else {
                         isVotingDisabledForUsedId = false;
                         sessionStorage.removeItem('isVotingDisabledForUsedId');
                         showCustomAlert('Login successful! Welcome.');
                     }
-
                     initialLoginSection.classList.add('hidden');
                     mainAppContainer.classList.remove('hidden');
-                    showTab(contentVote, tabVote); // Automatically go to Vote tab
+                    showTab(contentVote, tabVote);
                     await updateLiveVoteCount();
-                    // displayPartyList() is called by updateVoteSectionUI()
                 } else {
                     showCustomAlert(result ? result.message : 'Invalid Voting ID.');
                 }
             });
 
-            // Logout Button (for general app logout)
-            document.getElementById('logout-button').addEventListener('click', () => {
-                sessionStorage.clear(); // Clear all session data
-                currentVotingId = null;
-                currentVotingPlayerDetails = null;
-                loggedInCandidate = null;
-                isVotingDisabledForUsedId = false;
-
-                initialLoginSection.classList.remove('hidden'); // Show initial login
-                mainAppContainer.classList.add('hidden'); // Hide main app
-
-                votingIdInputInitial.value = ''; // Clear initial ID input
-                partyLoginForm.reset(); // Clear party login form
-                registerCandidateForm.reset(); // Clear register form
-                logoPreview.src = placeholderImage; // Reset logo preview
-
-                showCustomAlert('Logged out successfully.');
+            logoutButton.addEventListener('click', () => {
+                sessionStorage.clear();
+                window.location.reload();
             });
 
-
-            // Tab Navigation Buttons
             tabVote.addEventListener('click', () => showTab(contentVote, tabVote));
             tabCandidateLogin.addEventListener('click', () => showTab(contentCandidateLogin, tabCandidateLogin));
             tabRegisterCandidate.addEventListener('click', () => showTab(contentRegisterCandidate, tabRegisterCandidate));
 
-            // Party Logo Upload
-            uploadLogoBtn.addEventListener('click', () => {
-                partyLogoUpload.click();
-            });
-
-            partyLogoUpload.addEventListener('change', (event) => {
-                const file = event.target.files[0];
+            uploadLogoBtn.addEventListener('click', () => partyLogoUpload.click());
+            partyLogoUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
                 if (file) {
-                    // Changed MAX_IMAGE_SIZE_MB to MAX_IMAGE_SIZE_KB and updated calculation
-                    const MAX_IMAGE_SIZE_KB = 100; // Example size
-                    if (file.size > MAX_IMAGE_SIZE_KB * 1024) {
-                        showCustomAlert(`Image size should be less than ${MAX_IMAGE_SIZE_KB}KB.`);
-                        event.target.value = '';
-                        logoPreview.src = placeholderImage;
+                    if (file.size > 100 * 1024) {
+                        showCustomAlert('Image size should be less than 100KB.');
                         return;
                     }
                     const reader = new FileReader();
-                    reader.onload = function(event) {
-                        logoPreview.src = event.target.result;
-                    };
+                    reader.onload = (e) => logoPreview.src = e.target.result;
                     reader.readAsDataURL(file);
                 }
             });
 
-            // Register Candidate Form Submission
             registerCandidateForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-
-                // Check if registration is generally enabled
                 if (!IS_REGISTRATION_ENABLED) {
                     showCustomAlert(REGISTRATION_DISABLED_CUSTOM_MESSAGE);
                     return;
                 }
-
                 const candidateName = document.getElementById('candidate-name').value;
                 const partyName = document.getElementById('party-name-reg').value;
                 const partyPassword = document.getElementById('party-password-reg').value;
                 const partyChinn = document.getElementById('party-chinn').value;
                 const partyLogo = logoPreview.src;
-
-                const newCandidate = {
-                    candidateName,
-                    partyName,
-                    password: btoa(partyPassword), // Base64 encode password for storage
-                    partyChinn,
-                    partyLogo
-                };
-
-                const result = await postData('/register-candidate', newCandidate);
-
+                const result = await postData('/register-candidate', { candidateName, partyName, password: btoa(partyPassword), partyChinn, partyLogo });
                 if (result && result.success) {
                     showCustomAlert('Candidate registered successfully!');
                     registerCandidateForm.reset();
                     logoPreview.src = placeholderImage;
-                    // Automatically log in the new candidate
                     await loginCandidate(partyName, partyPassword);
                     await Promise.all([updateLiveVoteCount(), displayPartyList()]);
-                } else {
-                    showCustomAlert(result ? result.message : 'Failed to register candidate.');
                 }
             });
 
-            // Party Login Form Submission
-            partyLoginForm.addEventListener('submit', async (e) => {
+            partyLoginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const loginPartyName = document.getElementById('login-party-name').value;
-                const loginPartyPassword = document.getElementById('login-party-password').value;
-                loginCandidate(loginPartyName, loginPartyPassword);
+                loginCandidate(document.getElementById('login-party-name').value, document.getElementById('login-party-password').value);
             });
 
-            // Party Search Input Listener
             partySearchInput.addEventListener('input', () => {
-                const searchTerm = partySearchInput.value.toLowerCase();
-                // If search term is empty, display all candidates
-                if (searchTerm === '') {
-                    displayPartyList(allCandidates);
-                    return;
-                }
-                // Filter allCandidates, not just the currently displayed ones
-                const filteredCandidates = allCandidates.filter(candidate =>
-                    candidate.partyName.toLowerCase().includes(searchTerm) ||
-                    candidate.candidateName.toLowerCase().includes(searchTerm) ||
-                    candidate.partyChinn.toLowerCase().includes(searchTerm)
+                const term = partySearchInput.value.toLowerCase();
+                if (!term) { displayPartyList(allCandidates); return; }
+                const filtered = allCandidates.filter(c =>
+                    c.partyName.toLowerCase().includes(term) ||
+                    c.candidateName.toLowerCase().includes(term) ||
+                    c.partyChinn.toLowerCase().includes(term)
                 );
-                displayPartyList(filteredCandidates);
+                displayPartyList(filtered);
             });
 
             // --- Initial Setup on Load ---
-            // Hide registration tab and content if disabled
             if (!IS_REGISTRATION_ENABLED) {
-                tabRegisterCandidate.classList.add('hidden'); // Hide the tab button
-                contentRegisterCandidate.innerHTML = `
-                    <div class="disabled-message">
-                        <p>${REGISTRATION_DISABLED_CUSTOM_MESSAGE}</p>
-                    </div>
-                `;
+                tabRegisterCandidate.classList.add('hidden');
+                contentRegisterCandidate.innerHTML = `<div class="disabled-message"><p>${REGISTRATION_DISABLED_CUSTOM_MESSAGE}</p></div>`;
             }
 
-
-            // Determine which screen to show on page load
-            if (currentVotingId) {
-                // Attempt to retrieve stored voting ID data
-                const storedVotingIdData = sessionStorage.getItem('currentVotingPlayerDetails');
-                if (storedVotingIdData) {
-                    try {
-                        currentVotingPlayerDetails = JSON.parse(storedVotingIdData);
-                    } catch (e) {
-                        console.error("Error parsing stored currentVotingPlayerDetails:", e);
-                        sessionStorage.removeItem('currentVotingPlayerDetails'); // Clear invalid data
-                        currentVotingId = null; // Force re-login
-                    }
-                }
-
-                if (currentVotingId && currentVotingPlayerDetails) { // Proceed only if both are valid
+            async function initializeApp() {
+                if (currentVotingId) {
                     initialLoginSection.classList.add('hidden');
                     mainAppContainer.classList.remove('hidden');
                     isVotingDisabledForUsedId = sessionStorage.getItem('isVotingDisabledForUsedId') === 'true';
-                    updateVoteSectionUI(); // Now currentVotingIdData should be available
                     await Promise.all([updateLiveVoteCount(), displayCandidateDashboard()]);
-                    // displayPartyList() is called by updateVoteSectionUI()
                     showTab(contentVote, tabVote);
-                } else {
-                    // If currentVotingId exists but data is missing/corrupted, force login screen
-                    console.warn("Voting ID found but data missing or corrupted. Redirecting to login.");
-                    sessionStorage.removeItem('currentVotingId');
-                    sessionStorage.removeItem('currentVotingPlayerDetails');
-                    sessionStorage.removeItem('isVotingDisabledForUsedId');
-                    initialLoginSection.classList.remove('hidden');
-                    mainAppContainer.classList.add('hidden');
-                    // No specific tab to show here, as it's the initial login screen
+                } else if (loggedInCandidate) {
+                    initialLoginSection.classList.add('hidden');
+                    mainAppContainer.classList.remove('hidden');
+                    await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
+                    showTab(contentCandidateLogin, tabCandidateLogin);
                 }
-            } else if (loggedInCandidate) {
-                initialLoginSection.classList.add('hidden');
-                mainAppContainer.classList.remove('hidden');
-                await Promise.all([updateLiveVoteCount(), displayPartyList(), displayCandidateDashboard()]);
-                showTab(contentCandidateLogin, tabCandidateLogin);
-            } else {
-                initialLoginSection.classList.remove('hidden');
-                mainAppContainer.classList.add('hidden');
-                // No specific tab to show here, as it's the initial login screen
             }
+
+            initializeApp();
         });
     </script>
 </body>
