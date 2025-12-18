@@ -190,9 +190,21 @@
         </div>
     </div>
 
-    <!-- Vote Casting Animation Overlay -->
-    <div id="vote-casting-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[1001] hidden items-center justify-center">
-        <canvas id="voteCanvas"></canvas>
+    <!-- 3D Vote Casting Overlay -->
+    <div id="vote-casting-overlay" class="vote-3d-overlay hidden">
+        <div class="vote-3d-stage">
+            <div class="vote-box-3d">
+                <div class="vote-box-face top"></div>
+                <div class="vote-box-face front"></div>
+                <div class="vote-box-face left"></div>
+                <div class="vote-box-face right"></div>
+                <div class="vote-box-face back"></div>
+
+                <div class="vote-paper-3d" id="vote-paper-text">
+                    PARTY NAME
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Custom Alert Modal -->

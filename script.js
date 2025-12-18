@@ -216,52 +216,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function playVoteVideoAnimation(partyName, totalVotes) {
-        const canvas = document.getElementById("voteCanvas");
-        const ctx = canvas.getContext("2d");
+    function playVoteVideoAnimation(partyName) {
+        const overlay = document.getElementById('vote-casting-overlay');
+        const paper = document.getElementById('vote-paper-text');
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        paper.textContent = partyName;
+        overlay.classList.remove('hidden');
 
-        let yPaper = -200;
-        let alpha = 0;
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dark background
-            ctx.fillStyle = "#020617";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Vote box
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(canvas.width/2 - 120, canvas.height/2 + 100, 240, 120);
-
-            // Paper
-            ctx.globalAlpha = alpha;
-            ctx.fillStyle = "#e5e7eb";
-            ctx.fillRect(canvas.width/2 - 100, yPaper, 200, 120);
-
-            ctx.fillStyle = "#020617";
-            ctx.font = "bold 18px Inter";
-            ctx.textAlign = "center";
-            ctx.fillText(partyName, canvas.width/2, yPaper + 65);
-
-            ctx.globalAlpha = 1;
-
-            if (yPaper < canvas.height/2 - 50) {
-                yPaper += 6;
-                alpha += 0.02;
-            } else {
-                ctx.fillStyle = "#22d3ee";
-                ctx.font = "bold 22px Inter";
-                ctx.fillText(`TOTAL VOTES: ${totalVotes}`, canvas.width/2, canvas.height/2 + 170);
-            }
-
-            requestAnimationFrame(draw);
-        }
-
-        draw();
+        // auto close after animation
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 3000);
     }
 
     // --- UI Management Functions ---
@@ -320,14 +285,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         voteSectionDetails.classList.remove('hidden');
 
         // Display player info from the validated voting ID
-        displayMinecraftName.textContent = currentVotingPlayerDetails.playerName || 'N/A';
-        displayGameEdition.textContent = currentVotingPlayerDetails.gameEdition || 'N/A';
-        playerInfoDisplay.classList.remove('hidden');
+        if (currentVotingPlayerDetails) {
+            displayMinecraftName.textContent = currentVotingPlayerDetails.playerName || 'N/A';
+            displayGameEdition.textContent = currentVotingPlayerDetails.gameEdition || 'N/A';
+            playerInfoDisplay.classList.remove('hidden');
 
-        if (currentVotingPlayerDetails.gameEdition === 'Bedrock') {
-            bedrockHint.classList.remove('hidden');
+            if (currentVotingPlayerDetails.gameEdition === 'Bedrock') {
+                bedrockHint.classList.remove('hidden');
+            } else {
+                bedrockHint.classList.add('hidden');
+            }
         } else {
-            bedrockHint.classList.add('hidden');
+            playerInfoDisplay.classList.add('hidden');
         }
 
         // Update entered details display dynamically as user types
@@ -531,10 +500,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                // Show vote casting overlay (canvas)
+                // Show vote casting overlay
                 voteCastingOverlay.classList.remove('hidden');
-                voteCastingOverlay.classList.add('flex'); 
-
+                
                 // Simulate network/processing delay (shortened)
                 setTimeout(async () => {
                     const voteData = {
@@ -547,25 +515,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const result = await postData('/submit-vote', voteData);
 
                     if (result && result.success) {
-                        playVoteVideoAnimation(candidate.partyName, getPartyVoteCount(candidate.partyName) + 1);
+                        // Play 3D animation (auto-closes)
+                        playVoteVideoAnimation(candidate.partyName);
+                        
                         isVotingDisabledForUsedId = true;
                         sessionStorage.setItem('isVotingDisabledForUsedId', 'true');
                         updateVoteSectionUI();
                         await updateLiveVoteCount();
-                        
-                        // Click to close
-                        const canvas = document.getElementById("voteCanvas");
-                        const closeHandler = () => {
-                             voteCastingOverlay.classList.add('hidden');
-                             voteCastingOverlay.classList.remove('flex');
-                             canvas.removeEventListener('click', closeHandler);
-                        };
-                        canvas.addEventListener('click', closeHandler);
-
                     } else {
                         // Hide overlay
                         voteCastingOverlay.classList.add('hidden');
-                        voteCastingOverlay.classList.remove('flex');
                         
                         // Trigger vote failure animation on the specific card
                         partyCard.classList.add('failed');
