@@ -295,8 +295,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </p>
                 <p class="text-sm mt-2">You can still view live vote counts and candidate information.</p>
             `;
-            votingDisabledMessage.classList.add('bg-red-100', 'border-red-300', 'text-red-700');
-            votingDisabledMessage.classList.remove('disabled-message'); // Remove custom style if it was applied
+            // Remove old tailwind classes if present
+            votingDisabledMessage.classList.remove('bg-red-100', 'border-red-300', 'text-red-700');
+            // Add custom readable style
+            votingDisabledMessage.classList.add('disabled-message-error');
             partyListForVoting.classList.add('hidden');
         } else {
             votingDisabledMessage.classList.add('hidden');
