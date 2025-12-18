@@ -219,14 +219,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     function playVoteVideoAnimation(partyName) {
         const overlay = document.getElementById('vote-casting-overlay');
         const paper = document.getElementById('vote-paper-text');
+        const successSound = document.getElementById('success-sound');
 
         paper.textContent = partyName;
         overlay.classList.remove('hidden');
 
-        // auto close after animation
+        // Sound + vibration
+        successSound.currentTime = 0;
+        successSound.play().catch(()=>{});
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+        // Celebration message
+        const msg = document.createElement('div');
+        msg.className = 'vote-success-text';
+        msg.innerHTML = `
+            You have voted for <strong>${partyName}</strong>.<br>
+            Please wait until the election ends and see who wins.
+        `;
+        document.body.appendChild(msg);
+
         setTimeout(() => {
             overlay.classList.add('hidden');
-        }, 3000);
+            msg.remove();
+        }, 4000);
     }
 
     // --- UI Management Functions ---
@@ -523,16 +538,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                         updateVoteSectionUI();
                         await updateLiveVoteCount();
                     } else {
-                        // Hide overlay
-                        voteCastingOverlay.classList.add('hidden');
-                        
-                        // Trigger vote failure animation on the specific card
-                        partyCard.classList.add('failed');
-                        showCustomAlert(result ? result.message : 'Failed to submit vote.');
-                        // Remove the class after animation so it can be triggered again
+                        const failSound = document.getElementById('fail-sound');
+                        const box = document.querySelector('.vote-box-3d');
+
+                        failSound.currentTime = 0;
+                        failSound.play().catch(()=>{});
+                        if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+
+                        box.classList.add('break');
+
                         setTimeout(() => {
-                            partyCard.classList.remove('failed');
-                        }, 1000); // Duration of the break-down animation
+                            voteCastingOverlay.classList.add('hidden');
+                            box.classList.remove('break');
+                        }, 900);
+
+                        showCustomAlert(result ? result.message : 'Vote failed. Please try again.');
                     }
                 }, 1000); 
             });
