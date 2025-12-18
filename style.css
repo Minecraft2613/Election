@@ -446,6 +446,8 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
     color: #e2e8f0;
     border: 1px solid #6366f1;
+    max-height: 60vh;
+    overflow-y: auto;
 }
 #live-vote-count h3 { color: #fff; }
 
@@ -472,9 +474,9 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
 
 /* App Controls positioning */
 #app-controls {
-    position: absolute;
+    position: fixed;
     bottom: 1rem;
-    right: 3.5rem;
+    right: 1rem;
     z-index: 100;
 }
 
@@ -557,5 +559,41 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
     100% {
         transform: translate(var(--x-end, 0px), var(--y-end, 0px)) scale(0) rotate(360deg);
         opacity: 0;
+    }
+}
+
+/* FIX: Prevent sidebar overlap on mobile */
+@media (max-width: 1023px) {
+    .app-container {
+        padding-bottom: 2rem; /* remove huge bottom gap */
+    }
+
+    .main-content-area,
+    .sidebar-area {
+        width: 100%;
+    }
+
+    .sidebar-area {
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #app-controls {
+        position: static;
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .disabled-message,
+    .disabled-message-error {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+    #party-list {
+        grid-template-columns: 1fr !important;
     }
 }
