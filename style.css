@@ -451,7 +451,12 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
 }
 #live-vote-count h3 { color: #fff; }
 
+/* Vote count item - UPDATED for flex wrap */
 .vote-count-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap; /* IMPORTANT */
     background-color: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     color: #e2e8f0 !important;
@@ -460,8 +465,16 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
     padding: 0.75rem !important;
     margin-bottom: 0.75rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
+}
+
+.vote-count-item span,
+.vote-count-item div {
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.vote-count-item .flex-grow {
+    min-width: 0;
 }
 
 .vote-count-item:last-child {
@@ -472,12 +485,13 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
     border-color: #81e6d9;
 }
 
-/* App Controls positioning */
-#app-controls {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 100;
+/* ===== APP FOOTER (LOGOUT FIX) ===== */
+.app-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
 }
 
 /* New Loading animation */
@@ -562,6 +576,23 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
     }
 }
 
+/* ===== VOTE ANIMATION CANVAS ===== */
+#voteCanvas {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #0f172a, #020617);
+}
+
+/* Cinematic glow */
+.vote-glow {
+    animation: glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+    from { box-shadow: 0 0 20px #6366f1; }
+    to   { box-shadow: 0 0 60px #22d3ee; }
+}
+
 /* FIX: Prevent sidebar overlap on mobile */
 @media (max-width: 1023px) {
     .app-container {
@@ -579,19 +610,28 @@ body[data-theme="dark"] .bg-gray-50 { background-color: var(--bg-content-area-da
 }
 
 @media (max-width: 768px) {
-    #app-controls {
-        position: static;
-        margin-top: 1.5rem;
-        display: flex;
-        justify-content: center;
-    }
+    /* Fixed: No need for app-controls fix here as it's now app-footer */
+}
+
+/* ===== MOBILE SAFE MESSAGE BOX ===== */
+.disabled-message,
+.disabled-message-error {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
 }
 
 @media (max-width: 640px) {
     .disabled-message,
     .disabled-message-error {
-        font-size: 1rem;
+        font-size: 0.95rem;
         padding: 1rem;
+        margin: 0 auto 1rem auto;
+    }
+
+    #vote-section-details {
+        overflow-x: hidden;
     }
     #party-list {
         grid-template-columns: 1fr !important;

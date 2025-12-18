@@ -185,22 +185,14 @@
         </div>
 
         <!-- App Controls -->
-        <div id="app-controls" class="flex flex-col gap-2">
+        <div id="app-controls" class="app-footer">
             <button id="logout-button" class="action-button logout-button">Logout</button>
         </div>
     </div>
 
     <!-- Vote Casting Animation Overlay -->
     <div id="vote-casting-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[1001] hidden items-center justify-center">
-        <div class="vote-animation-container">
-            <div class="hand">
-                <div class="vote-paper"></div>
-            </div>
-            <div class="vote-box">
-                <div class="vote-slot"></div>
-            </div>
-            <p id="vote-casting-text" class="text-white text-xl mt-4"></p>
-        </div>
+        <canvas id="voteCanvas"></canvas>
     </div>
 
     <!-- Custom Alert Modal -->
