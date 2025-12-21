@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Feature Toggles and Custom Messages ---
     const IS_VOTING_ENABLED = false; // Set to true to enable voting as requested
-    const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is tomorrow not today. Please check back tomorrow at 10 am !";
+    const VOTING_DISABLED_CUSTOM_MESSAGE = "Voting is delayed it will be held after 12:00 O'clock!";
 
     const IS_REGISTRATION_ENABLED = true; // Set to true to enable candidate registration
     const REGISTRATION_DISABLED_CUSTOM_MESSAGE = "Voting is going on.";
